@@ -48,3 +48,10 @@ def test_labels_cover_every_card_and_icons_exist():
     for cid, entry in LABELS.items():
         if entry["icon"]:
             assert (MOD_ICONS / f"{entry['icon']}.png").exists(), f"{cid}: missing icon {entry['icon']}.png"
+
+
+def test_empty_template_only_rates_divine_orbs():
+    empty = json.loads((DATA / "profiles" / "empty.json").read_text(encoding="utf-8"))
+    assert empty["readOnly"] is True
+    assert sorted(empty["upsides"]["s"]) == ["TangleAltarUpsideBossDivineOrb", "TangleAltarUpsideMonsterDivineOrb"]
+    assert not any(empty["upsides"][t] for t in ("a", "b")) and not any(empty["downsides"].values())

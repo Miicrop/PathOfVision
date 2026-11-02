@@ -1,0 +1,17 @@
+{
+  "name": "Empty",
+  "readOnly": true,
+  "modsVersion": "3.29.3.3",
+  "upsides": {
+    "s": [
+      "TangleAltarUpsideBossDivineOrb",
+      "TangleAltarUpsideMonsterDivineOrb"
+    ],
+    "a": [],
+    "b": []
+  },
+  "downsides": {
+    "dangerous": [],
+    "brick": []
+  }
+}

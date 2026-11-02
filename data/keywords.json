@@ -3,8 +3,14 @@
   "keywords": {
     "Fire": "#ff7a45",
     "Cold": "#5cb8ff",
+    "Chilled": "#5cb8ff",
+    "Chill": "#5cb8ff",
     "Lightning": "#ffe14d",
+    "Shocked": "#ffe14d",
+    "Shock": "#ffe14d",
     "Chaos": "#d77cff",
-    "Physical": "#c8a97e"
+    "Physical": "#c8a97e",
+    "Chaos Orb": "#d8d8d8",
+    "Physical Damage": "#d8d8d8"
   }
 }

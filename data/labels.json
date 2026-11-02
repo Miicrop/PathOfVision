@@ -159,72 +159,72 @@
     "TangledAltarUpsideMonsterScarabAbyss": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Abyss Scarab",
       "alias": "Abyss Scarab",
-      "icon": ""
+      "icon": "abyss-scarab"
     },
     "CleansingAltarUpsideMonsterScarabStrongbox": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Ambush Scarab",
       "alias": "Ambush Scarab",
-      "icon": ""
+      "icon": "ambush-scarab"
     },
     "CleansingAltarUpsideMonsterScarabAnarchy": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Anarchy Scarab",
       "alias": "Anarchy Scarab",
-      "icon": ""
+      "icon": "anarchy-scarab"
     },
     "TangleAltarUpsideMonsterAncientOrb": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Ancient Orb",
       "alias": "Ancient Orb",
-      "icon": ""
+      "icon": "ancient-orb"
     },
     "TangledAltarUpsideMonsterScarabBeasts": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Bestiary Scarab",
       "alias": "Bestiary Scarab",
-      "icon": ""
+      "icon": "bestiary-scarab"
     },
     "TangledAltarUpsideMonsterScarabBetrayal": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Betrayal Scarab",
       "alias": "Betrayal Scarab",
-      "icon": ""
+      "icon": "betrayal-scarab"
     },
     "CleansingAltarUpsideMonsterScarabBeyond": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Beyond Scarab",
       "alias": "Beyond Scarab",
-      "icon": ""
+      "icon": "beyond-scarab"
     },
     "TangleAltarUpsideMonsterBlessedOrb": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Blessed Orb",
       "alias": "Blessed Orb",
-      "icon": ""
+      "icon": "blessed-orb"
     },
     "TangledAltarUpsideMonsterScarabBlight": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Blight Scarab",
       "alias": "Blight Scarab",
-      "icon": ""
+      "icon": "blight-scarab"
     },
     "TangledAltarUpsideMonsterScarabBreach": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Breach Scarab",
       "alias": "Breach Scarab",
-      "icon": ""
+      "icon": "breach-scarab"
     },
     "CleansingAltarUpsideMonsterScarabMaps": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Cartography Scarab",
       "alias": "Cartography Scarab",
-      "icon": ""
+      "icon": "cartography-scarab"
     },
     "CleansingAltarUpsideMonsterChaosOrb": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Chaos Orb",
       "alias": "Chaos Orb",
-      "icon": ""
+      "icon": "chaos-orb"
     },
     "TangleAltarUpsideMonsterChromaticOrb": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Chromatic Orb",
       "alias": "Chromatic Orb",
-      "icon": ""
+      "icon": "chromatic-orb"
     },
     "TangledAltarUpsideMonsterScarabDelirium": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Delirium Scarab",
       "alias": "Delirium Scarab",
-      "icon": ""
+      "icon": "delirium-scarab"
     },
     "TangledAltarUpsideMonsterDivinationCardsCurrencyBasic": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards Basic Currency",
@@ -294,192 +294,192 @@
     "CleansingAltarUpsideMonsterScarabDivination": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Divination Scarab",
       "alias": "Divination Scarab",
-      "icon": ""
+      "icon": "divination-scarab"
     },
     "TangleAltarUpsideMonsterDivineOrb": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Divine Orb",
       "alias": "Divine Orb",
-      "icon": ""
+      "icon": "divine-orb"
     },
     "CleansingAltarUpsideMonsterScarabDomination": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Domination Scarab",
       "alias": "Domination Scarab",
-      "icon": ""
+      "icon": "domination-scarab"
     },
     "CleansingAltarUpsideMonsterEnkindlingOrb": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Enkindling Orb",
       "alias": "Enkindling Orb",
-      "icon": ""
+      "icon": "enkindling-orb"
     },
     "CleansingAltarUpsideMonsterScarabEssence": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Essence Scarab",
       "alias": "Essence Scarab",
-      "icon": ""
+      "icon": "essence-scarab"
     },
     "TangleAltarUpsideMonsterExaltedOrb": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Exalted Orb",
       "alias": "Exalted Orb",
-      "icon": ""
+      "icon": "exalted-orb"
     },
     "TangledAltarUpsideMonsterScarabExpedition": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Expedition Scarab",
       "alias": "Expedition Scarab",
-      "icon": ""
+      "icon": "expedition-scarab"
     },
     "CleansingAltarUpsideMonsterGemcuttersPrism": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Gemcutter's Prism",
       "alias": "Gemcutters Prism",
-      "icon": ""
+      "icon": "gemcutters-prism"
     },
     "CleansingAltarUpsideMonsterGlassblowersBauble": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Glassblower's Bauble",
       "alias": "Glassblowers Bauble",
-      "icon": ""
+      "icon": "glassblowers-bauble"
     },
     "CleansingAltarUpsideMonsterGrandEldritchEmber": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Grand Eldritch Ember",
       "alias": "Grand Eldritch Ember",
-      "icon": ""
+      "icon": "grand-eldritch-ember"
     },
     "TangleAltarUpsideMonsterGrandEldritchIchor": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Grand Eldritch Ichor",
       "alias": "Grand Eldritch Ichor",
-      "icon": ""
+      "icon": "grand-eldritch-ichor"
     },
     "CleansingAltarUpsideMonsterGreaterEldritchEmber": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Greater Eldritch Ember",
       "alias": "Greater Eldritch Ember",
-      "icon": ""
+      "icon": "greater-eldritch-ember"
     },
     "TangleAltarUpsideMonsterGreaterEldritchIchor": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Greater Eldritch Ichor",
       "alias": "Greater Eldritch Ichor",
-      "icon": ""
+      "icon": "greater-eldritch-ichor"
     },
     "TangledAltarUpsideMonsterScarabHarvest": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Harvest Scarab",
       "alias": "Harvest Scarab",
-      "icon": ""
+      "icon": "harvest-scarab"
     },
     "TangledAltarUpsideMonsterScarabIncursion": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Incursion Scarab",
       "alias": "Incursion Scarab",
-      "icon": ""
+      "icon": "incursion-scarab"
     },
     "CleansingAltarUpsideMonsterScarabInfluence": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Influence Scarab",
       "alias": "Influence Scarab",
-      "icon": ""
+      "icon": "influence-scarab"
     },
     "CleansingAltarUpsideMonsterInstillingOrb": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Instilling Orb",
       "alias": "Instilling Orb",
-      "icon": ""
+      "icon": "instilling-orb"
     },
     "TangleAltarUpsideMonsterJewellersOrb": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Jeweller's Orb",
       "alias": "Jewellers Orb",
-      "icon": ""
+      "icon": "jewellers-orb"
     },
     "TangledAltarUpsideMonsterScarabSettlers": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Kalguuran Scarab",
       "alias": "Kalguuran Scarab",
-      "icon": ""
+      "icon": "kalguuran-scarab"
     },
     "TangledAltarUpsideMonsterScarabLegion": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Legion Scarab",
       "alias": "Legion Scarab",
-      "icon": ""
+      "icon": "legion-scarab"
     },
     "CleansingAltarUpsideMonsterLesserEldritchEmber": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Lesser Eldritch Ember",
       "alias": "Lesser Eldritch Ember",
-      "icon": ""
+      "icon": "lesser-eldritch-ember"
     },
     "TangleAltarUpsideMonsterLesserEldritchIchor": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Lesser Eldritch Ichor",
       "alias": "Lesser Eldritch Ichor",
-      "icon": ""
+      "icon": "lesser-eldritch-ichor"
     },
     "CleansingAltarUpsideMonsterScarabMisc": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Miscellaneous Scarab",
       "alias": "Miscellaneous Scarab",
-      "icon": ""
+      "icon": "miscellaneous-scarab"
     },
     "TangleAltarUpsideMonsterOrbOfAlteration": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Orb of Alteration",
       "alias": "Alteration",
-      "icon": ""
+      "icon": "orb-of-alteration"
     },
     "CleansingAltarUpsideMonsterOrbOfAnnulment": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Orb of Annulment",
       "alias": "Annulment",
-      "icon": ""
+      "icon": "orb-of-annulment"
     },
     "CleansingAltarUpsideMonsterOrbOfBinding": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Orb of Binding",
       "alias": "Binding",
-      "icon": ""
+      "icon": "orb-of-binding"
     },
     "TangleAltarUpsideMonsterFusingOrb": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Orb of Fusing",
       "alias": "Fusing",
-      "icon": ""
+      "icon": "orb-of-fusing"
     },
     "CleansingAltarUpsideMonsterOrbOfRegret": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Orb of Regret",
       "alias": "Regret",
-      "icon": ""
+      "icon": "orb-of-regret"
     },
     "CleansingAltarUpsideMonsterOrbOfScouring": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Orb of Scouring",
       "alias": "Scouring",
-      "icon": ""
+      "icon": "orb-of-scouring"
     },
     "CleansingAltarUpsideMonsterOrbOfUnmaking": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Orb of Unmaking",
       "alias": "Unmaking",
-      "icon": ""
+      "icon": "orb-of-unmaking"
     },
     "TangleAltarUpsideMonsterRegalOrb": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Regal Orb",
       "alias": "Regal",
-      "icon": ""
+      "icon": "regal-orb"
     },
     "TangledAltarUpsideMonsterScarabRitual": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Ritual Scarab",
       "alias": "Ritual Scarab",
-      "icon": ""
+      "icon": "ritual-scarab"
     },
     "TangledAltarUpsideMonsterScarabSulphite": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Sulphite Scarab",
       "alias": "Sulphite Scarab",
-      "icon": ""
+      "icon": "sulphite-scarab"
     },
     "CleansingAltarUpsideMonsterScarabUniques": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Titanic Scarab",
       "alias": "Titanic Scarab",
-      "icon": ""
+      "icon": "titanic-scarab"
     },
     "CleansingAltarUpsideMonsterScarabTorment": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Torment Scarab",
       "alias": "Torment Scarab",
-      "icon": ""
+      "icon": "torment-scarab"
     },
     "CleansingAltarUpsideMonsterScarabMercenaries": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Trarthan Scarab",
       "alias": "Trarthan Scarab",
-      "icon": ""
+      "icon": "trarthan-scarab"
     },
     "TangledAltarUpsideMonsterScarabUltimatum": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Ultimatum Scarab",
       "alias": "Ultimatum Scarab",
-      "icon": ""
+      "icon": "ultimatum-scarab"
     },
     "CleansingAltarUpsideMonsterVaalOrb": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Vaal Orb",
       "alias": "Vaal Orb",
-      "icon": ""
+      "icon": "vaal-orb"
     },
     "CleansingAltarDownsideMonsterIncreasedEvasion": {
       "text": "minions - (250-500)% increased Evasion Rating",
@@ -594,72 +594,72 @@
     "TangledAltarUpsideBossScarabAbyss": {
       "text": "boss + Final Boss drops (2-4) additional Abyss Scarabs",
       "alias": "Abyss Scarab",
-      "icon": ""
+      "icon": "abyss-scarab"
     },
     "CleansingAltarUpsideBossScarabStrongbox": {
       "text": "boss + Final Boss drops (2-4) additional Ambush Scarabs",
       "alias": "Ambush Scarab",
-      "icon": ""
+      "icon": "ambush-scarab"
     },
     "CleansingAltarUpsideBossScarabAnarchy": {
       "text": "boss + Final Boss drops (2-4) additional Anarchy Scarabs",
       "alias": "Anarchy Scarab",
-      "icon": ""
+      "icon": "anarchy-scarab"
     },
     "TangleAltarUpsideBossAncientOrb": {
       "text": "boss + Final Boss drops (2-4) additional Ancient Orbs",
       "alias": "Ancient Orb",
-      "icon": ""
+      "icon": "ancient-orb"
     },
     "TangledAltarUpsideBossScarabBeasts": {
       "text": "boss + Final Boss drops (2-4) additional Bestiary Scarabs",
       "alias": "Bestiary Scarab",
-      "icon": ""
+      "icon": "bestiary-scarab"
     },
     "TangledAltarUpsideBossScarabBetrayal": {
       "text": "boss + Final Boss drops (2-4) additional Betrayal Scarabs",
       "alias": "Betrayal Scarab",
-      "icon": ""
+      "icon": "betrayal-scarab"
     },
     "CleansingAltarUpsideBossScarabBeyond": {
       "text": "boss + Final Boss drops (2-4) additional Beyond Scarabs",
       "alias": "Beyond Scarab",
-      "icon": ""
+      "icon": "beyond-scarab"
     },
     "TangleAltarUpsideBossBlessedOrb": {
       "text": "boss + Final Boss drops (2-4) additional Blessed Orbs",
       "alias": "Blessed Orb",
-      "icon": ""
+      "icon": "blessed-orb"
     },
     "TangledAltarUpsideBossScarabBlight": {
       "text": "boss + Final Boss drops (2-4) additional Blight Scarabs",
       "alias": "Blight Scarab",
-      "icon": ""
+      "icon": "blight-scarab"
     },
     "TangledAltarUpsideBossScarabBreach": {
       "text": "boss + Final Boss drops (2-4) additional Breach Scarabs",
       "alias": "Breach Scarab",
-      "icon": ""
+      "icon": "breach-scarab"
     },
     "CleansingAltarUpsideBossScarabMaps": {
       "text": "boss + Final Boss drops (2-4) additional Cartography Scarabs",
       "alias": "Cartography Scarab",
-      "icon": ""
+      "icon": "cartography-scarab"
     },
     "CleansingAltarUpsideBossChaosOrb": {
       "text": "boss + Final Boss drops (2-4) additional Chaos Orbs",
       "alias": "Chaos Orb",
-      "icon": ""
+      "icon": "chaos-orb"
     },
     "TangleAltarUpsideBossChromaticOrb": {
       "text": "boss + Final Boss drops (2-4) additional Chromatic Orbs",
       "alias": "Chromatic Orb",
-      "icon": ""
+      "icon": "chromatic-orb"
     },
     "TangledAltarUpsideBossScarabDelirium": {
       "text": "boss + Final Boss drops (2-4) additional Delirium Scarabs",
       "alias": "Delirium Scarab",
-      "icon": ""
+      "icon": "delirium-scarab"
     },
     "TangledAltarUpsideBossDivinationCardsCurrencyBasic": {
       "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward Basic Currency",
@@ -729,192 +729,192 @@
     "CleansingAltarUpsideBossScarabDivination": {
       "text": "boss + Final Boss drops (2-4) additional Divination Scarabs",
       "alias": "Divination Scarab",
-      "icon": ""
+      "icon": "divination-scarab"
     },
     "TangleAltarUpsideBossDivineOrb": {
       "text": "boss + Final Boss drops (2-4) additional Divine Orbs",
       "alias": "Divine Orb",
-      "icon": ""
+      "icon": "divine-orb"
     },
     "CleansingAltarUpsideBossScarabDomination": {
       "text": "boss + Final Boss drops (2-4) additional Domination Scarabs",
       "alias": "Domination Scarab",
-      "icon": ""
+      "icon": "domination-scarab"
     },
     "CleansingAltarUpsideBossEnkindlingOrb": {
       "text": "boss + Final Boss drops (2-4) additional Enkindling Orbs",
       "alias": "Enkindling Orb",
-      "icon": ""
+      "icon": "enkindling-orb"
     },
     "CleansingAltarUpsideBossScarabEssence": {
       "text": "boss + Final Boss drops (2-4) additional Essence Scarabs",
       "alias": "Essence Scarab",
-      "icon": ""
+      "icon": "essence-scarab"
     },
     "TangleAltarUpsideBossExaltedOrb": {
       "text": "boss + Final Boss drops (2-4) additional Exalted Orbs",
       "alias": "Exalted Orb",
-      "icon": ""
+      "icon": "exalted-orb"
     },
     "TangledAltarUpsideBossScarabExpedition": {
       "text": "boss + Final Boss drops (2-4) additional Expedition Scarabs",
       "alias": "Expedition Scarab",
-      "icon": ""
+      "icon": "expedition-scarab"
     },
     "CleansingAltarUpsideBossGemcuttersPrism": {
       "text": "boss + Final Boss drops (2-4) additional Gemcutter's Prisms",
       "alias": "Gemcutters Prism",
-      "icon": ""
+      "icon": "gemcutters-prism"
     },
     "CleansingAltarUpsideBossGlassblowersBauble": {
       "text": "boss + Final Boss drops (2-4) additional Glassblower's Baubles",
       "alias": "Glassblowers Bauble",
-      "icon": ""
+      "icon": "glassblowers-bauble"
     },
     "CleansingAltarUpsideBossGrandEldritchEmber": {
       "text": "boss + Final Boss drops (2-4) additional Grand Eldritch Embers",
       "alias": "Grand Eldritch Ember",
-      "icon": ""
+      "icon": "grand-eldritch-ember"
     },
     "TangleAltarUpsideBossGrandEldritchIchor": {
       "text": "boss + Final Boss drops (2-4) additional Grand Eldritch Ichors",
       "alias": "Grand Eldritch Ichor",
-      "icon": ""
+      "icon": "grand-eldritch-ichor"
     },
     "CleansingAltarUpsideBossGreaterEldritchEmber": {
       "text": "boss + Final Boss drops (2-4) additional Greater Eldritch Embers",
       "alias": "Greater Eldritch Ember",
-      "icon": ""
+      "icon": "greater-eldritch-ember"
     },
     "TangleAltarUpsideBossGreaterEldritchIchor": {
       "text": "boss + Final Boss drops (2-4) additional Greater Eldritch Ichors",
       "alias": "Greater Eldritch Ichor",
-      "icon": ""
+      "icon": "greater-eldritch-ichor"
     },
     "TangledAltarUpsideBossScarabHarvest": {
       "text": "boss + Final Boss drops (2-4) additional Harvest Scarabs",
       "alias": "Harvest Scarab",
-      "icon": ""
+      "icon": "harvest-scarab"
     },
     "TangledAltarUpsideBossScarabIncursion": {
       "text": "boss + Final Boss drops (2-4) additional Incursion Scarabs",
       "alias": "Incursion Scarab",
-      "icon": ""
+      "icon": "incursion-scarab"
     },
     "CleansingAltarUpsideBossScarabInfluence": {
       "text": "boss + Final Boss drops (2-4) additional Influence Scarabs",
       "alias": "Influence Scarab",
-      "icon": ""
+      "icon": "influence-scarab"
     },
     "CleansingAltarUpsideBossInstillingOrb": {
       "text": "boss + Final Boss drops (2-4) additional Instilling Orbs",
       "alias": "Instilling Orb",
-      "icon": ""
+      "icon": "instilling-orb"
     },
     "TangleAltarUpsideBossJewellersOrb": {
       "text": "boss + Final Boss drops (2-4) additional Jeweller's Orbs",
       "alias": "Jewellers Orb",
-      "icon": ""
+      "icon": "jewellers-orb"
     },
     "TangledAltarUpsideBossScarabSettlers": {
       "text": "boss + Final Boss drops (2-4) additional Kalguuran Scarabs",
       "alias": "Kalguuran Scarab",
-      "icon": ""
+      "icon": "kalguuran-scarab"
     },
     "TangledAltarUpsideBossScarabLegion": {
       "text": "boss + Final Boss drops (2-4) additional Legion Scarabs",
       "alias": "Legion Scarab",
-      "icon": ""
+      "icon": "legion-scarab"
     },
     "CleansingAltarUpsideBossLesserEldritchEmber": {
       "text": "boss + Final Boss drops (2-4) additional Lesser Eldritch Embers",
       "alias": "Lesser Eldritch Ember",
-      "icon": ""
+      "icon": "lesser-eldritch-ember"
     },
     "TangleAltarUpsideBossLesserEldritchIchor": {
       "text": "boss + Final Boss drops (2-4) additional Lesser Eldritch Ichors",
       "alias": "Lesser Eldritch Ichor",
-      "icon": ""
+      "icon": "lesser-eldritch-ichor"
     },
     "CleansingAltarUpsideBossScarabMisc": {
       "text": "boss + Final Boss drops (2-4) additional Miscellaneous Scarabs",
       "alias": "Miscellaneous Scarab",
-      "icon": ""
+      "icon": "miscellaneous-scarab"
     },
     "TangleAltarUpsideBossOrbOfAlteration": {
       "text": "boss + Final Boss drops (2-4) additional Orbs of Alteration",
       "alias": "Alteration",
-      "icon": ""
+      "icon": "orb-of-alteration"
     },
     "CleansingAltarUpsideBossOrbOfAnnulment": {
       "text": "boss + Final Boss drops (2-4) additional Orbs of Annulment",
       "alias": "Annulment",
-      "icon": ""
+      "icon": "orb-of-annulment"
     },
     "CleansingAltarUpsideBossOrbOfBinding": {
       "text": "boss + Final Boss drops (2-4) additional Orbs of Binding",
       "alias": "Binding",
-      "icon": ""
+      "icon": "orb-of-binding"
     },
     "TangleAltarUpsideBossFusingOrb": {
       "text": "boss + Final Boss drops (2-4) additional Orbs of Fusing",
       "alias": "Fusing",
-      "icon": ""
+      "icon": "orb-of-fusing"
     },
     "CleansingAltarUpsideBossOrbOfRegret": {
       "text": "boss + Final Boss drops (2-4) additional Orbs of Regret",
       "alias": "Regret",
-      "icon": ""
+      "icon": "orb-of-regret"
     },
     "CleansingAltarUpsideBossOrbOfScouring": {
       "text": "boss + Final Boss drops (2-4) additional Orbs of Scouring",
       "alias": "Scouring",
-      "icon": ""
+      "icon": "orb-of-scouring"
     },
     "CleansingAltarUpsideBossOrbOfUnmaking": {
       "text": "boss + Final Boss drops (2-4) additional Orbs of Unmaking",
       "alias": "Unmaking",
-      "icon": ""
+      "icon": "orb-of-unmaking"
     },
     "TangleAltarUpsideBossRegalOrb": {
       "text": "boss + Final Boss drops (2-4) additional Regal Orbs",
       "alias": "Regal",
-      "icon": ""
+      "icon": "regal-orb"
     },
     "TangledAltarUpsideBossScarabRitual": {
       "text": "boss + Final Boss drops (2-4) additional Ritual Scarabs",
       "alias": "Ritual Scarab",
-      "icon": ""
+      "icon": "ritual-scarab"
     },
     "TangledAtlarUpsideBossScarabSulphite": {
       "text": "boss + Final Boss drops (2-4) additional Sulphite Scarabs",
       "alias": "Sulphite Scarab",
-      "icon": ""
+      "icon": "sulphite-scarab"
     },
     "CleansingAltarUpsideBossScarabUniques": {
       "text": "boss + Final Boss drops (2-4) additional Titanic Scarabs",
       "alias": "Titanic Scarab",
-      "icon": ""
+      "icon": "titanic-scarab"
     },
     "CleansingAltarUpsideBossScarabTorment": {
       "text": "boss + Final Boss drops (2-4) additional Torment Scarabs",
       "alias": "Torment Scarab",
-      "icon": ""
+      "icon": "torment-scarab"
     },
     "CleansingAltarUpsideBossScarabMercenaries": {
       "text": "boss + Final Boss drops (2-4) additional Trarthan Scarabs",
       "alias": "Trarthan Scarab",
-      "icon": ""
+      "icon": "trarthan-scarab"
     },
     "TangledAltarUpsideBossScarabUltimatum": {
       "text": "boss + Final Boss drops (2-4) additional Ultimatum Scarabs",
       "alias": "Ultimatum Scarab",
-      "icon": ""
+      "icon": "ultimatum-scarab"
     },
     "CleansingAltarUpsideBossVaalOrb": {
       "text": "boss + Final Boss drops (2-4) additional Vaal Orbs",
       "alias": "Vaal Orb",
-      "icon": ""
+      "icon": "vaal-orb"
     },
     "CleansingAltarDownsideBossIncreasedArmourAndEvasion": {
       "text": "boss - (100-200)% increased Armour / (100-200)% increased Evasion Rating",

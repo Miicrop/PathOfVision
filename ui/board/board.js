@@ -29,20 +29,23 @@ const ALTAR = { eater: ["Eater", "var(--eater)"], exarch: ["Exarch", "var(--exar
 const TARGET = { player: "Player", minions: "Minions", boss: "Map Boss" };
 const COLS = {
   upside: [
-    { id: null, name: "Unrated", tier: "var(--t-un)", hint: "New mods land here" },
+    { id: null, name: "Unrated", tier: "var(--t-un)" },
     { id: "b", name: "B", tier: "var(--t-b)" },
     { id: "a", name: "A", tier: "var(--t-a)" },
-    { id: "s", name: "S", tier: "var(--t-s)", hint: "Jackpot" },
+    { id: "s", name: "S", tier: "var(--t-s)" },
   ],
   downside: [
     { id: null, name: "Fine", tier: "var(--t-fine)", hint: "Unrated downsides count as fine" },
-    { id: "dangerous", name: "Dangerous", tier: "var(--t-danger)" },
+    { id: "dangerous", name: "Dangerous", tier: "var(--t-danger)", hint: "Gives a warning" },
     { id: "brick", name: "Brick", tier: "var(--t-brick)", hint: "Never take, unless the upside is S tier" },
   ],
 };
 const LISTS = { upside: "upsides", downside: "downsides" };   // profile keys
 
 let api, state, byId, profile, file;
+let dragging = null;                                   // id of the card being dragged
+const dropMark = document.createElement("div");         // gold line where the card will land
+dropMark.className = "drop-mark";
 const filter = { altar: "both", side: "all", target: "all", q: "" };
 const $ = id => document.getElementById(id);
 
@@ -106,8 +109,18 @@ function cardEl(m, colIndex, colCount) {
       <button type="button" data-move="1" aria-label="Move to higher column" ${profile.readOnly || colIndex === colCount - 1 ? "disabled" : ""}>›</button>
     </div>`;
   el.querySelector(".txt").textContent = text(m);
-  el.addEventListener("dragstart", e => { e.dataTransfer.setData("text/plain", m.id); el.classList.add("dragging"); });
-  el.addEventListener("dragend", () => el.classList.remove("dragging"));
+  el.addEventListener("dragstart", e => {
+    e.dataTransfer.setData("text/plain", m.id);
+    e.dataTransfer.effectAllowed = "move";
+    dragging = m.id;
+    requestAnimationFrame(() => el.classList.add("dragging"));   // after the browser took the drag image
+  });
+  el.addEventListener("dragend", () => {
+    dragging = null;
+    el.classList.remove("dragging");
+    dropMark.remove();
+    document.querySelectorAll(".col.over").forEach(c => c.classList.remove("over"));
+  });
   el.querySelectorAll("[data-move]").forEach(b => b.addEventListener("click", () => {
     const next = COLS[m.side][colIndex + Number(b.dataset.move)];
     if (next) moveCard(m.id, next.id, null);
@@ -128,25 +141,46 @@ function renderBoard(side) {
     list.className = "list";
     if (!ids.length) list.innerHTML = `<div class="empty">${profile.readOnly ? "No cards" : "Drop cards here"}</div>`;
     ids.forEach(id => list.appendChild(cardEl(byId[id], i, COLS[side].length)));
-    list.addEventListener("dragover", e => {
-      const id = document.querySelector(".card.dragging")?.dataset.id;
-      if (profile.readOnly || !id || byId[id].side !== side) return;
+    // The whole column is the drop target; over its header the card goes to the top.
+    colEl.addEventListener("dragover", e => {
+      if (profile.readOnly || !dragging || byId[dragging].side !== side) return;
       e.preventDefault();
-      list.classList.add("over");
+      e.dataTransfer.dropEffect = "move";
+      document.querySelectorAll(".col.over").forEach(c => c !== colEl && c.classList.remove("over"));
+      colEl.classList.add("over");
+      const cards = [...list.querySelectorAll(".card:not(.dragging)")];
+      const before = e.target.closest("header, .hint") ? cards[0]
+        : cards.find(el => e.clientY < el.getBoundingClientRect().top + el.offsetHeight / 2);
+      if (before) list.insertBefore(dropMark, before); else list.appendChild(dropMark);
+      autoScroll(list, e.clientY);
     });
-    list.addEventListener("dragleave", () => list.classList.remove("over"));
-    list.addEventListener("drop", e => {
+    colEl.addEventListener("dragleave", e => {
+      if (colEl.contains(e.relatedTarget)) return;
+      colEl.classList.remove("over");
+      if (dropMark.parentNode === list) dropMark.remove();
+    });
+    colEl.addEventListener("drop", e => {
       e.preventDefault();
-      list.classList.remove("over");
-      const id = e.dataTransfer.getData("text/plain");
+      const id = dragging;
       if (!id || byId[id].side !== side) return;
-      const after = [...list.querySelectorAll(".card:not(.dragging)")]
-        .find(el => e.clientY < el.getBoundingClientRect().top + el.offsetHeight / 2);
-      moveCard(id, col.id, after ? after.dataset.id : null);
+      let next = dropMark.nextElementSibling;
+      while (next && (!next.classList.contains("card") || next.classList.contains("dragging"))) next = next.nextElementSibling;
+      dropMark.remove();
+      moveCard(id, col.id, next ? next.dataset.id : null);
     });
     colEl.appendChild(list);
     wrap.appendChild(colEl);
   });
+}
+
+// While dragging near the top or bottom edge of a column or the window, scroll it.
+// dragover keeps firing while the pointer rests, so this runs continuously.
+function autoScroll(list, y) {
+  const r = list.getBoundingClientRect(), edge = 50, step = 18;
+  if (y < r.top + edge) list.scrollTop -= step;
+  else if (y > r.bottom - edge) list.scrollTop += step;
+  if (y < edge) window.scrollBy(0, -step);
+  else if (y > window.innerHeight - edge) window.scrollBy(0, step);
 }
 
 function renderProfiles() {

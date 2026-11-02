@@ -198,7 +198,7 @@ function headerEl(col, count, colCount) {
     const add = document.createElement("button");
     add.type = "button";
     add.className = "add-col";
-    add.textContent = "+ Column";
+    add.innerHTML = '<span class="plus" aria-hidden="true">+</span>Column';
     add.disabled = profile.readOnly;
     add.title = profile.readOnly ? "Read-only profile: duplicate it to add columns" : "Add a column left of this one";
     add.addEventListener("click", addColumn);

@@ -73,9 +73,17 @@ button.btn:disabled { opacity: .4; cursor: default; }
 .col header .tools button { background: transparent; border: 1px solid transparent; border-radius: 3px; color: var(--muted); cursor: pointer; padding: 0 5px; font-size: 13px; }
 .col header .tools button:hover:not(:disabled) { border-color: var(--line); color: var(--fg); }
 .col header .tools button:disabled { visibility: hidden; }
-.col header .add-col { background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; color: var(--fg); cursor: pointer; padding: 1px 8px; font-size: 12px; white-space: nowrap; }
-.col header .add-col:hover:not(:disabled) { border-color: var(--tier); }
-.col header .add-col:disabled { opacity: .4; cursor: default; }
+.col header:has(.add-col) { align-items: center; }
+.col header .add-col {
+  display: inline-flex; align-items: center; gap: 5px; margin-left: 4px; padding: 3px 11px 3px 9px;
+  border: 1px solid color-mix(in srgb, var(--tier) 55%, var(--line)); border-radius: 999px;
+  background: color-mix(in srgb, var(--tier) 14%, var(--panel-2)); color: var(--tier);
+  font: 600 12px/16px var(--font-body); letter-spacing: .02em; white-space: nowrap; cursor: pointer;
+  transition: background .12s, border-color .12s;
+}
+.col header .add-col .plus { font-size: 16px; line-height: 1; margin-top: -1px; }
+.col header .add-col:hover:not(:disabled) { background: color-mix(in srgb, var(--tier) 26%, var(--panel-2)); border-color: var(--tier); }
+.col header .add-col:disabled { opacity: .35; cursor: default; }
 .col .hint { font-size: 12px; color: var(--muted); padding: 0 10px 6px; }
 .list { display: flex; flex-direction: column; gap: 8px; padding: 6px 8px 10px; min-height: 90px; max-height: 62vh; overflow-y: auto; border-radius: 0 0 6px 6px; }
 .col.over .list { background: color-mix(in srgb, var(--tier) 10%, transparent); }

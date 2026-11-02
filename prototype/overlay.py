@@ -50,17 +50,21 @@ def _label(rich: str, align=Qt.AlignLeft) -> QLabel:
 
 
 class _Icons:
-    """Target icons: halves of the in-game altar icon, colored by altar type."""
+    """Target icons: the game's altar icon halves (top/bottom), colored by altar type.
+
+    Source: Art/2DArt/UIImages/InGame/AtlasAltar/4k/{Top,Bottom}Icon* plus the matching
+    *IconFrame sprite, extracted from the game bundles.
+    """
 
     def __init__(self):
-        self._cache: dict[tuple[str, str], QPixmap] = {}
+        self._cache: dict[tuple[str, str, str], QPixmap] = {}
 
-    def get(self, target: str | None, altar: str) -> QPixmap | None:
+    def get(self, target: str | None, position: str, altar: str) -> QPixmap | None:
         if target is None:
             return None
-        key = (target, altar)
+        key = (target, position, altar)
         if key not in self._cache:
-            pixmap = QPixmap(str(ASSETS / f"target_{target}_{altar}.png"))
+            pixmap = QPixmap(str(ASSETS / f"target_{target}_{position}_{altar}.png"))
             self._cache[key] = pixmap.scaledToHeight(ICON_HEIGHT, Qt.SmoothTransformation)
         return self._cache[key]
 
@@ -80,7 +84,7 @@ def _option_box(view: AltarView, position: str, icons: _Icons) -> QFrame:
     icon.setStyleSheet("background: transparent;")
     icon.setFixedWidth(int(ICON_HEIGHT * 2.1))
     icon.setAlignment(Qt.AlignCenter)
-    pixmap = icons.get(option.target, view.altar.altar)
+    pixmap = icons.get(option.target, position, view.altar.altar)
     if pixmap:
         icon.setPixmap(pixmap)
     row.addWidget(icon, 0, Qt.AlignTop)

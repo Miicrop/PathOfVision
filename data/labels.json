@@ -19,32 +19,32 @@
     "TangledAltarUpsidePlayerDuplicateDroppedCurrency": {
       "text": "player + Basic Currency Items dropped by slain Enemies have (15-30)% chance to be Duplicated",
       "alias": "Basic Currency Duplicated",
-      "icon": ""
+      "icon": "dup-basic-currency"
     },
     "TangledAltarUpsidePlayerDuplicateDroppedDivinationCards": {
       "text": "player + Divination Cards dropped by slain Enemies have (15-30)% chance to be Duplicated",
       "alias": "Divination Cards Duplicated",
-      "icon": ""
+      "icon": "dup-divination-cards"
     },
     "HardModeTangledAltarUpsidePlayerDuplicateDroppedGems": {
       "text": "player + Gems dropped by slain Enemies have (10-15)% chance to be Duplicated",
       "alias": "Gems Duplicated",
-      "icon": ""
+      "icon": "dup-gems"
     },
     "TangledAltarUpsidePlayerDuplicateDroppedMaps": {
       "text": "player + Maps dropped by slain Enemies have (15-30)% chance to be Duplicated",
       "alias": "Maps Duplicated",
-      "icon": ""
+      "icon": "dup-maps"
     },
     "TangledAltarUpsidePlayerDuplicateDroppedScarabs": {
       "text": "player + Scarabs dropped by slain Enemies have (15-30)% chance to be Duplicated",
       "alias": "Scarabs Duplicated",
-      "icon": ""
+      "icon": "dup-scarabs"
     },
     "TangledAltarUpsidePlayerDuplicateDroppedUniques": {
       "text": "player + Unique Items dropped by slain Enemies have (15-30)% chance to be Duplicated",
       "alias": "Uniques Duplicated",
-      "icon": ""
+      "icon": "dup-uniques"
     },
     "CleansingAltarDownsidePlayerBurningGroundWhenHit": {
       "text": "player - (15-20)% chance for Enemies to drop Burning Ground when Hitting you, no more than once every 2 seconds",
@@ -229,67 +229,67 @@
     "TangledAltarUpsideMonsterDivinationCardsCurrencyBasic": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards Basic Currency",
       "alias": "Div Card: Basic Currency",
-      "icon": ""
+      "icon": "div-card-basic-currency"
     },
     "TangledAltarUpsideMonsterDivinationCardsGems": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards Gems",
       "alias": "Div Card: Gems",
-      "icon": ""
+      "icon": "div-card-gems"
     },
     "TangledAltarUpsideMonsterDivinationCardsCurrencyLeague": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards League Currency",
       "alias": "Div Card: League Currency",
-      "icon": ""
+      "icon": "div-card-league-currency"
     },
     "TangledAltarUpsideMonsterDivinationCardsGemsLevelled": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards Levelled Gems",
       "alias": "Div Card: Levelled Gems",
-      "icon": ""
+      "icon": "div-card-levelled-gems"
     },
     "TangledAltarUpsideMonsterDivinationCardsGemsQuality": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards Quality Gems",
       "alias": "Div Card: Quality Gems",
-      "icon": ""
+      "icon": "div-card-quality-gems"
     },
     "CleansingAltarUpsideMonsterDivinationCardsUniqueJewellery": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards Unique Jewellery",
       "alias": "Div Card: Unique Jewellery",
-      "icon": ""
+      "icon": "div-card-unique-jewellery"
     },
     "CleansingAltarUpsideMonsterDivinationCardsCorrupted": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards a Corrupted Item",
       "alias": "Div Card: Corrupted Item",
-      "icon": ""
+      "icon": "div-card-corrupted-item"
     },
     "CleansingAltarUpsideMonsterDivinationCardsUniqueCorrupted": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards a Corrupted Unique Item",
       "alias": "Div Card: Corrupted Unique Item",
-      "icon": ""
+      "icon": "div-card-corrupted-unique-item"
     },
     "CleansingAltarUpsideMonsterDivinationCardsMap": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards a Map",
       "alias": "Div Card: Map",
-      "icon": ""
+      "icon": "div-card-map"
     },
     "CleansingAltarUpsideMonsterDivinationCardsUniqueArmour": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards a Unique Armour",
       "alias": "Div Card: Unique Armour",
-      "icon": ""
+      "icon": "div-card-unique-armour"
     },
     "CleansingAltarUpsideMonsterDivinationCardsMapUnique": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards a Unique Map",
       "alias": "Div Card: Unique Map",
-      "icon": ""
+      "icon": "div-card-unique-map"
     },
     "CleansingAltarUpsideMonsterDivinationCardsUniqueWeapon": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards a Unique Weapon",
       "alias": "Div Card: Unique Weapon",
-      "icon": ""
+      "icon": "div-card-unique-weapon"
     },
     "TangledAltarUpsideMonsterDivinationCardsGivesOtherDivinationCards": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards other Divination Cards",
       "alias": "Div Card: Div Card",
-      "icon": ""
+      "icon": "div-card-div-cards"
     },
     "CleansingAltarUpsideMonsterScarabDivination": {
       "text": "minions + (1.6-3.2)% chance to drop an additional Divination Scarab",
@@ -664,67 +664,67 @@
     "TangledAltarUpsideBossDivinationCardsCurrencyBasic": {
       "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward Basic Currency",
       "alias": "Div Card: Basic Currency",
-      "icon": ""
+      "icon": "div-card-basic-currency"
     },
     "TangledAltarUpsideBossDivinationCardsGems": {
       "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward Gems",
       "alias": "Div Card: Gems",
-      "icon": ""
+      "icon": "div-card-gems"
     },
     "TangledAltarUpsideBossDivinationCardsCurrencyLeague": {
       "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward League Currency",
       "alias": "Div Card: League Currency",
-      "icon": ""
+      "icon": "div-card-league-currency"
     },
     "TangledAltarUpsideBossDivinationCardsGemsLevelled": {
       "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward Levelled Gems",
       "alias": "Div Card: Levelled Gems",
-      "icon": ""
+      "icon": "div-card-levelled-gems"
     },
     "TangledAltarUpsideBossDivinationCardsGemsQuality": {
       "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward Quality Gems",
       "alias": "Div Card: Quality Gems",
-      "icon": ""
+      "icon": "div-card-quality-gems"
     },
     "CleansingAltarUpsideBossDivinationCardsUniqueJewellery": {
       "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward Unique Jewellery",
       "alias": "Div Card: Unique Jewellery",
-      "icon": ""
+      "icon": "div-card-unique-jewellery"
     },
     "CleansingAltarUpsideBossDivinationCardsCorrupted": {
       "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward a Corrupted Item",
       "alias": "Div Card: Corrupted Item",
-      "icon": ""
+      "icon": "div-card-corrupted-item"
     },
     "CleansingAltarUpsideBossDivinationCardsUniqueCorrupted": {
       "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward a Corrupted Unique Item",
       "alias": "Div Card: Corrupted Unique Item",
-      "icon": ""
+      "icon": "div-card-corrupted-unique-item"
     },
     "CleansingAltarUpsideBossDivinationCardsMap": {
       "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward a Map",
       "alias": "Div Card: Map",
-      "icon": ""
+      "icon": "div-card-map"
     },
     "CleansingAltarUpsideBossDivinationCardsUniqueArmour": {
       "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward a Unique Armour",
       "alias": "Div Card: Unique Armour",
-      "icon": ""
+      "icon": "div-card-unique-armour"
     },
     "CleansingAltarUpsideBossDivinationCardsMapUnique": {
       "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward a Unique Map",
       "alias": "Div Card: Unique Map",
-      "icon": ""
+      "icon": "div-card-unique-map"
     },
     "CleansingAltarUpsideBossDivinationCardsUniqueWeapon": {
       "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward a Unique Weapon",
       "alias": "Div Card: Unique Weapon",
-      "icon": ""
+      "icon": "div-card-unique-weapon"
     },
     "TangledAltarUpsideBossDivinationCardsGivesOtherDivinationCards": {
       "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward other Divination Cards",
       "alias": "Div Card: Div Card",
-      "icon": ""
+      "icon": "div-card-div-cards"
     },
     "CleansingAltarUpsideBossScarabDivination": {
       "text": "boss + Final Boss drops (2-4) additional Divination Scarabs",

@@ -27,11 +27,12 @@ VERDICT_COLORS = {TAKE: "#4fbf6a", CONSIDER: "#e0a33a", ADAPT: "#d65db1", AVOID:
                   NEUTRAL: "#9aa0a6", UNREADABLE: "#5d6168"}
 TIER_LABELS = {"s": ("S", "#f2c84b"), "a": ("A", "#b48cf0"), "b": ("B", "#6fa4dc"),
                "dangerous": ("Dangerous", "#e0a33a"), "brick": ("Brick", "#e05a4f")}
-TARGETS = {"player": "Player", "minions": "Eldritch Minions", "boss": "Map Boss", None: ""}
 MAX_ALTARS = 2
 MAX_LINE = 64
-ICON_HEIGHT = 46
-MOD_ICON_SIZE = 18
+ICON_HEIGHT = 54
+MOD_ICON_SIZE = 24
+FONT_SIZE = 15
+LEGEND_OVERLAP = 9   # px the verdict legend sticks out above the box border
 BOX_STYLE = "QFrame#{name} {{ background: rgba(12, 14, 20, 228); border: 2px solid {color}; border-radius: 6px; }}"
 
 
@@ -45,11 +46,11 @@ def _span(text: str, color: str, bold: bool = False) -> str:
     return f'<span style="color:{color};{weight}">{html.escape(text)}</span>'
 
 
-def _label(rich: str, align=Qt.AlignLeft) -> QLabel:
+def _label(rich: str, align=Qt.AlignLeft, size: int = FONT_SIZE) -> QLabel:
     label = QLabel(rich)
     label.setTextFormat(Qt.RichText)
     label.setAlignment(align | Qt.AlignVCenter)
-    label.setStyleSheet("QLabel { background: transparent; color: #d8d8d8; font-family: 'Segoe UI'; font-size: 13px; }")
+    label.setStyleSheet(f"QLabel {{ background: transparent; color: #d8d8d8; font-family: 'Segoe UI'; font-size: {size}px; }}")
     return label
 
 
@@ -90,7 +91,7 @@ def mod_text(match: Match, ocr_lines: list[str], labels: dict[str, Label]) -> st
     return text if len(text) <= MAX_LINE else text[:MAX_LINE - 1] + "…"
 
 
-def _option_box(view: AltarView, position: str, icons: _Icons, labels: dict[str, Label]) -> QFrame:
+def _option_box(view: AltarView, position: str, icons: _Icons, labels: dict[str, Label]) -> QWidget:
     option = next(o for o in view.altar.options if o.position == position)
     verdict = view.verdicts[position]
     color = VERDICT_COLORS[verdict.verdict]
@@ -108,15 +109,13 @@ def _option_box(view: AltarView, position: str, icons: _Icons, labels: dict[str,
     pixmap = icons.get(option.target, position, view.altar.altar)
     if pixmap:
         icon.setPixmap(pixmap)
-    row.addWidget(icon, 0, Qt.AlignTop)
+    row.addWidget(icon, 0, Qt.AlignVCenter)
 
     # One row per mod in columns: sign | mod icon | alias or text | tier
     grid = QGridLayout()
     grid.setHorizontalSpacing(6)
     grid.setVerticalSpacing(1)
-    grid.addWidget(_label(f"{_span(verdict.verdict, color, True)}&nbsp;&nbsp;{_span(TARGETS[option.target], '#9aa0a6')}"),
-                   0, 0, 1, 4)
-    for r, m in enumerate(sorted(option.matches, key=lambda m: m.card.side != "upside"), start=1):
+    for r, m in enumerate(sorted(option.matches, key=lambda m: m.card.side != "upside")):
         sign = _span("+", "#4fbf6a", True) if m.card.side == "upside" else _span("−", "#e05a4f", True)
         grid.addWidget(_label(sign), r, 0)
         label = labels.get(m.card.id)
@@ -130,9 +129,28 @@ def _option_box(view: AltarView, position: str, icons: _Icons, labels: dict[str,
         tier, tier_color = TIER_LABELS.get(verdict.tiers.get(m.card.id),
                                            ("Unrated" if m.card.side == "upside" else "Fine", "#6f757d"))
         grid.addWidget(_label(_span(tier, tier_color, True), Qt.AlignRight), r, 3)
+        grid.setRowMinimumHeight(r, MOD_ICON_SIZE)   # rows with and without icon look the same
+    grid.setColumnMinimumWidth(1, MOD_ICON_SIZE)     # texts line up across boxes
     grid.setColumnStretch(2, 1)
     row.addLayout(grid, 1)
-    return box
+    return _with_legend(box, _span(verdict.verdict, color, True))
+
+
+def _with_legend(box: QFrame, rich: str) -> QWidget:
+    """Put a small label on the box's top-left border, like a fieldset legend."""
+    wrapper = QWidget()
+    wrapper.setStyleSheet("background: transparent;")
+    layout = QVBoxLayout(wrapper)
+    layout.setContentsMargins(0, LEGEND_OVERLAP, 0, 0)
+    layout.addWidget(box)
+    legend = _label(rich, size=FONT_SIZE - 3)
+    legend.setParent(wrapper)
+    legend.setStyleSheet(legend.styleSheet().replace("background: transparent", "background: rgb(12, 14, 20)")
+                         + " QLabel { padding: 0 5px; border-radius: 3px; }")
+    legend.adjustSize()
+    legend.move(12, LEGEND_OVERLAP - legend.height() // 2 + 1)
+    legend.raise_()
+    return wrapper
 
 
 def _recommendation_box(view: AltarView) -> QFrame:

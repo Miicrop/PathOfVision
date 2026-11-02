@@ -41,13 +41,12 @@ def test_parse_ranges_sorts_and_applies_sign():
     assert parse_ranges("Enemies lose 6 Flask Charges every 3 seconds") == [[6, 6], [3, 3]]
 
 
-def test_only_spawnable_non_ruthless_altar_mods_are_kept():
+def test_only_spawnable_altar_mods_are_kept():
     cards = cards_by_id()
     variant_ids = {v["id"] for c in cards.values() for v in c["variants"]}
     assert "TangledAltarDownsideBossAllDamageCanChill" not in variant_ids
     assert "Strength1" not in variant_ids
-    assert not any(i.startswith("HardMode") for i in variant_ids)
-    assert len(variant_ids) == 5
+    assert len(variant_ids) == 7
 
 
 def test_side_target_and_altar():
@@ -58,12 +57,15 @@ def test_side_target_and_altar():
     assert sap["variants"][0]["templates"] == ["#% chance to be Sapped when Hit", "All Damage taken from Hits can Sap you"]
 
 
-def test_generic_mods_share_a_card():
+def test_generic_and_hard_mode_variants_share_a_card():
     rarity = cards_by_id()["TangledAltarUpsidePlayerIncreasedRarity"]
     assert rarity["altars"] == ["eater", "exarch"]
-    assert rarity["weights"] == {"eater": 165600, "exarch": 75225}
-    assert [v["id"] for v in rarity["variants"]] == [
-        "TangledAltarUpsidePlayerIncreasedRarity", "CleansingAltarUpsidePlayerIncreasedRarity"]
+    assert rarity["weights"] == {"eater": 166100, "exarch": 75225}
+    assert [v["hardMode"] for v in rarity["variants"]] == [False, False, True]
+
+    ichor = cards_by_id()["TangleAltarUpsideBossGrandEldritchIchor"]
+    assert [v["id"] for v in ichor["variants"]] == [
+        "TangleAltarUpsideBossGrandEldritchIchor", "HardModeTangleAltarUpsideBossGrandEldritchIchor"]
 
 
 def test_build_is_deterministic():

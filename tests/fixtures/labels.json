@@ -1,0 +1,1097 @@
+{
+ "screen_02.png": [
+  {
+   "icon": [
+    956,
+    1134
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "TangledAltarDownsideBossMaxLifeAsEnergyShield",
+     "TangledAltarDownsideBossPhysToAddAsLightning",
+     "TangledAltarDownsideBossCoveredInFrostOnHit",
+     "TangleAltarUpsideBossFusingOrb",
+     "CleansingAltarUpsideBossDivinationCardsUniqueJewellery"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerLightningMonsterAura",
+     "TangledAltarDownsidePlayerNonDamagingAilmentsReflectedToSelf",
+     "TangledAltarDownsidePlayerTaintedPower",
+     "TangledAltarUpsidePlayerIncreasedRarity",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   }
+  },
+  {
+   "icon": [
+    1106,
+    196
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "boss",
+    "mods": null,
+    "note": "hidden under the buff bar"
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerChilledGroundWhenHit",
+     "TangledAltarDownsidePlayerSapped",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   }
+  }
+ ],
+ "screen_03.png": [
+  {
+   "icon": [
+    910,
+    394
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "TangledAltarDownsideBossMaxLifeAsEnergyShield",
+     "TangledAltarDownsideBossPhysToAddAsLightning",
+     "TangledAltarDownsideBossCoveredInFrostOnHit",
+     "TangleAltarUpsideBossFusingOrb",
+     "CleansingAltarUpsideBossDivinationCardsUniqueJewellery"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerLightningMonsterAura",
+     "TangledAltarDownsidePlayerNonDamagingAilmentsReflectedToSelf",
+     "TangledAltarDownsidePlayerTaintedPower",
+     "TangledAltarUpsidePlayerIncreasedRarity",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   }
+  }
+ ],
+ "screen_04.png": [
+  {
+   "icon": [
+    2762,
+    864
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "TangledAltarDownsideBossPhysicalDamageReduction",
+     "TangledAltarDownsideBossPhysToAddAsCold",
+     "TangleAltarUpsideBossOrbOfAlteration"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerChilledGroundWhenHit",
+     "TangledAltarDownsidePlayerSapped",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   }
+  }
+ ],
+ "screen_05.png": [
+  {
+   "icon": [
+    954,
+    498
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "TangledAltarDownsideBossCoveredInFrostOnHit",
+     "TangledAltarDownsideBossPhysicalDamageReduction",
+     "TangledAltarUpsideBossDivinationCardsCurrencyBasic"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerReducedColdAndLightningResist",
+     "TangledAltarDownsidePlayerReducedPhysicalDamageReduction",
+     "TangledAltarUpsidePlayerIncreasedQuantity"
+    ]
+   }
+  }
+ ],
+ "screen_06.png": [
+  {
+   "icon": [
+    2774,
+    904
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "TangledAltarDownsideBossPenetrateElementalResistances",
+     "TangledAltarDownsideBossColdAndLightningResist",
+     "TangledAltarDownsideBossMaxLifeAsEnergyShield",
+     "TangleAltarUpsideBossOrbOfAlteration",
+     "CleansingAltarUpsideBossLesserEldritchEmber"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterColdDamage",
+     "TangledAltarDownsideMonsterShockedGroundOnDeath",
+     "TangledAltarDownsideMonsterExtraProjectiles",
+     "TangleAltarUpsideMonsterJewellersOrb",
+     "CleansingAltarUpsideMonsterLesserEldritchEmber"
+    ],
+    "note": "two lines partly covered by a portal icon"
+   }
+  }
+ ],
+ "screen_07.png": [
+  {
+   "icon": [
+    936,
+    590
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterLightningDamage",
+     "TangledAltarDownsideMonsterChilledGroundOnDeath",
+     "TangledAltarDownsideMonsterRemoveChargeOnHit",
+     "TangleAltarUpsideMonsterOrbOfAlteration",
+     "CleansingAltarUpsideMonsterChaosOrb"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerSapped",
+     "TangledAltarDownsidePlayerShockedGroundWhenHit",
+     "TangledAltarDownsidePlayerChilledGroundWhenHit",
+     "TangledAltarUpsidePlayerIncreasedRarity",
+     "TangledAltarUpsidePlayerDuplicateDroppedUniques"
+    ]
+   }
+  }
+ ],
+ "screen_08.png": [
+  {
+   "icon": [
+    1078,
+    928
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "TangledAltarDownsideBossBlindOnHit",
+     "TangledAltarDownsideBossPhysToAddAsLightning",
+     "TangleAltarUpsideBossLesserEldritchIchor"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerColdMonsterAura",
+     "TangledAltarDownsidePlayerTaintedEndurance",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   }
+  }
+ ],
+ "screen_09.png": [
+  {
+   "icon": [
+    1318,
+    992
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterChilledGroundOnDeath",
+     "TangledAltarDownsideMonsterColdDamage",
+     "TangleAltarUpsideMonsterLesserEldritchIchor"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerTaintedEndurance",
+     "TangledAltarDownsidePlayerSapped",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   }
+  }
+ ],
+ "screen_10.png": [
+  {
+   "icon": [
+    856,
+    1152
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "TangledAltarDownsideBossPhysicalDamageReduction",
+     "TangledAltarDownsideBossMaxLifeAsEnergyShield",
+     "TangleAltarUpsideBossLesserEldritchIchor"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerReducedPhysicalDamageReduction",
+     "TangledAltarDownsidePlayerColdMonsterAura",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ],
+    "note": "line starts covered by the flask bar"
+   }
+  }
+ ],
+ "screen_11.png": [
+  {
+   "icon": [
+    1248,
+    776
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "TangledAltarDownsideBossPhysicalDamageReduction",
+     "TangledAltarDownsideBossMaxLifeAsEnergyShield",
+     "TangleAltarUpsideBossLesserEldritchIchor"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerReducedPhysicalDamageReduction",
+     "TangledAltarDownsidePlayerColdMonsterAura",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   }
+  }
+ ],
+ "screen_12.png": [
+  {
+   "icon": [
+    2596,
+    314
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterShockedGroundOnDeath",
+     "TangledAltarDownsideMonsterColdAndLightningResist",
+     "TangledAltarDownsideMonsterSupressSpells",
+     "TangleAltarUpsideMonsterOrbOfAlteration",
+     "CleansingAltarUpsideMonsterChaosOrb"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerChilledGroundWhenHit",
+     "TangledAltarDownsidePlayerReducedColdAndLightningResist",
+     "TangledAltarDownsidePlayerTaintedFrenzy",
+     "TangledAltarUpsidePlayerDuplicateDroppedScarabs",
+     "TangledAltarUpsidePlayerIncreasedQuantity"
+    ]
+   }
+  }
+ ],
+ "screen_13.png": [
+  {
+   "icon": [
+    2242,
+    560
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "TangledAltarDownsideBossPhysToAddAsLightning",
+     "TangledAltarDownsideBossPhysToAddAsCold",
+     "TangledAltarUpsideBossDivinationCardsCurrencyBasic"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterColdAndLightningResist",
+     "TangledAltarDownsideMonsterExtraProjectiles",
+     "TangleAltarUpsideMonsterJewellersOrb"
+    ],
+    "note": "a monster life bar crosses the projectiles line"
+   }
+  },
+  {
+   "icon": [
+    1390,
+    1250
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "TangledAltarDownsideBossSuppressSpells",
+     "TangledAltarDownsideBossPhysicalDamageReduction",
+     "TangledAltarDownsideBossColdAndLightningResist",
+     "TangledAltarUpsideBossDivinationCardsCurrencyBasic",
+     "CleansingAltarUpsideBossLesserEldritchEmber"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": null,
+    "note": "cut off by the bottom HUD bar"
+   }
+  }
+ ],
+ "screen_14.png": [
+  {
+   "icon": [
+    998,
+    332
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "boss",
+    "mods": null,
+    "note": "suppress lines hidden under the buff bar"
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerReducedColdAndLightningResist",
+     "TangledAltarDownsidePlayerLightningMonsterAura",
+     "TangledAltarDownsidePlayerShockedGroundWhenHit",
+     "TangledAltarUpsidePlayerDuplicateDroppedUniques",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   }
+  }
+ ],
+ "screen_15.png": [
+  {
+   "icon": [
+    1736,
+    1036
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "TangledAltarDownsideBossSuppressSpells",
+     "TangledAltarDownsideBossPhysicalDamageReduction",
+     "TangledAltarDownsideBossColdAndLightningResist",
+     "TangledAltarUpsideBossDivinationCardsCurrencyBasic",
+     "CleansingAltarUpsideBossLesserEldritchEmber"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerReducedColdAndLightningResist",
+     "TangledAltarDownsidePlayerLightningMonsterAura",
+     "TangledAltarDownsidePlayerShockedGroundWhenHit",
+     "TangledAltarUpsidePlayerDuplicateDroppedUniques",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   }
+  },
+  {
+   "icon": [
+    2462,
+    430
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "TangledAltarDownsideBossPhysToAddAsLightning",
+     "TangledAltarDownsideBossPhysToAddAsCold",
+     "TangledAltarUpsideBossDivinationCardsCurrencyBasic"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterColdAndLightningResist",
+     "TangledAltarDownsideMonsterExtraProjectiles",
+     "TangleAltarUpsideMonsterJewellersOrb"
+    ]
+   }
+  }
+ ],
+ "screen_16.png": [
+  {
+   "icon": [
+    1154,
+    590
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerColdMonsterAura",
+     "TangledAltarDownsidePlayerTaintedPower",
+     "TangledAltarDownsidePlayerSapped",
+     "TangledAltarUpsidePlayerIncreasedQuantity",
+     "TangledAltarUpsidePlayerIncreasedQuantity"
+    ]
+   },
+   "bottom": {
+    "target": "boss",
+    "mods": [
+     "TangledAltarDownsideBossPenetrateElementalResistances",
+     "TangledAltarDownsideBossCoveredInFrostOnHit",
+     "TangledAltarDownsideBossMaxLifeAsEnergyShield",
+     "TangledAltarUpsideBossDivinationCardsCurrencyBasic",
+     "CleansingAltarUpsideBossDivinationCardsUniqueWeapon"
+    ]
+   }
+  }
+ ],
+ "screen_17.png": [
+  {
+   "icon": [
+    2388,
+    230
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterPhysicalDamageReduction",
+     "TangledAltarDownsideMonsterSupressSpells",
+     "TangleAltarUpsideMonsterJewellersOrb"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerNonDamagingAilmentsReflectedToSelf",
+     "TangledAltarDownsidePlayerRandomProjectileDirection",
+     "TangledAltarUpsidePlayerDuplicateDroppedMaps"
+    ]
+   }
+  }
+ ],
+ "screen_18.png": [
+  {
+   "icon": [
+    2556,
+    566
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterOverwhelm",
+     "TangledAltarDownsideMonsterGraspingVineStackOnHit",
+     "TangledAltarDownsideMonsterColdDamage",
+     "TangledAltarUpsideMonsterScarabHarvest",
+     "CleansingAltarUpsideMonsterInstillingOrb"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerReducedPhysicalDamageReduction",
+     "TangledAltarDownsidePlayerChilledGroundWhenHit",
+     "TangledAltarDownsidePlayerTaintedEndurance",
+     "TangledAltarUpsidePlayerDuplicateDroppedCurrency",
+     "TangledAltarUpsidePlayerDuplicateDroppedMaps"
+    ]
+   }
+  }
+ ],
+ "screen_19.png": [
+  {
+   "icon": [
+    2874,
+    550
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerReducedPhysicalDamageReduction",
+     "TangledAltarDownsidePlayerChilledGroundWhenHit",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterGraspingVineStackOnHit",
+     "TangledAltarDownsideMonsterColdAndLightningResist",
+     "TangledAltarUpsideMonsterDivinationCardsCurrencyBasic"
+    ]
+   }
+  }
+ ],
+ "screen_20.png": [
+  {
+   "icon": [
+    744,
+    416
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterSupressSpells",
+     "TangledAltarDownsideMonsterShockedGroundOnDeath",
+     "TangleAltarUpsideMonsterGreaterEldritchIchor"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerColdMonsterAura",
+     "TangledAltarDownsidePlayerShockedGroundWhenHit",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   }
+  }
+ ],
+ "screen_21.png": [
+  {
+   "icon": [
+    2432,
+    1010
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterOverwhelm",
+     "TangledAltarDownsideMonsterChilledGroundOnDeath",
+     "TangledAltarUpsideMonsterDivinationCardsCurrencyBasic"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerTaintedFrenzy",
+     "TangledAltarDownsidePlayerLightningMonsterAura",
+     "TangledAltarUpsidePlayerDuplicateDroppedScarabs"
+    ],
+    "note": "end of the scarab line covered by an icon"
+   }
+  }
+ ],
+ "screen_22.png": [
+  {
+   "icon": [
+    522,
+    584
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "TangledAltarDownsideBossMaxLifeAsEnergyShield",
+     "TangledAltarDownsideBossPenetrateElementalResistances",
+     "TangledAltarDownsideBossPhysToAddAsLightning",
+     "TangleAltarUpsideBossOrbOfAlteration",
+     "CleansingAltarUpsideBossOrbOfUnmaking"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterChilledGroundOnDeath",
+     "TangledAltarDownsideMonsterSupressSpells",
+     "TangledAltarDownsideMonsterExtraProjectiles",
+     "TangledAltarUpsideMonsterDivinationCardsGems",
+     "CleansingAltarUpsideMonsterChaosOrb"
+    ]
+   }
+  }
+ ],
+ "screen_23.png": [
+  {
+   "icon": [
+    2532,
+    592
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "CleansingAltarDownsideBossPhysToAddAsFire",
+     "CleansingAltarDownsideBossCoveredInAshOnHit",
+     "CleansingAltarUpsideBossDivinationCardsUniqueArmour",
+     "TangleAltarUpsideBossLesserEldritchIchor"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerChaosDegenDuringFlaskDuration",
+     "CleansingAltarDownsidePlayerIncreasedFlaskChargesUsed",
+     "TangledAltarUpsidePlayerIncreasedRarity",
+     "TangledAltarUpsidePlayerDuplicateDroppedCurrency"
+    ]
+   }
+  }
+ ],
+ "screen_24.png": [
+  {
+   "icon": [
+    2376,
+    566
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterFireDamage",
+     "CleansingAltarUpsideMonsterChaosOrb"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerReducedFireAndChaosResist",
+     "TangledAltarUpsidePlayerIncreasedQuantity"
+    ]
+   }
+  }
+ ],
+ "screen_25.png": [
+  {
+   "icon": [
+    2352,
+    398
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "CleansingAltarDownsideBossRemoveFlaskChargeOnHit",
+     "CleansingAltarUpsideBossOrbOfUnmaking"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerBurningGroundWhenHit",
+     "TangledAltarUpsidePlayerIncreasedQuantity"
+    ]
+   }
+  }
+ ],
+ "screen_26.png": [
+  {
+   "icon": [
+    612,
+    784
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "CleansingAltarDownsideBossRemoveFlaskChargeOnHit",
+     "CleansingAltarUpsideBossOrbOfUnmaking"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerBurningGroundWhenHit",
+     "TangledAltarUpsidePlayerIncreasedQuantity"
+    ]
+   }
+  }
+ ],
+ "screen_27.png": [
+  {
+   "icon": [
+    2508,
+    832
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerFireMonsterAura",
+     "TangledAltarUpsidePlayerDuplicateDroppedCurrency"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterIncreasedEvasion",
+     "CleansingAltarUpsideMonsterOrbOfScouring"
+    ]
+   }
+  }
+ ],
+ "screen_28.png": [
+  {
+   "icon": [
+    2008,
+    656
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerMeteorOnFlaskUse",
+     "TangledAltarUpsidePlayerDuplicateDroppedMaps"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterChaosDamage",
+     "CleansingAltarUpsideMonsterScarabBeyond"
+    ]
+   }
+  }
+ ],
+ "screen_29.png": [
+  {
+   "icon": [
+    1280,
+    288
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterChaosDamage",
+     "CleansingAltarUpsideMonsterDivinationCardsMap"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerChaosDegenDuringFlaskDuration",
+     "TangledAltarUpsidePlayerIncreasedQuantity"
+    ]
+   }
+  },
+  {
+   "icon": [
+    2012,
+    134
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerBurningGroundWhenHit",
+     "TangledAltarUpsidePlayerIncreasedQuantity"
+    ],
+    "note": "header above the screen edge"
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterFireAndChaosResist",
+     "CleansingAltarUpsideMonsterOrbOfUnmaking"
+    ],
+    "note": "gold labels and a life bar overlap the box"
+   }
+  }
+ ],
+ "screen_30.png": [
+  {
+   "icon": [
+    2440,
+    652
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerBurningGroundWhenHit",
+     "TangledAltarUpsidePlayerIncreasedQuantity"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterFireAndChaosResist",
+     "CleansingAltarUpsideMonsterOrbOfUnmaking"
+    ]
+   }
+  },
+  {
+   "icon": [
+    1544,
+    898
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterChaosDamage",
+     "CleansingAltarUpsideMonsterDivinationCardsMap"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerChaosDegenDuringFlaskDuration",
+     "TangledAltarUpsidePlayerIncreasedQuantity"
+    ]
+   }
+  }
+ ],
+ "screen_31.png": [
+  {
+   "icon": [
+    2440,
+    652
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerBurningGroundWhenHit",
+     "TangledAltarUpsidePlayerIncreasedQuantity"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterFireAndChaosResist",
+     "CleansingAltarUpsideMonsterOrbOfUnmaking"
+    ]
+   }
+  }
+ ],
+ "screen_32.png": [
+  {
+   "icon": [
+    772,
+    484
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterChaosDamage",
+     "CleansingAltarUpsideMonsterChaosOrb"
+    ]
+   },
+   "bottom": {
+    "target": "boss",
+    "mods": [
+     "CleansingAltarDownsideBossRemoveFlaskChargeOnHit",
+     "CleansingAltarUpsideBossOrbOfUnmaking"
+    ]
+   }
+  }
+ ],
+ "screen_33.png": [
+  {
+   "icon": [
+    2588,
+    528
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerMeteorOnFlaskUse",
+     "TangledAltarUpsidePlayerIncreasedQuantity"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterIncreasedEvasion",
+     "CleansingAltarUpsideMonsterDivinationCardsCorrupted"
+    ]
+   }
+  }
+ ],
+ "screen_34.png": [
+  {
+   "icon": [
+    2326,
+    408
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterFlaskDegenOnHit",
+     "CleansingAltarUpsideMonsterGreaterEldritchEmber"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerIncreasedFlaskChargesUsed",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   }
+  }
+ ],
+ "screen_35.png": [
+  {
+   "icon": [
+    2608,
+    508
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterExposureOnHit",
+     "CleansingAltarUpsideMonsterGrandEldritchEmber"
+    ]
+   },
+   "bottom": {
+    "target": "boss",
+    "mods": [
+     "CleansingAltarDownsideBossFireAndChaosResist",
+     "CleansingAltarUpsideBossOrbOfBinding"
+    ]
+   }
+  }
+ ],
+ "screen_36.png": [
+  {
+   "icon": [
+    1156,
+    904
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerBurningGroundWhenHit",
+     "TangledAltarUpsidePlayerDuplicateDroppedScarabs"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterConsecratedGroundOnDeath",
+     "CleansingAltarUpsideMonsterDivinationCardsUniqueWeapon"
+    ]
+   }
+  }
+ ],
+ "screen_37.png": [
+  {
+   "icon": [
+    902,
+    496
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterBurningGroundOnDeath",
+     "CleansingAltarUpsideMonsterDivinationCardsCorrupted"
+    ]
+   },
+   "bottom": {
+    "target": "boss",
+    "mods": [
+     "CleansingAltarDownsideBossHinderAura",
+     "CleansingAltarUpsideBossDivinationCardsUniqueWeapon"
+    ]
+   }
+  }
+ ],
+ "screen_38.png": [
+  {
+   "icon": [
+    2378,
+    624
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerMeteorOnFlaskUse",
+     "CleansingAltarDownsidePlayerChaosMonsterAura",
+     "TangledAltarUpsidePlayerDuplicateDroppedDivinationCards",
+     "TangledAltarUpsidePlayerIncreasedQuantity"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterFireDamage",
+     "CleansingAltarDownsideMonsterFireAndChaosResist",
+     "CleansingAltarUpsideMonsterGreaterEldritchEmber",
+     "TangledAltarUpsideMonsterDivinationCardsCurrencyLeague"
+    ]
+   }
+  }
+ ],
+ "screen_39.png": [
+  {
+   "icon": [
+    610,
+    774
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerIncreasedFlaskChargesUsed",
+     "TangledAltarUpsidePlayerIncreasedQuantity"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterConsecratedGroundOnDeath",
+     "CleansingAltarUpsideMonsterGlassblowersBauble"
+    ]
+   }
+  }
+ ],
+ "screen_40.png": [
+  {
+   "icon": [
+    814,
+    600
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerBurningGroundWhenHit",
+     "TangledAltarUpsidePlayerIncreasedQuantity"
+    ]
+   },
+   "bottom": {
+    "target": "boss",
+    "mods": [
+     "CleansingAltarDownsideBossFireAndChaosResist",
+     "CleansingAltarUpsideBossDivinationCardsUniqueJewellery"
+    ]
+   }
+  }
+ ]
+}

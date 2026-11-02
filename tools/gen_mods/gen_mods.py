@@ -31,8 +31,8 @@ ALTAR_TAGS = {"tangle_altar": "eater", "cleansing_fire_altar": "exarch"}
 TARGETS = {"Player": "player", "Monster": "minions", "Boss": "boss"}
 
 # Game IDs are inconsistent ("TangledAltar", "TangleAltar", "TangledAtlar",
-# "CleansingAltar"), so only this part of the ID is trusted.
-SIDE_TARGET_RE = re.compile(r"(Upside|Downside)(Boss|Monster|Player)")
+# "CleansingAltar", "HardMode..."), so only this part of the ID is trusted.
+SIDE_TARGET_RE = re.compile(r"(Upside|Downside)(Boss|Monster|Player)(\w*)$")
 RANGE_RE = re.compile(r"\((-?\d+(?:\.\d+)?)-(-?\d+(?:\.\d+)?)\)")
 NUMBER_RE = re.compile(r"(?<![\w.#])\d+(?:\.\d+)?")
 VALUE_RE = re.compile(r"(-?)(?:\((-?\d+(?:\.\d+)?)-(-?\d+(?:\.\d+)?)\)|(?<![\w.])(\d+(?:\.\d+)?))")
@@ -60,12 +60,10 @@ def _num(value: float) -> float | int:
 
 def parse_variant(mod_id: str, mod: dict) -> dict | None:
     """Turn one raw game mod into a variant, or None if it cannot spawn."""
-    if mod_id.startswith("HardMode"):  # Ruthless-only rolls, out of scope
-        return None
     match = SIDE_TARGET_RE.search(mod_id)
     if not match:
         raise ValueError(f"unexpected altar mod id: {mod_id}")
-    side, target = match.groups()
+    side, target, suffix = match.groups()
 
     spawning = [w for w in mod["spawn_weights"] if w["weight"] > 0 and w["tag"] in ALTAR_TAGS]
     if not spawning:
@@ -79,6 +77,9 @@ def parse_variant(mod_id: str, mod: dict) -> dict | None:
         "altar": ALTAR_TAGS[spawning[0]["tag"]],
         "side": side.lower(),
         "target": TARGETS[target],
+        # HardMode variants roll lower values and show up on both altar types in practice
+        "hardMode": mod_id.startswith("HardMode"),
+        "suffix": suffix,
         "lines": lines,
         "templates": [to_template(line) for line in lines],
         "ranges": [r for line in lines for r in parse_ranges(line)],
@@ -87,15 +88,40 @@ def parse_variant(mod_id: str, mod: dict) -> dict | None:
 
 
 def group_variants(variants: list[dict]) -> list[list[dict]]:
-    """Group variants into cards: the same side, target and text on both altars is one generic card."""
+    """Group variants into cards.
+
+    Two variants share a card when they have the same side, target and text
+    templates (generic mods on both altars), or the same altar and ID suffix
+    (a HardMode variant and its normal counterpart, sometimes worded slightly differently).
+    """
+    parent = list(range(len(variants)))
+
+    def find(i: int) -> int:
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+
+    seen: dict[tuple, int] = {}
+    for i, v in enumerate(variants):
+        keys = [
+            ("text", v["side"], v["target"], tuple(v["templates"])),
+            ("suffix", v["side"], v["target"], v["altar"], v["suffix"]),
+        ]
+        for key in keys:
+            if key in seen:
+                parent[find(i)] = find(seen[key])
+            else:
+                seen[key] = i
+
     groups = defaultdict(list)
-    for v in variants:
-        groups[(v["side"], v["target"], tuple(v["templates"]))].append(v)
+    for i, v in enumerate(variants):
+        groups[find(i)].append(v)
     return list(groups.values())
 
 
 def build_card(group: list[dict]) -> dict:
-    group = sorted(group, key=lambda v: (v["altar"], v["id"]))
+    group = sorted(group, key=lambda v: (v["hardMode"], v["altar"], v["id"]))
     primary = group[0]
     weights: dict[str, int] = {}
     for v in group:
@@ -108,7 +134,7 @@ def build_card(group: list[dict]) -> dict:
         "lines": primary["lines"],
         "weights": weights,
         "variants": [
-            {k: v[k] for k in ("id", "altar", "lines", "templates", "ranges", "weight")}
+            {k: v[k] for k in ("id", "altar", "hardMode", "lines", "templates", "ranges", "weight")}
             for v in group
         ],
     }

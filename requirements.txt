@@ -1,0 +1,12 @@
+# Prototype (Windows): python -m venv .venv && .venv\Scripts\pip install -r requirements.txt
+opencv-python
+numpy
+rapidfuzz
+winrt-runtime
+winrt-Windows.Foundation
+winrt-Windows.Foundation.Collections
+winrt-Windows.Globalization
+winrt-Windows.Graphics.Imaging
+winrt-Windows.Media.Ocr
+winrt-Windows.Storage.Streams
+pytest

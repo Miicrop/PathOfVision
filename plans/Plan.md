@@ -23,7 +23,7 @@ Settings mockup: https://claude.ai/artifact/YJLU2dYUSPTziV5WrNxDKv
 | Trigger | Continuous scan, no hotkey required |
 | Scan pipeline | Two stages: cheap detection (3–5 Hz) → OCR + matching only on a hit, cached per altar |
 | Display | Fixed HUD panel, no frames around the in-game boxes (characters move too fast) |
-| Altar type | Detected automatically (icon color or matched mod), no user setting |
+| Altar type | Detected automatically from the icon color, no user setting. Only informational: mods of the other altar type do appear (see Phase 2) |
 | Mod data | Auto-generated `mods.json` with stable IDs; weight 0 mods excluded |
 | Settings UI | Tier board modeled on poedb's altar table, profiles, instant apply |
 | Tech path | Python prototype first, then port to a distributable app |
@@ -107,11 +107,12 @@ Your call: check the Dangerous downside against your build.
       "side": "upside",
       "target": "player",
       "lines": ["(15-30)% increased Rarity of Items found in this Area"],
-      "weights": { "eater": 165600, "exarch": 75225 },
+      "weights": { "eater": 166100, "exarch": 75225 },
       "variants": [
         {
           "id": "TangledAltarUpsidePlayerIncreasedRarity",
           "altar": "eater",
+          "hardMode": false,
           "lines": ["(15-30)% increased Rarity of Items found in this Area"],
           "templates": ["#% increased Rarity of Items found in this Area"],
           "ranges": [[15, 30]],
@@ -123,12 +124,12 @@ Your call: check the Dangerous downside against your build.
 }
 ```
 
-- **Card vs. variant:** one entry in `mods` is one card on the board. A card groups game mods ("variants") with the same side, target and text on both altars (generic mods).
-- **Ruthless excluded:** `HardMode*` mods (most likely Ruthless-only rolls) are skipped by the generator.
-- **Card id** = id of the first variant (sorted by altar, then id). Profiles store card ids. If a card id ever changes, a loader can still resolve an old id through `variants[].id`.
+- **Card vs. variant:** one entry in `mods` is one card on the board. A card groups game mods ("variants") that are the same effect: the same text on both altars (generic mods) and `HardMode*` variants of a mod (lower rolls, sometimes worded slightly differently).
+- **HardMode variants** are not Ruthless-only: they show up in normal maps, on both altar types (e.g. "1.9% chance to drop an additional Lesser Eldritch Ember" on an Eater altar). When exactly they spawn is unknown.
+- **Card id** = id of the first normal variant (sorted by HardMode, altar, id). Profiles store card ids. If a card id ever changes, a loader can still resolve an old id through `variants[].id`.
 - **Altar / side / target** come from the spawn tags (`tangle_altar` = eater, `cleansing_fire_altar` = exarch; the blocked `primordial_altar_upside/downside` tag gives the side) and the `Upside|Downside` + `Boss|Monster|Player` part of the id. The rest of the game ids is inconsistent (`TangledAltar`, `TangleAltar`, `TangledAtlar`, `CleansingAltar`) and not used.
 - **templates:** every value or range replaced by `#`, signs kept (`-(60-40)%` → `-#%`). The same function normalizes OCR text, so matching is a template comparison.
-- **ranges:** one `[low, high]` per value in display order, sorted and signed (`(20-10)% reduced` → `[10, 20]`).
+- **ranges:** one `[low, high]` per value in display order, sorted and signed (`(20-10)% reduced` → `[10, 20]`). These are base values: atlas passives raise the effect of altar mods, so in-game values often exceed them (e.g. "Final Boss drops 6 additional Orbs of Alteration" for a (2-4) range, 43 % Rarity for (15-30)).
 - `weights` sums the variant weights per altar.
 
 `data/profiles/<name>.json`:
@@ -173,7 +174,8 @@ data/profiles/default.json
 tools/gen_mods/          # mod list generator + diff report
 ui/board/                # tier board (HTML/JS/CSS), grown from the mockup
 prototype/               # Python: capture, detect, ocr, match, verdict, overlay, app
-tests/fixtures/screens/  # labeled altar screenshots
+tests/fixtures/screens/  # altar screenshots (local only, not in git)
+tests/fixtures/labels.json  # verified labels for the screenshots
 tests/                   # unit + recognition accuracy tests
 ```
 
@@ -185,21 +187,29 @@ tests/                   # unit + recognition accuracy tests
 - New verdict rules incl. ADAPT - BRICK. Legend and HUD preview updated.
 
 ### Phase 1 – Mod data pipeline ✅ (done 2026-11-02)
-- Source: RePoE export, domain `primordial_altar` (276 mods, 231 spawnable, 207 without Ruthless `HardMode*` mods). poedb serves as a cross-check only (no IDs; wiki content is CC BY-NC-SA).
-- Generator `tools/gen_mods` → `data/mods.json`: 199 cards from 207 spawnable mods (game 3.29.3.3). Standard library only. `--offline` reuses the cached download, `--dry-run` only prints the diff.
+- Source: RePoE export, domain `primordial_altar` (276 mods, 231 spawnable). poedb serves as a cross-check only (no IDs; wiki content is CC BY-NC-SA).
+- Generator `tools/gen_mods` → `data/mods.json`: 201 cards from 231 spawnable mods (game 3.29.3.3). Standard library only. `--offline` reuses the cached download, `--dry-run` only prints the diff.
 - Diff report on every run: added / removed / changed cards.
 - `data/profiles/default.json`: first-guess starter tiers (S: Divine Orbs, duplicated Scarabs, Quantity; Brick: chaos damage during flask effect only). To be reviewed by the user.
 - Tests: `python -m pytest` (generator unit tests + data consistency: profile ids exist and sit on the right side).
-- Result of the cross-check against poedb: every normal mod matches (side, target, text, altar, weight). Differences are presentation only: poedb shows generic wording and drops the minus sign. poedb also lists the HardMode (Ruthless) variants, which we skip.
+- Result of the cross-check against poedb: every normal mod matches (side, target, text, altar, weight). Differences are presentation only: poedb shows generic wording and drops the minus sign, and it lists HardMode variants as generic (no altar icon), which matches what the screenshots show.
 - The four values in `Altar.png` (2.2 % Alteration, 61 % ignore Phys DR, 34 % Sap, 21 % Rarity) all lie inside the generated ranges.
 
-### Phase 2 – Recognition prototype (offline, Python)
-- Collect 20–30 labeled screenshots (both altar types, different targets, busy fights, own resolution 3440×1440).
-- Box detection with OpenCV (dark semi-transparent box + border near the altar icon).
-- OCR comparison: Windows.Media.Ocr vs RapidOCR (Tesseract as fallback), with upscaling/thresholding.
-- Normalize numbers to `#` and fuzzy match with `rapidfuzz` against templates. The header line gives the target.
-- Altar type from icon color, cross-checked with the matched mods.
-- **Done when:** ≥95 % of options matched correctly on the test set, under 200 ms per altar.
+### Phase 2 – Recognition prototype (offline, Python) ✅ (done 2026-11-02)
+- **Result on 39 screenshots (44 altars, 85 readable options):** 44/44 altars found, 0 false detections, **84/85 options fully correct (98.8 %)**, 175 ms median per screenshot (max 297 ms with two altars). Run `python -m prototype.evaluate`.
+- Test set: `tests/fixtures/screens/screen_*.png` (3440×1440, local only, not in git) and `tests/fixtures/labels.json` (in git). Labels were drafted from the pipeline and then checked by eye against every screenshot. A box counts as unreadable (`"mods": null`, skipped) when a line is completely hidden; partly covered lines that a human can still identify stay in.
+- Pipeline (`prototype/`):
+  1. `detect.py`: template match on the altar ring (shared by both types), coarse at 1/4 scale, re-scored at 1/2 scale around each candidate. Altar type from the icon color.
+  2. `read.py`: OCR 650 px left/right and 320 px above/below the icon. Preprocessing keeps only bright pixels (max channel > 110) as black on white and upscales 2×; this fixes the semi-transparent box background. Row fragments split by icons or life bars are joined; a line belongs to a box if it crosses the icon's center column and is vertically contiguous. Lines before the header (gold labels, timers) are dropped.
+  3. `match.py`: numbers → `#`, fuzzy match per line, then an exact-cover search over the box's lines.
+- Findings that shaped the design:
+  - **Windows.Media.Ocr** (~15 ms per box, near perfect after preprocessing) beat RapidOCR (~1.4 s, split lines and glued words).
+  - **Line order in-game differs from the data** and lines of different mods interleave ("Hits always Shock / Gain X% … Lightning / All Damage can Shock"). Matching treats a box as a set of lines.
+  - **The same mod can appear twice** on one option (two "Rarity" lines).
+  - **Mods of the other altar type appear** (Embers and Unique Jewellery cards on Eater altars, Ichors on Exarch altars). Matching does not filter by altar type; generic texts are one card anyway.
+  - **Box text is centered on the icon.** The icon's two halves show both options' targets (crown = boss, figure = player, group = minions).
+  - **Header hidden** (screen edge, buff bar): the target is inferred as the one that explains the most lines.
+  - **HUD covers boxes**: buff bar, flask bar and skill bar draw on top of altar boxes. The one remaining miss is a Rarity line almost fully behind the flask bar.
 
 ### Phase 3 – Live prototype (Python)
 - Capture via `dxcam`/Windows Graphics Capture. Stage 1 at 3–5 Hz, stage 2 on hit, crop-hash cache.
@@ -219,7 +229,9 @@ tests/                   # unit + recognition accuracy tests
 - **Profile import/export** as a shareable text code (like PoB codes).
 - **In-app mod data updates:** download the newest `mods.json` from releases. New mods show up as "new" on the board.
 - **Profile hotkey switching** (e.g. per farm strategy).
-- **Roll value scaling:** a high roll scores better than a low roll within the same tier.
+- **Roll value scaling:** a high roll scores better than a low roll within the same tier. Needs the player's atlas scaling, since in-game values exceed the base ranges.
+- **Target from the icon halves:** classify crown/figure/group in the icon to know a box's target even when its header is hidden.
+- **Partial reads:** show "incomplete" in the HUD when a box is cut off by HUD or screen edges, instead of a verdict on half the mods.
 - **Configurable thresholds** per profile (e.g. which upside tiers trigger CONSIDER / ADAPT - BRICK).
 - **Combination rules** ("downside X only matters together with upside Y").
 - **Accessibility:** colorblind-safe verdict colors, HUD text size.
@@ -229,7 +241,8 @@ tests/                   # unit + recognition accuracy tests
 
 - ~~Which game data export contains the altar mods with stable IDs?~~ RePoE, domain `primordial_altar` (see Phase 1).
 - ~~How are multi-line mods represented?~~ As one mod with several lines; `lines`/`templates` keep them per line.
-- ~~When do HardMode variants spawn?~~ Most likely Ruthless only; excluded.
+- When do HardMode variants spawn? They are not Ruthless-only (seen in normal maps); maybe tied to an atlas passive or map tier.
 - The board mockup still uses made-up ids. It switches to `data/mods.json` when it moves to `ui/board/` (Phase 3).
 - How far can the boxes be from the altar icon at different camera positions and resolutions?
-- Can an altar option have several upsides/downsides from atlas passives, and how does the box layout change then?
+- ~~Can an option have several upsides/downsides?~~ Yes, up to 3 downsides and 2 upsides seen; the box simply grows (tallest ~250 px).
+- How do boxes behave at other resolutions and UI scales? Only 3440×1440 is covered so far.

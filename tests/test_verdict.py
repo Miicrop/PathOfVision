@@ -43,7 +43,7 @@ def test_take_prefers_higher_tier_then_column_position():
 
 def test_risky_is_your_call_with_minions_fallback():
     rec = recommend(*options(OptionInput("player", ["u_s1"], ["d_dan"]), OptionInput("minions", ["u_x"], [])))
-    assert rec.choice is None
+    assert (rec.choice, rec.about) == (None, "top")
     assert "Your call: top" in rec.text and "bottom option (Minions)" in rec.text
 
 

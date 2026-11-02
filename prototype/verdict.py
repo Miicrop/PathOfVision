@@ -92,6 +92,7 @@ def judge(option: OptionInput, profile: Profile) -> OptionVerdict:
 class Recommendation:
     choice: str | None           # "top", "bottom" or None
     text: str
+    about: str | None = None     # option the text talks about when there is no firm choice ("Your call")
 
 
 def recommend(options: dict[str, OptionInput], verdicts: dict[str, OptionVerdict]) -> Recommendation:
@@ -117,7 +118,7 @@ def recommend(options: dict[str, OptionInput], verdicts: dict[str, OptionVerdict
         reason = "Brick downside, needs build adjustments" if verdicts[best].verdict == ADAPT else "check the Dangerous downside"
         fallback = minions_option({NEUTRAL})
         tail = f" Safe fallback: the {fallback} option (Minions)." if fallback and fallback != best else ""
-        return Recommendation(None, f"Your call: {best} option, {reason}.{tail}")
+        return Recommendation(None, f"Your call: {best} option, {reason}.{tail}", about=best)
 
     if all(v.verdict == AVOID for v in verdicts.values()):
         return Recommendation(None, "Leave this altar alone.")

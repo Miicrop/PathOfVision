@@ -156,6 +156,8 @@ def _option_box(view: AltarView, position: str, icons: _Icons, labels: dict[str,
         if mod_icon:
             pic = QLabel()
             pic.setStyleSheet("background: transparent;")
+            pic.setFixedSize(style.mod_icon, style.mod_icon)   # centered in a square, whatever its shape
+            pic.setAlignment(Qt.AlignCenter)
             pic.setPixmap(mod_icon)
             grid.addWidget(pic, r, 1)
         text = color_keywords(mod_text(m, option.lines, labels), style.keywords)
@@ -188,7 +190,8 @@ def _with_legend(box: QFrame, rich: str, style: Style) -> QWidget:
 
 def _recommendation_box(view: AltarView, style: Style) -> QFrame:
     rec = view.recommendation
-    color = VERDICT_COLORS[view.verdicts[rec.choice].verdict] if rec.choice else "#e0a33a"
+    focus = rec.choice or rec.about
+    color = VERDICT_COLORS[view.verdicts[focus].verdict] if focus else "#e0a33a"
     text = _span(rec.text, color, True)
     if not view.complete:
         text += "<br>" + _span("partly hidden, verdict may change", "#9aa0a6")

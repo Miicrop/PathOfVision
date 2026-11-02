@@ -130,6 +130,7 @@ function cardEl(m, colIndex, colCount) {
 
 function renderBoard(side) {
   const wrap = $("cols-" + side);
+  const scrolled = [...wrap.querySelectorAll(".list")].map(l => l.scrollTop);   // keep each column where it was
   wrap.innerHTML = "";
   COLS[side].forEach((col, i) => {
     const ids = columnIds(side, col.id).filter(id => visible(byId[id]));
@@ -170,6 +171,7 @@ function renderBoard(side) {
     });
     colEl.appendChild(list);
     wrap.appendChild(colEl);
+    list.scrollTop = scrolled[i] || 0;
   });
 }
 

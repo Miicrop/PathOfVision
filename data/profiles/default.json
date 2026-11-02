@@ -1,0 +1,66 @@
+{
+  "name": "Default",
+  "readOnly": true,
+  "modsVersion": "3.29.3.3",
+  "upsides": {
+    "s": [
+      "TangleAltarUpsideBossDivineOrb",
+      "TangleAltarUpsideMonsterDivineOrb",
+      "TangledAltarUpsidePlayerDuplicateDroppedScarabs",
+      "TangledAltarUpsidePlayerIncreasedQuantity"
+    ],
+    "a": [
+      "TangleAltarUpsideBossExaltedOrb",
+      "CleansingAltarUpsideBossOrbOfAnnulment",
+      "TangleAltarUpsideBossGrandEldritchIchor",
+      "CleansingAltarUpsideBossGrandEldritchEmber",
+      "TangledAltarUpsidePlayerDuplicateDroppedCurrency",
+      "TangledAltarUpsidePlayerIncreasedRarity",
+      "TangledAltarUpsidePlayerDuplicateDroppedDivinationCards",
+      "TangleAltarUpsideMonsterExaltedOrb",
+      "CleansingAltarUpsideMonsterOrbOfAnnulment"
+    ],
+    "b": [
+      "TangleAltarUpsideBossAncientOrb",
+      "CleansingAltarUpsideBossChaosOrb",
+      "TangleAltarUpsideBossGreaterEldritchIchor",
+      "CleansingAltarUpsideBossGreaterEldritchEmber",
+      "TangledAltarUpsidePlayerDuplicateDroppedMaps",
+      "TangledAltarUpsidePlayerDuplicateDroppedUniques",
+      "TangleAltarUpsideMonsterGrandEldritchIchor",
+      "CleansingAltarUpsideMonsterGrandEldritchEmber",
+      "CleansingAltarUpsideMonsterChaosOrb"
+    ]
+  },
+  "downsides": {
+    "dangerous": [
+      "TangledAltarDownsidePlayerSapped",
+      "CleansingAltarDownsidePlayerScorched",
+      "TangledAltarDownsidePlayerReducedColdAndLightningResist",
+      "CleansingAltarDownsidePlayerReducedFireAndChaosResist",
+      "TangledAltarDownsidePlayerReducedPhysicalDamageReduction",
+      "CleansingAltarDownsidePlayerReducedArmourAndEvasion",
+      "CleansingAltarDownsidePlayerMeteorOnFlaskUse",
+      "CleansingAltarDownsidePlayerCurseReflect",
+      "TangledAltarDownsidePlayerNonDamagingAilmentsReflectedToSelf",
+      "TangledAltarDownsidePlayerColdMonsterAura",
+      "TangledAltarDownsidePlayerLightningMonsterAura",
+      "CleansingAltarDownsidePlayerFireMonsterAura",
+      "CleansingAltarDownsidePlayerChaosMonsterAura",
+      "TangledAltarDownsideMonsterSpeed",
+      "TangledAltarDownsideMonsterExtraProjectiles",
+      "TangledAltarDownsideMonsterOverwhelm",
+      "CleansingAltarDownsideMonsterExposureOnHit",
+      "CleansingAltarDownsideMonsterFlaskDegenOnHit",
+      "TangledAltarDownsideBossPhysToAddAsLightning",
+      "CleansingAltarDownsideBossPhysToAddAsFire",
+      "CleansingAltarDownsideBossPhysToAddAsChaos",
+      "TangledAltarDownsideBossPhysToAddAsCold",
+      "TangledAltarDownsideBossPenetrateElementalResistances",
+      "CleansingAltarDownsideBossRemoveFlaskChargeOnHit"
+    ],
+    "brick": [
+      "CleansingAltarDownsidePlayerChaosDegenDuringFlaskDuration"
+    ]
+  }
+}

@@ -1,0 +1,6941 @@
+{
+  "gameVersion": "3.29.3.3",
+  "source": "https://repoe-fork.github.io/mods.min.json",
+  "mods": [
+    {
+      "id": "CleansingAltarUpsideBossChaosOrb",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Chaos Orbs"
+      ],
+      "weights": {
+        "exarch": 48000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossChaosOrb",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Chaos Orbs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Chaos Orbs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 48000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossDivinationCardsCorrupted",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Divination Cards which reward a Corrupted Item"
+      ],
+      "weights": {
+        "exarch": 24977
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossDivinationCardsCorrupted",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Divination Cards which reward a Corrupted Item"
+          ],
+          "templates": [
+            "Final Boss drops # additional Divination Cards which reward a Corrupted Item"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 24977
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossDivinationCardsMap",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Divination Cards which reward a Map"
+      ],
+      "weights": {
+        "exarch": 20315
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossDivinationCardsMap",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Divination Cards which reward a Map"
+          ],
+          "templates": [
+            "Final Boss drops # additional Divination Cards which reward a Map"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 20315
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossDivinationCardsMapUnique",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Divination Cards which reward a Unique Map"
+      ],
+      "weights": {
+        "exarch": 2264
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossDivinationCardsMapUnique",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Divination Cards which reward a Unique Map"
+          ],
+          "templates": [
+            "Final Boss drops # additional Divination Cards which reward a Unique Map"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 2264
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossDivinationCardsUniqueArmour",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Divination Cards which reward a Unique Armour"
+      ],
+      "weights": {
+        "exarch": 28203
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossDivinationCardsUniqueArmour",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Divination Cards which reward a Unique Armour"
+          ],
+          "templates": [
+            "Final Boss drops # additional Divination Cards which reward a Unique Armour"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 28203
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossDivinationCardsUniqueCorrupted",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Divination Cards which reward a Corrupted Unique Item"
+      ],
+      "weights": {
+        "exarch": 14418
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossDivinationCardsUniqueCorrupted",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Divination Cards which reward a Corrupted Unique Item"
+          ],
+          "templates": [
+            "Final Boss drops # additional Divination Cards which reward a Corrupted Unique Item"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 14418
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossDivinationCardsUniqueJewellery",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Divination Cards which reward Unique Jewellery"
+      ],
+      "weights": {
+        "exarch": 25764
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossDivinationCardsUniqueJewellery",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Divination Cards which reward Unique Jewellery"
+          ],
+          "templates": [
+            "Final Boss drops # additional Divination Cards which reward Unique Jewellery"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 25764
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossDivinationCardsUniqueWeapon",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Divination Cards which reward a Unique Weapon"
+      ],
+      "weights": {
+        "exarch": 36284
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossDivinationCardsUniqueWeapon",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Divination Cards which reward a Unique Weapon"
+          ],
+          "templates": [
+            "Final Boss drops # additional Divination Cards which reward a Unique Weapon"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 36284
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossEnkindlingOrb",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Enkindling Orbs"
+      ],
+      "weights": {
+        "exarch": 3000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossEnkindlingOrb",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Enkindling Orbs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Enkindling Orbs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 3000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossGemcuttersPrism",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Gemcutter's Prisms"
+      ],
+      "weights": {
+        "exarch": 4000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossGemcuttersPrism",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Gemcutter's Prisms"
+          ],
+          "templates": [
+            "Final Boss drops # additional Gemcutter's Prisms"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 4000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossGlassblowersBauble",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Glassblower's Baubles"
+      ],
+      "weights": {
+        "exarch": 4950
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossGlassblowersBauble",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Glassblower's Baubles"
+          ],
+          "templates": [
+            "Final Boss drops # additional Glassblower's Baubles"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 4950
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossGrandEldritchEmber",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Grand Eldritch Embers"
+      ],
+      "weights": {
+        "exarch": 9091
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossGrandEldritchEmber",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Grand Eldritch Embers"
+          ],
+          "templates": [
+            "Final Boss drops # additional Grand Eldritch Embers"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 9091
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossGreaterEldritchEmber",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Greater Eldritch Embers"
+      ],
+      "weights": {
+        "exarch": 22727
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossGreaterEldritchEmber",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Greater Eldritch Embers"
+          ],
+          "templates": [
+            "Final Boss drops # additional Greater Eldritch Embers"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 22727
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossInstillingOrb",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Instilling Orbs"
+      ],
+      "weights": {
+        "exarch": 6000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossInstillingOrb",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Instilling Orbs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Instilling Orbs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 6000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossLesserEldritchEmber",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Lesser Eldritch Embers"
+      ],
+      "weights": {
+        "exarch": 54545
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossLesserEldritchEmber",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Lesser Eldritch Embers"
+          ],
+          "templates": [
+            "Final Boss drops # additional Lesser Eldritch Embers"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 54545
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossOrbOfAnnulment",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Orbs of Annulment"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossOrbOfAnnulment",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Orbs of Annulment"
+          ],
+          "templates": [
+            "Final Boss drops # additional Orbs of Annulment"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossOrbOfBinding",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Orbs of Binding"
+      ],
+      "weights": {
+        "exarch": 20000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossOrbOfBinding",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Orbs of Binding"
+          ],
+          "templates": [
+            "Final Boss drops # additional Orbs of Binding"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 20000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossOrbOfRegret",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Orbs of Regret"
+      ],
+      "weights": {
+        "exarch": 8000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossOrbOfRegret",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Orbs of Regret"
+          ],
+          "templates": [
+            "Final Boss drops # additional Orbs of Regret"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 8000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossOrbOfScouring",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Orbs of Scouring"
+      ],
+      "weights": {
+        "exarch": 30000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossOrbOfScouring",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Orbs of Scouring"
+          ],
+          "templates": [
+            "Final Boss drops # additional Orbs of Scouring"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 30000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossOrbOfUnmaking",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Orbs of Unmaking"
+      ],
+      "weights": {
+        "exarch": 16000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossOrbOfUnmaking",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Orbs of Unmaking"
+          ],
+          "templates": [
+            "Final Boss drops # additional Orbs of Unmaking"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 16000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossScarabAnarchy",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Anarchy Scarabs"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossScarabAnarchy",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Anarchy Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Anarchy Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossScarabBeyond",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Beyond Scarabs"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossScarabBeyond",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Beyond Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Beyond Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossScarabDivination",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Divination Scarabs"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossScarabDivination",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Divination Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Divination Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossScarabDomination",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Domination Scarabs"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossScarabDomination",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Domination Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Domination Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossScarabEssence",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Essence Scarabs"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossScarabEssence",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Essence Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Essence Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossScarabInfluence",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Influence Scarabs"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossScarabInfluence",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Influence Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Influence Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossScarabMaps",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Cartography Scarabs"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossScarabMaps",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Cartography Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Cartography Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossScarabMercenaries",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Trarthan Scarabs"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossScarabMercenaries",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Trarthan Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Trarthan Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossScarabMisc",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Miscellaneous Scarabs"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossScarabMisc",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Miscellaneous Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Miscellaneous Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossScarabStrongbox",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Ambush Scarabs"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossScarabStrongbox",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Ambush Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Ambush Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossScarabTorment",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Torment Scarabs"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossScarabTorment",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Torment Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Torment Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossScarabUniques",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Titanic Scarabs"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossScarabUniques",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Titanic Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Titanic Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideBossVaalOrb",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Vaal Orbs"
+      ],
+      "weights": {
+        "exarch": 20000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideBossVaalOrb",
+          "altar": "exarch",
+          "lines": [
+            "Final Boss drops (2-4) additional Vaal Orbs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Vaal Orbs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 20000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideBossAncientOrb",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Ancient Orbs"
+      ],
+      "weights": {
+        "eater": 1500
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideBossAncientOrb",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Ancient Orbs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Ancient Orbs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 1500
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideBossBlessedOrb",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Blessed Orbs"
+      ],
+      "weights": {
+        "eater": 8000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideBossBlessedOrb",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Blessed Orbs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Blessed Orbs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 8000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideBossChromaticOrb",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Chromatic Orbs"
+      ],
+      "weights": {
+        "eater": 8000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideBossChromaticOrb",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Chromatic Orbs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Chromatic Orbs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 8000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideBossDivineOrb",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Divine Orbs"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideBossDivineOrb",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Divine Orbs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Divine Orbs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideBossExaltedOrb",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Exalted Orbs"
+      ],
+      "weights": {
+        "eater": 20000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideBossExaltedOrb",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Exalted Orbs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Exalted Orbs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 20000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideBossFusingOrb",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Orbs of Fusing"
+      ],
+      "weights": {
+        "eater": 100000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideBossFusingOrb",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Orbs of Fusing"
+          ],
+          "templates": [
+            "Final Boss drops # additional Orbs of Fusing"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 100000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideBossGrandEldritchIchor",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Grand Eldritch Ichors"
+      ],
+      "weights": {
+        "eater": 20000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideBossGrandEldritchIchor",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Grand Eldritch Ichors"
+          ],
+          "templates": [
+            "Final Boss drops # additional Grand Eldritch Ichors"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 20000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideBossGreaterEldritchIchor",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Greater Eldritch Ichors"
+      ],
+      "weights": {
+        "eater": 50000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideBossGreaterEldritchIchor",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Greater Eldritch Ichors"
+          ],
+          "templates": [
+            "Final Boss drops # additional Greater Eldritch Ichors"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 50000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideBossJewellersOrb",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Jeweller's Orbs"
+      ],
+      "weights": {
+        "eater": 160000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideBossJewellersOrb",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Jeweller's Orbs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Jeweller's Orbs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 160000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideBossLesserEldritchIchor",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Lesser Eldritch Ichors"
+      ],
+      "weights": {
+        "eater": 120000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideBossLesserEldritchIchor",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Lesser Eldritch Ichors"
+          ],
+          "templates": [
+            "Final Boss drops # additional Lesser Eldritch Ichors"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 120000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideBossOrbOfAlteration",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Orbs of Alteration"
+      ],
+      "weights": {
+        "eater": 160000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideBossOrbOfAlteration",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Orbs of Alteration"
+          ],
+          "templates": [
+            "Final Boss drops # additional Orbs of Alteration"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 160000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideBossRegalOrb",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Regal Orbs"
+      ],
+      "weights": {
+        "eater": 25000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideBossRegalOrb",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Regal Orbs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Regal Orbs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 25000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossDivinationCardsCurrencyBasic",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Divination Cards which reward Basic Currency"
+      ],
+      "weights": {
+        "eater": 230076
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossDivinationCardsCurrencyBasic",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Divination Cards which reward Basic Currency"
+          ],
+          "templates": [
+            "Final Boss drops # additional Divination Cards which reward Basic Currency"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 230076
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossDivinationCardsCurrencyLeague",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Divination Cards which reward League Currency"
+      ],
+      "weights": {
+        "eater": 18227
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossDivinationCardsCurrencyLeague",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Divination Cards which reward League Currency"
+          ],
+          "templates": [
+            "Final Boss drops # additional Divination Cards which reward League Currency"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 18227
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossDivinationCardsGems",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Divination Cards which reward Gems"
+      ],
+      "weights": {
+        "eater": 39542
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossDivinationCardsGems",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Divination Cards which reward Gems"
+          ],
+          "templates": [
+            "Final Boss drops # additional Divination Cards which reward Gems"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 39542
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossDivinationCardsGemsLevelled",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Divination Cards which reward Levelled Gems"
+      ],
+      "weights": {
+        "eater": 7565
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossDivinationCardsGemsLevelled",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Divination Cards which reward Levelled Gems"
+          ],
+          "templates": [
+            "Final Boss drops # additional Divination Cards which reward Levelled Gems"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 7565
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossDivinationCardsGemsQuality",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Divination Cards which reward Quality Gems"
+      ],
+      "weights": {
+        "eater": 32236
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossDivinationCardsGemsQuality",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Divination Cards which reward Quality Gems"
+          ],
+          "templates": [
+            "Final Boss drops # additional Divination Cards which reward Quality Gems"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 32236
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossDivinationCardsGivesOtherDivinationCards",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Divination Cards which reward other Divination Cards"
+      ],
+      "weights": {
+        "eater": 3954
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossDivinationCardsGivesOtherDivinationCards",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Divination Cards which reward other Divination Cards"
+          ],
+          "templates": [
+            "Final Boss drops # additional Divination Cards which reward other Divination Cards"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 3954
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossScarabAbyss",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Abyss Scarabs"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossScarabAbyss",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Abyss Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Abyss Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossScarabBeasts",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Bestiary Scarabs"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossScarabBeasts",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Bestiary Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Bestiary Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossScarabBetrayal",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Betrayal Scarabs"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossScarabBetrayal",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Betrayal Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Betrayal Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossScarabBlight",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Blight Scarabs"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossScarabBlight",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Blight Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Blight Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossScarabBreach",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Breach Scarabs"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossScarabBreach",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Breach Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Breach Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossScarabDelirium",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Delirium Scarabs"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossScarabDelirium",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Delirium Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Delirium Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossScarabExpedition",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Expedition Scarabs"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossScarabExpedition",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Expedition Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Expedition Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossScarabHarvest",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Harvest Scarabs"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossScarabHarvest",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Harvest Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Harvest Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossScarabIncursion",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Incursion Scarabs"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossScarabIncursion",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Incursion Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Incursion Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossScarabLegion",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Legion Scarabs"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossScarabLegion",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Legion Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Legion Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossScarabRitual",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Ritual Scarabs"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossScarabRitual",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Ritual Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Ritual Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossScarabSettlers",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Kalguuran Scarabs"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossScarabSettlers",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Kalguuran Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Kalguuran Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideBossScarabUltimatum",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Ultimatum Scarabs"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideBossScarabUltimatum",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Ultimatum Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Ultimatum Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAtlarUpsideBossScarabSulphite",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "boss",
+      "lines": [
+        "Final Boss drops (2-4) additional Sulphite Scarabs"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAtlarUpsideBossScarabSulphite",
+          "altar": "eater",
+          "lines": [
+            "Final Boss drops (2-4) additional Sulphite Scarabs"
+          ],
+          "templates": [
+            "Final Boss drops # additional Sulphite Scarabs"
+          ],
+          "ranges": [
+            [
+              2,
+              4
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterChaosOrb",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Chaos Orb"
+      ],
+      "weights": {
+        "exarch": 48000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterChaosOrb",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Chaos Orb"
+          ],
+          "templates": [
+            "#% chance to drop an additional Chaos Orb"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 48000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterDivinationCardsCorrupted",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Divination Card which rewards a Corrupted Item"
+      ],
+      "weights": {
+        "exarch": 24977
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterDivinationCardsCorrupted",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Divination Card which rewards a Corrupted Item"
+          ],
+          "templates": [
+            "#% chance to drop an additional Divination Card which rewards a Corrupted Item"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 24977
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterDivinationCardsMap",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Divination Card which rewards a Map"
+      ],
+      "weights": {
+        "exarch": 20315
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterDivinationCardsMap",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Divination Card which rewards a Map"
+          ],
+          "templates": [
+            "#% chance to drop an additional Divination Card which rewards a Map"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 20315
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterDivinationCardsMapUnique",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Divination Card which rewards a Unique Map"
+      ],
+      "weights": {
+        "exarch": 2264
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterDivinationCardsMapUnique",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Divination Card which rewards a Unique Map"
+          ],
+          "templates": [
+            "#% chance to drop an additional Divination Card which rewards a Unique Map"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 2264
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterDivinationCardsUniqueArmour",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Divination Card which rewards a Unique Armour"
+      ],
+      "weights": {
+        "exarch": 28203
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterDivinationCardsUniqueArmour",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Divination Card which rewards a Unique Armour"
+          ],
+          "templates": [
+            "#% chance to drop an additional Divination Card which rewards a Unique Armour"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 28203
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterDivinationCardsUniqueCorrupted",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Divination Card which rewards a Corrupted Unique Item"
+      ],
+      "weights": {
+        "exarch": 14418
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterDivinationCardsUniqueCorrupted",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Divination Card which rewards a Corrupted Unique Item"
+          ],
+          "templates": [
+            "#% chance to drop an additional Divination Card which rewards a Corrupted Unique Item"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 14418
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterDivinationCardsUniqueJewellery",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Divination Card which rewards Unique Jewellery"
+      ],
+      "weights": {
+        "exarch": 25764
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterDivinationCardsUniqueJewellery",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Divination Card which rewards Unique Jewellery"
+          ],
+          "templates": [
+            "#% chance to drop an additional Divination Card which rewards Unique Jewellery"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 25764
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterDivinationCardsUniqueWeapon",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Divination Card which rewards a Unique Weapon"
+      ],
+      "weights": {
+        "exarch": 36284
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterDivinationCardsUniqueWeapon",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Divination Card which rewards a Unique Weapon"
+          ],
+          "templates": [
+            "#% chance to drop an additional Divination Card which rewards a Unique Weapon"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 36284
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterEnkindlingOrb",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Enkindling Orb"
+      ],
+      "weights": {
+        "exarch": 3000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterEnkindlingOrb",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Enkindling Orb"
+          ],
+          "templates": [
+            "#% chance to drop an additional Enkindling Orb"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 3000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterGemcuttersPrism",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Gemcutter's Prism"
+      ],
+      "weights": {
+        "exarch": 4000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterGemcuttersPrism",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Gemcutter's Prism"
+          ],
+          "templates": [
+            "#% chance to drop an additional Gemcutter's Prism"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 4000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterGlassblowersBauble",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Glassblower's Bauble"
+      ],
+      "weights": {
+        "exarch": 4950
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterGlassblowersBauble",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Glassblower's Bauble"
+          ],
+          "templates": [
+            "#% chance to drop an additional Glassblower's Bauble"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 4950
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterGrandEldritchEmber",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Grand Eldritch Ember"
+      ],
+      "weights": {
+        "exarch": 9091
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterGrandEldritchEmber",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Grand Eldritch Ember"
+          ],
+          "templates": [
+            "#% chance to drop an additional Grand Eldritch Ember"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 9091
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterGreaterEldritchEmber",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Greater Eldritch Ember"
+      ],
+      "weights": {
+        "exarch": 22727
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterGreaterEldritchEmber",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Greater Eldritch Ember"
+          ],
+          "templates": [
+            "#% chance to drop an additional Greater Eldritch Ember"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 22727
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterInstillingOrb",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Instilling Orb"
+      ],
+      "weights": {
+        "exarch": 6000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterInstillingOrb",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Instilling Orb"
+          ],
+          "templates": [
+            "#% chance to drop an additional Instilling Orb"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 6000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterLesserEldritchEmber",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Lesser Eldritch Ember"
+      ],
+      "weights": {
+        "exarch": 54545
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterLesserEldritchEmber",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Lesser Eldritch Ember"
+          ],
+          "templates": [
+            "#% chance to drop an additional Lesser Eldritch Ember"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 54545
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterOrbOfAnnulment",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Orb of Annulment"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterOrbOfAnnulment",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Orb of Annulment"
+          ],
+          "templates": [
+            "#% chance to drop an additional Orb of Annulment"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterOrbOfBinding",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Orb of Binding"
+      ],
+      "weights": {
+        "exarch": 20000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterOrbOfBinding",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Orb of Binding"
+          ],
+          "templates": [
+            "#% chance to drop an additional Orb of Binding"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 20000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterOrbOfRegret",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Orb of Regret"
+      ],
+      "weights": {
+        "exarch": 8000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterOrbOfRegret",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Orb of Regret"
+          ],
+          "templates": [
+            "#% chance to drop an additional Orb of Regret"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 8000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterOrbOfScouring",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Orb of Scouring"
+      ],
+      "weights": {
+        "exarch": 30000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterOrbOfScouring",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Orb of Scouring"
+          ],
+          "templates": [
+            "#% chance to drop an additional Orb of Scouring"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 30000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterOrbOfUnmaking",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Orb of Unmaking"
+      ],
+      "weights": {
+        "exarch": 16000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterOrbOfUnmaking",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Orb of Unmaking"
+          ],
+          "templates": [
+            "#% chance to drop an additional Orb of Unmaking"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 16000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterScarabAnarchy",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Anarchy Scarab"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterScarabAnarchy",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Anarchy Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Anarchy Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterScarabBeyond",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Beyond Scarab"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterScarabBeyond",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Beyond Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Beyond Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterScarabDivination",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Divination Scarab"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterScarabDivination",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Divination Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Divination Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterScarabDomination",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Domination Scarab"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterScarabDomination",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Domination Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Domination Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterScarabEssence",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Essence Scarab"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterScarabEssence",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Essence Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Essence Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterScarabInfluence",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Influence Scarab"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterScarabInfluence",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Influence Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Influence Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterScarabMaps",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Cartography Scarab"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterScarabMaps",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Cartography Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Cartography Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterScarabMercenaries",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Trarthan Scarab"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterScarabMercenaries",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Trarthan Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Trarthan Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterScarabMisc",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Miscellaneous Scarab"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterScarabMisc",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Miscellaneous Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Miscellaneous Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterScarabStrongbox",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Ambush Scarab"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterScarabStrongbox",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Ambush Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Ambush Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterScarabTorment",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Torment Scarab"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterScarabTorment",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Torment Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Torment Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterScarabUniques",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Titanic Scarab"
+      ],
+      "weights": {
+        "exarch": 1584
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterScarabUniques",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Titanic Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Titanic Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 1584
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarUpsideMonsterVaalOrb",
+      "altars": [
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Vaal Orb"
+      ],
+      "weights": {
+        "exarch": 20000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarUpsideMonsterVaalOrb",
+          "altar": "exarch",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Vaal Orb"
+          ],
+          "templates": [
+            "#% chance to drop an additional Vaal Orb"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 20000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideMonsterAncientOrb",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Ancient Orb"
+      ],
+      "weights": {
+        "eater": 1500
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideMonsterAncientOrb",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Ancient Orb"
+          ],
+          "templates": [
+            "#% chance to drop an additional Ancient Orb"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 1500
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideMonsterBlessedOrb",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Blessed Orb"
+      ],
+      "weights": {
+        "eater": 8000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideMonsterBlessedOrb",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Blessed Orb"
+          ],
+          "templates": [
+            "#% chance to drop an additional Blessed Orb"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 8000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideMonsterChromaticOrb",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Chromatic Orb"
+      ],
+      "weights": {
+        "eater": 8000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideMonsterChromaticOrb",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Chromatic Orb"
+          ],
+          "templates": [
+            "#% chance to drop an additional Chromatic Orb"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 8000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideMonsterDivineOrb",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Divine Orb"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideMonsterDivineOrb",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Divine Orb"
+          ],
+          "templates": [
+            "#% chance to drop an additional Divine Orb"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideMonsterExaltedOrb",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Exalted Orb"
+      ],
+      "weights": {
+        "eater": 20000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideMonsterExaltedOrb",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Exalted Orb"
+          ],
+          "templates": [
+            "#% chance to drop an additional Exalted Orb"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 20000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideMonsterFusingOrb",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Orb of Fusing"
+      ],
+      "weights": {
+        "eater": 100000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideMonsterFusingOrb",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Orb of Fusing"
+          ],
+          "templates": [
+            "#% chance to drop an additional Orb of Fusing"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 100000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideMonsterGrandEldritchIchor",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Grand Eldritch Ichor"
+      ],
+      "weights": {
+        "eater": 20000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideMonsterGrandEldritchIchor",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Grand Eldritch Ichor"
+          ],
+          "templates": [
+            "#% chance to drop an additional Grand Eldritch Ichor"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 20000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideMonsterGreaterEldritchIchor",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Greater Eldritch Ichor"
+      ],
+      "weights": {
+        "eater": 50000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideMonsterGreaterEldritchIchor",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Greater Eldritch Ichor"
+          ],
+          "templates": [
+            "#% chance to drop an additional Greater Eldritch Ichor"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 50000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideMonsterJewellersOrb",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Jeweller's Orb"
+      ],
+      "weights": {
+        "eater": 160000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideMonsterJewellersOrb",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Jeweller's Orb"
+          ],
+          "templates": [
+            "#% chance to drop an additional Jeweller's Orb"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 160000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideMonsterLesserEldritchIchor",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Lesser Eldritch Ichor"
+      ],
+      "weights": {
+        "eater": 120000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideMonsterLesserEldritchIchor",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Lesser Eldritch Ichor"
+          ],
+          "templates": [
+            "#% chance to drop an additional Lesser Eldritch Ichor"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 120000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideMonsterOrbOfAlteration",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Orb of Alteration"
+      ],
+      "weights": {
+        "eater": 160000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideMonsterOrbOfAlteration",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Orb of Alteration"
+          ],
+          "templates": [
+            "#% chance to drop an additional Orb of Alteration"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 160000
+        }
+      ]
+    },
+    {
+      "id": "TangleAltarUpsideMonsterRegalOrb",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Regal Orb"
+      ],
+      "weights": {
+        "eater": 25000
+      },
+      "variants": [
+        {
+          "id": "TangleAltarUpsideMonsterRegalOrb",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Regal Orb"
+          ],
+          "templates": [
+            "#% chance to drop an additional Regal Orb"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 25000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterDivinationCardsCurrencyBasic",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Divination Card which rewards Basic Currency"
+      ],
+      "weights": {
+        "eater": 230076
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterDivinationCardsCurrencyBasic",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Divination Card which rewards Basic Currency"
+          ],
+          "templates": [
+            "#% chance to drop an additional Divination Card which rewards Basic Currency"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 230076
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterDivinationCardsCurrencyLeague",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Divination Card which rewards League Currency"
+      ],
+      "weights": {
+        "eater": 18227
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterDivinationCardsCurrencyLeague",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Divination Card which rewards League Currency"
+          ],
+          "templates": [
+            "#% chance to drop an additional Divination Card which rewards League Currency"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 18227
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterDivinationCardsGems",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Divination Card which rewards Gems"
+      ],
+      "weights": {
+        "eater": 39542
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterDivinationCardsGems",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Divination Card which rewards Gems"
+          ],
+          "templates": [
+            "#% chance to drop an additional Divination Card which rewards Gems"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 39542
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterDivinationCardsGemsLevelled",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Divination Card which rewards Levelled Gems"
+      ],
+      "weights": {
+        "eater": 7565
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterDivinationCardsGemsLevelled",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Divination Card which rewards Levelled Gems"
+          ],
+          "templates": [
+            "#% chance to drop an additional Divination Card which rewards Levelled Gems"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 7565
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterDivinationCardsGemsQuality",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Divination Card which rewards Quality Gems"
+      ],
+      "weights": {
+        "eater": 32236
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterDivinationCardsGemsQuality",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Divination Card which rewards Quality Gems"
+          ],
+          "templates": [
+            "#% chance to drop an additional Divination Card which rewards Quality Gems"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 32236
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterDivinationCardsGivesOtherDivinationCards",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Divination Card which rewards other Divination Cards"
+      ],
+      "weights": {
+        "eater": 3954
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterDivinationCardsGivesOtherDivinationCards",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Divination Card which rewards other Divination Cards"
+          ],
+          "templates": [
+            "#% chance to drop an additional Divination Card which rewards other Divination Cards"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 3954
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterScarabAbyss",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Abyss Scarab"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterScarabAbyss",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Abyss Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Abyss Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterScarabBeasts",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Bestiary Scarab"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterScarabBeasts",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Bestiary Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Bestiary Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterScarabBetrayal",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Betrayal Scarab"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterScarabBetrayal",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Betrayal Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Betrayal Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterScarabBlight",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Blight Scarab"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterScarabBlight",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Blight Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Blight Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterScarabBreach",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Breach Scarab"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterScarabBreach",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Breach Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Breach Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterScarabDelirium",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Delirium Scarab"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterScarabDelirium",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Delirium Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Delirium Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterScarabExpedition",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Expedition Scarab"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterScarabExpedition",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Expedition Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Expedition Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterScarabHarvest",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Harvest Scarab"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterScarabHarvest",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Harvest Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Harvest Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterScarabIncursion",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Incursion Scarab"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterScarabIncursion",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Incursion Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Incursion Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterScarabLegion",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Legion Scarab"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterScarabLegion",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Legion Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Legion Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterScarabRitual",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Ritual Scarab"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterScarabRitual",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Ritual Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Ritual Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterScarabSettlers",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Kalguuran Scarab"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterScarabSettlers",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Kalguuran Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Kalguuran Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterScarabSulphite",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Sulphite Scarab"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterScarabSulphite",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Sulphite Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Sulphite Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsideMonsterScarabUltimatum",
+      "altars": [
+        "eater"
+      ],
+      "side": "upside",
+      "target": "minions",
+      "lines": [
+        "(1.6-3.2)% chance to drop an additional Ultimatum Scarab"
+      ],
+      "weights": {
+        "eater": 3187
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsideMonsterScarabUltimatum",
+          "altar": "eater",
+          "lines": [
+            "(1.6-3.2)% chance to drop an additional Ultimatum Scarab"
+          ],
+          "templates": [
+            "#% chance to drop an additional Ultimatum Scarab"
+          ],
+          "ranges": [
+            [
+              1.6,
+              3.2
+            ]
+          ],
+          "weight": 3187
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsidePlayerDuplicateDroppedCurrency",
+      "altars": [
+        "eater",
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "player",
+      "lines": [
+        "Basic Currency Items dropped by slain Enemies have (15-30)% chance to be Duplicated"
+      ],
+      "weights": {
+        "eater": 33160,
+        "exarch": 15223
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsidePlayerDuplicateDroppedCurrency",
+          "altar": "eater",
+          "lines": [
+            "Basic Currency Items dropped by slain Enemies have (15-30)% chance to be Duplicated"
+          ],
+          "templates": [
+            "Basic Currency Items dropped by slain Enemies have #% chance to be Duplicated"
+          ],
+          "ranges": [
+            [
+              15,
+              30
+            ]
+          ],
+          "weight": 33160
+        },
+        {
+          "id": "CleansingAltarUpsidePlayerDuplicateDroppedCurrency",
+          "altar": "exarch",
+          "lines": [
+            "Basic Currency Items dropped by slain Enemies have (15-30)% chance to be Duplicated"
+          ],
+          "templates": [
+            "Basic Currency Items dropped by slain Enemies have #% chance to be Duplicated"
+          ],
+          "ranges": [
+            [
+              15,
+              30
+            ]
+          ],
+          "weight": 15223
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsidePlayerDuplicateDroppedDivinationCards",
+      "altars": [
+        "eater",
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "player",
+      "lines": [
+        "Divination Cards dropped by slain Enemies have (15-30)% chance to be Duplicated"
+      ],
+      "weights": {
+        "eater": 33160,
+        "exarch": 15223
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsidePlayerDuplicateDroppedDivinationCards",
+          "altar": "eater",
+          "lines": [
+            "Divination Cards dropped by slain Enemies have (15-30)% chance to be Duplicated"
+          ],
+          "templates": [
+            "Divination Cards dropped by slain Enemies have #% chance to be Duplicated"
+          ],
+          "ranges": [
+            [
+              15,
+              30
+            ]
+          ],
+          "weight": 33160
+        },
+        {
+          "id": "CleansingAltarUpsidePlayerDuplicateDroppedDivinationCards",
+          "altar": "exarch",
+          "lines": [
+            "Divination Cards dropped by slain Enemies have (15-30)% chance to be Duplicated"
+          ],
+          "templates": [
+            "Divination Cards dropped by slain Enemies have #% chance to be Duplicated"
+          ],
+          "ranges": [
+            [
+              15,
+              30
+            ]
+          ],
+          "weight": 15223
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsidePlayerDuplicateDroppedMaps",
+      "altars": [
+        "eater",
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "player",
+      "lines": [
+        "Maps dropped by slain Enemies have (15-30)% chance to be Duplicated"
+      ],
+      "weights": {
+        "eater": 33160,
+        "exarch": 15223
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsidePlayerDuplicateDroppedMaps",
+          "altar": "eater",
+          "lines": [
+            "Maps dropped by slain Enemies have (15-30)% chance to be Duplicated"
+          ],
+          "templates": [
+            "Maps dropped by slain Enemies have #% chance to be Duplicated"
+          ],
+          "ranges": [
+            [
+              15,
+              30
+            ]
+          ],
+          "weight": 33160
+        },
+        {
+          "id": "CleansingAltarUpsidePlayerDuplicateDroppedMaps",
+          "altar": "exarch",
+          "lines": [
+            "Maps dropped by slain Enemies have (15-30)% chance to be Duplicated"
+          ],
+          "templates": [
+            "Maps dropped by slain Enemies have #% chance to be Duplicated"
+          ],
+          "ranges": [
+            [
+              15,
+              30
+            ]
+          ],
+          "weight": 15223
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsidePlayerDuplicateDroppedScarabs",
+      "altars": [
+        "eater",
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "player",
+      "lines": [
+        "Scarabs dropped by slain Enemies have (15-30)% chance to be Duplicated"
+      ],
+      "weights": {
+        "eater": 33160,
+        "exarch": 15223
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsidePlayerDuplicateDroppedScarabs",
+          "altar": "eater",
+          "lines": [
+            "Scarabs dropped by slain Enemies have (15-30)% chance to be Duplicated"
+          ],
+          "templates": [
+            "Scarabs dropped by slain Enemies have #% chance to be Duplicated"
+          ],
+          "ranges": [
+            [
+              15,
+              30
+            ]
+          ],
+          "weight": 33160
+        },
+        {
+          "id": "CleansingAltarUpsidePlayerDuplicateDroppedScarabs",
+          "altar": "exarch",
+          "lines": [
+            "Scarabs dropped by slain Enemies have (15-30)% chance to be Duplicated"
+          ],
+          "templates": [
+            "Scarabs dropped by slain Enemies have #% chance to be Duplicated"
+          ],
+          "ranges": [
+            [
+              15,
+              30
+            ]
+          ],
+          "weight": 15223
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsidePlayerDuplicateDroppedUniques",
+      "altars": [
+        "eater",
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "player",
+      "lines": [
+        "Unique Items dropped by slain Enemies have (15-30)% chance to be Duplicated"
+      ],
+      "weights": {
+        "eater": 33160,
+        "exarch": 15223
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsidePlayerDuplicateDroppedUniques",
+          "altar": "eater",
+          "lines": [
+            "Unique Items dropped by slain Enemies have (15-30)% chance to be Duplicated"
+          ],
+          "templates": [
+            "Unique Items dropped by slain Enemies have #% chance to be Duplicated"
+          ],
+          "ranges": [
+            [
+              15,
+              30
+            ]
+          ],
+          "weight": 33160
+        },
+        {
+          "id": "CleansingAltarUpsidePlayerDuplicateDroppedUniques",
+          "altar": "exarch",
+          "lines": [
+            "Unique Items dropped by slain Enemies have (15-30)% chance to be Duplicated"
+          ],
+          "templates": [
+            "Unique Items dropped by slain Enemies have #% chance to be Duplicated"
+          ],
+          "ranges": [
+            [
+              15,
+              30
+            ]
+          ],
+          "weight": 15223
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsidePlayerIncreasedQuantity",
+      "altars": [
+        "eater",
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "player",
+      "lines": [
+        "(10-20)% increased Quantity of Items found in this Area"
+      ],
+      "weights": {
+        "eater": 165600,
+        "exarch": 75225
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsidePlayerIncreasedQuantity",
+          "altar": "eater",
+          "lines": [
+            "(10-20)% increased Quantity of Items found in this Area"
+          ],
+          "templates": [
+            "#% increased Quantity of Items found in this Area"
+          ],
+          "ranges": [
+            [
+              10,
+              20
+            ]
+          ],
+          "weight": 165600
+        },
+        {
+          "id": "CleansingAltarUpsidePlayerIncreasedQuantity",
+          "altar": "exarch",
+          "lines": [
+            "(10-20)% increased Quantity of Items found in this Area"
+          ],
+          "templates": [
+            "#% increased Quantity of Items found in this Area"
+          ],
+          "ranges": [
+            [
+              10,
+              20
+            ]
+          ],
+          "weight": 75225
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarUpsidePlayerIncreasedRarity",
+      "altars": [
+        "eater",
+        "exarch"
+      ],
+      "side": "upside",
+      "target": "player",
+      "lines": [
+        "(15-30)% increased Rarity of Items found in this Area"
+      ],
+      "weights": {
+        "eater": 165600,
+        "exarch": 75225
+      },
+      "variants": [
+        {
+          "id": "TangledAltarUpsidePlayerIncreasedRarity",
+          "altar": "eater",
+          "lines": [
+            "(15-30)% increased Rarity of Items found in this Area"
+          ],
+          "templates": [
+            "#% increased Rarity of Items found in this Area"
+          ],
+          "ranges": [
+            [
+              15,
+              30
+            ]
+          ],
+          "weight": 165600
+        },
+        {
+          "id": "CleansingAltarUpsidePlayerIncreasedRarity",
+          "altar": "exarch",
+          "lines": [
+            "(15-30)% increased Rarity of Items found in this Area"
+          ],
+          "templates": [
+            "#% increased Rarity of Items found in this Area"
+          ],
+          "ranges": [
+            [
+              15,
+              30
+            ]
+          ],
+          "weight": 75225
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideBossArmour",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "+50000 to Armour"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideBossArmour",
+          "altar": "exarch",
+          "lines": [
+            "+50000 to Armour"
+          ],
+          "templates": [
+            "+# to Armour"
+          ],
+          "ranges": [
+            [
+              50000,
+              50000
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideBossConsecrateOnHit",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "Create Consecrated Ground on Hit, lasting 6 seconds"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideBossConsecrateOnHit",
+          "altar": "exarch",
+          "lines": [
+            "Create Consecrated Ground on Hit, lasting 6 seconds"
+          ],
+          "templates": [
+            "Create Consecrated Ground on Hit, lasting # seconds"
+          ],
+          "ranges": [
+            [
+              6,
+              6
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideBossCoveredInAshOnHit",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "Cover Enemies in Ash on Hit",
+        "Gain (50-80)% of Physical Damage as Extra Fire Damage"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideBossCoveredInAshOnHit",
+          "altar": "exarch",
+          "lines": [
+            "Cover Enemies in Ash on Hit",
+            "Gain (50-80)% of Physical Damage as Extra Fire Damage"
+          ],
+          "templates": [
+            "Cover Enemies in Ash on Hit",
+            "Gain #% of Physical Damage as Extra Fire Damage"
+          ],
+          "ranges": [
+            [
+              50,
+              80
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideBossFireAndChaosResist",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "+80% to Fire Resistance",
+        "+80% to Chaos Resistance",
+        "+10% to maximum Fire Resistance",
+        "+10% to maximum Chaos Resistance"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideBossFireAndChaosResist",
+          "altar": "exarch",
+          "lines": [
+            "+80% to Fire Resistance",
+            "+80% to Chaos Resistance",
+            "+10% to maximum Fire Resistance",
+            "+10% to maximum Chaos Resistance"
+          ],
+          "templates": [
+            "+#% to Fire Resistance",
+            "+#% to Chaos Resistance",
+            "+#% to maximum Fire Resistance",
+            "+#% to maximum Chaos Resistance"
+          ],
+          "ranges": [
+            [
+              80,
+              80
+            ],
+            [
+              80,
+              80
+            ],
+            [
+              10,
+              10
+            ],
+            [
+              10,
+              10
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideBossHinderAura",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "Nearby Enemies are Hindered, with 40% reduced Movement Speed"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideBossHinderAura",
+          "altar": "exarch",
+          "lines": [
+            "Nearby Enemies are Hindered, with 40% reduced Movement Speed"
+          ],
+          "templates": [
+            "Nearby Enemies are Hindered, with #% reduced Movement Speed"
+          ],
+          "ranges": [
+            [
+              40,
+              40
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideBossIncreasedArmourAndEvasion",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "(100-200)% increased Armour",
+        "(100-200)% increased Evasion Rating"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideBossIncreasedArmourAndEvasion",
+          "altar": "exarch",
+          "lines": [
+            "(100-200)% increased Armour",
+            "(100-200)% increased Evasion Rating"
+          ],
+          "templates": [
+            "#% increased Armour",
+            "#% increased Evasion Rating"
+          ],
+          "ranges": [
+            [
+              100,
+              200
+            ],
+            [
+              100,
+              200
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideBossPhysToAddAsChaos",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "Gain (70-130)% of Physical Damage as Extra Chaos Damage",
+        "All Damage from Hits can Poison",
+        "Poison on Hit"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideBossPhysToAddAsChaos",
+          "altar": "exarch",
+          "lines": [
+            "Gain (70-130)% of Physical Damage as Extra Chaos Damage",
+            "All Damage from Hits can Poison",
+            "Poison on Hit"
+          ],
+          "templates": [
+            "Gain #% of Physical Damage as Extra Chaos Damage",
+            "All Damage from Hits can Poison",
+            "Poison on Hit"
+          ],
+          "ranges": [
+            [
+              70,
+              130
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideBossPhysToAddAsFire",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "Gain (70-130)% of Physical Damage as Extra Fire Damage",
+        "All Damage can Ignite",
+        "Hits always Ignite"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideBossPhysToAddAsFire",
+          "altar": "exarch",
+          "lines": [
+            "Gain (70-130)% of Physical Damage as Extra Fire Damage",
+            "All Damage can Ignite",
+            "Hits always Ignite"
+          ],
+          "templates": [
+            "Gain #% of Physical Damage as Extra Fire Damage",
+            "All Damage can Ignite",
+            "Hits always Ignite"
+          ],
+          "ranges": [
+            [
+              70,
+              130
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideBossRemoveFlaskChargeOnHit",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "Enemies lose 6 Flask Charges every 3 seconds and cannot gain Flask Charges for 6 seconds after being Hit"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideBossRemoveFlaskChargeOnHit",
+          "altar": "exarch",
+          "lines": [
+            "Enemies lose 6 Flask Charges every 3 seconds and cannot gain Flask Charges for 6 seconds after being Hit"
+          ],
+          "templates": [
+            "Enemies lose # Flask Charges every # seconds and cannot gain Flask Charges for # seconds after being Hit"
+          ],
+          "ranges": [
+            [
+              6,
+              6
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideBossBlindOnHit",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "100% Global chance to Blind Enemies on hit",
+        "(100-200)% increased Blind Effect"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideBossBlindOnHit",
+          "altar": "eater",
+          "lines": [
+            "100% Global chance to Blind Enemies on hit",
+            "(100-200)% increased Blind Effect"
+          ],
+          "templates": [
+            "#% Global chance to Blind Enemies on hit",
+            "#% increased Blind Effect"
+          ],
+          "ranges": [
+            [
+              100,
+              100
+            ],
+            [
+              100,
+              200
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideBossColdAndLightningResist",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "+80% to Cold Resistance",
+        "+80% to Lightning Resistance",
+        "+10% to maximum Cold Resistance",
+        "+10% to maximum Lightning Resistance"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideBossColdAndLightningResist",
+          "altar": "eater",
+          "lines": [
+            "+80% to Cold Resistance",
+            "+80% to Lightning Resistance",
+            "+10% to maximum Cold Resistance",
+            "+10% to maximum Lightning Resistance"
+          ],
+          "templates": [
+            "+#% to Cold Resistance",
+            "+#% to Lightning Resistance",
+            "+#% to maximum Cold Resistance",
+            "+#% to maximum Lightning Resistance"
+          ],
+          "ranges": [
+            [
+              80,
+              80
+            ],
+            [
+              80,
+              80
+            ],
+            [
+              10,
+              10
+            ],
+            [
+              10,
+              10
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideBossCoveredInFrostOnHit",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "Cover Enemies in Frost on Hit",
+        "Gain (50-80)% of Physical Damage as Extra Cold Damage"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideBossCoveredInFrostOnHit",
+          "altar": "eater",
+          "lines": [
+            "Cover Enemies in Frost on Hit",
+            "Gain (50-80)% of Physical Damage as Extra Cold Damage"
+          ],
+          "templates": [
+            "Cover Enemies in Frost on Hit",
+            "Gain #% of Physical Damage as Extra Cold Damage"
+          ],
+          "ranges": [
+            [
+              50,
+              80
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideBossMaxLifeAsEnergyShield",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "Gain (50-70)% of Maximum Life as Extra Maximum Energy Shield"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideBossMaxLifeAsEnergyShield",
+          "altar": "eater",
+          "lines": [
+            "Gain (50-70)% of Maximum Life as Extra Maximum Energy Shield"
+          ],
+          "templates": [
+            "Gain #% of Maximum Life as Extra Maximum Energy Shield"
+          ],
+          "ranges": [
+            [
+              50,
+              70
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideBossPenetrateElementalResistances",
+      "altars": [
+        "eater",
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "Damage Penetrates (15-25)% of Enemy Elemental Resistances",
+        "Gain (50-80)% of Physical Damage as Extra Damage of a random Element"
+      ],
+      "weights": {
+        "eater": 1000,
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideBossPenetrateElementalResistances",
+          "altar": "eater",
+          "lines": [
+            "Damage Penetrates (15-25)% of Enemy Elemental Resistances",
+            "Gain (50-80)% of Physical Damage as Extra Damage of a random Element"
+          ],
+          "templates": [
+            "Damage Penetrates #% of Enemy Elemental Resistances",
+            "Gain #% of Physical Damage as Extra Damage of a random Element"
+          ],
+          "ranges": [
+            [
+              15,
+              25
+            ],
+            [
+              50,
+              80
+            ]
+          ],
+          "weight": 1000
+        },
+        {
+          "id": "CleansingAltarDownsideBossPenetrateElementalResist",
+          "altar": "exarch",
+          "lines": [
+            "Damage Penetrates (15-25)% of Enemy Elemental Resistances",
+            "Gain (50-80)% of Physical Damage as Extra Damage of a random Element"
+          ],
+          "templates": [
+            "Damage Penetrates #% of Enemy Elemental Resistances",
+            "Gain #% of Physical Damage as Extra Damage of a random Element"
+          ],
+          "ranges": [
+            [
+              15,
+              25
+            ],
+            [
+              50,
+              80
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideBossPhysToAddAsCold",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "Gain (70-130)% of Physical Damage as Extra Cold Damage",
+        "All Damage with Hits can Chill"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideBossPhysToAddAsCold",
+          "altar": "eater",
+          "lines": [
+            "Gain (70-130)% of Physical Damage as Extra Cold Damage",
+            "All Damage with Hits can Chill"
+          ],
+          "templates": [
+            "Gain #% of Physical Damage as Extra Cold Damage",
+            "All Damage with Hits can Chill"
+          ],
+          "ranges": [
+            [
+              70,
+              130
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideBossPhysToAddAsLightning",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "Gain (70-130)% of Physical Damage as Extra Lightning Damage",
+        "All Damage can Shock",
+        "Hits always Shock"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideBossPhysToAddAsLightning",
+          "altar": "eater",
+          "lines": [
+            "Gain (70-130)% of Physical Damage as Extra Lightning Damage",
+            "All Damage can Shock",
+            "Hits always Shock"
+          ],
+          "templates": [
+            "Gain #% of Physical Damage as Extra Lightning Damage",
+            "All Damage can Shock",
+            "Hits always Shock"
+          ],
+          "ranges": [
+            [
+              70,
+              130
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideBossPhysicalDamageReduction",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "(50-70)% additional Physical Damage Reduction"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideBossPhysicalDamageReduction",
+          "altar": "eater",
+          "lines": [
+            "(50-70)% additional Physical Damage Reduction"
+          ],
+          "templates": [
+            "#% additional Physical Damage Reduction"
+          ],
+          "ranges": [
+            [
+              50,
+              70
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideBossSuppressSpells",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "boss",
+      "lines": [
+        "+100% chance to Suppress Spell Damage",
+        "Prevent +(20-30)% of Suppressed Spell Damage"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideBossSuppressSpells",
+          "altar": "eater",
+          "lines": [
+            "+100% chance to Suppress Spell Damage",
+            "Prevent +(20-30)% of Suppressed Spell Damage"
+          ],
+          "templates": [
+            "+#% chance to Suppress Spell Damage",
+            "Prevent +#% of Suppressed Spell Damage"
+          ],
+          "ranges": [
+            [
+              100,
+              100
+            ],
+            [
+              20,
+              30
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideMonsterArmour",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "+50000 to Armour"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideMonsterArmour",
+          "altar": "exarch",
+          "lines": [
+            "+50000 to Armour"
+          ],
+          "templates": [
+            "+# to Armour"
+          ],
+          "ranges": [
+            [
+              50000,
+              50000
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideMonsterBurningGroundOnDeath",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "Drops Burning Ground on Death, lasting 3 seconds"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideMonsterBurningGroundOnDeath",
+          "altar": "exarch",
+          "lines": [
+            "Drops Burning Ground on Death, lasting 3 seconds"
+          ],
+          "templates": [
+            "Drops Burning Ground on Death, lasting # seconds"
+          ],
+          "ranges": [
+            [
+              3,
+              3
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideMonsterChaosDamage",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "Gain (70-130)% of Physical Damage as Extra Chaos Damage"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideMonsterChaosDamage",
+          "altar": "exarch",
+          "lines": [
+            "Gain (70-130)% of Physical Damage as Extra Chaos Damage"
+          ],
+          "templates": [
+            "Gain #% of Physical Damage as Extra Chaos Damage"
+          ],
+          "ranges": [
+            [
+              70,
+              130
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideMonsterConsecratedGroundOnDeath",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "Create Consecrated Ground on Death, lasting 6 seconds"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideMonsterConsecratedGroundOnDeath",
+          "altar": "exarch",
+          "lines": [
+            "Create Consecrated Ground on Death, lasting 6 seconds"
+          ],
+          "templates": [
+            "Create Consecrated Ground on Death, lasting # seconds"
+          ],
+          "ranges": [
+            [
+              6,
+              6
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideMonsterExposureOnHit",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "Inflict Fire, Cold, and Lightning Exposure on Hit",
+        "Gain (70-130)% of Physical Damage as Extra Damage of a random Element"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideMonsterExposureOnHit",
+          "altar": "exarch",
+          "lines": [
+            "Inflict Fire, Cold, and Lightning Exposure on Hit",
+            "Gain (70-130)% of Physical Damage as Extra Damage of a random Element"
+          ],
+          "templates": [
+            "Inflict Fire, Cold, and Lightning Exposure on Hit",
+            "Gain #% of Physical Damage as Extra Damage of a random Element"
+          ],
+          "ranges": [
+            [
+              70,
+              130
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideMonsterFireAndChaosResist",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "+80% to Fire Resistance",
+        "+80% to Chaos Resistance",
+        "+10% to maximum Fire Resistance",
+        "+10% to maximum Chaos Resistance"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideMonsterFireAndChaosResist",
+          "altar": "exarch",
+          "lines": [
+            "+80% to Fire Resistance",
+            "+80% to Chaos Resistance",
+            "+10% to maximum Fire Resistance",
+            "+10% to maximum Chaos Resistance"
+          ],
+          "templates": [
+            "+#% to Fire Resistance",
+            "+#% to Chaos Resistance",
+            "+#% to maximum Fire Resistance",
+            "+#% to maximum Chaos Resistance"
+          ],
+          "ranges": [
+            [
+              80,
+              80
+            ],
+            [
+              80,
+              80
+            ],
+            [
+              10,
+              10
+            ],
+            [
+              10,
+              10
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideMonsterFireDamage",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "Gain (70-130)% of Physical Damage as Extra Fire Damage"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideMonsterFireDamage",
+          "altar": "exarch",
+          "lines": [
+            "Gain (70-130)% of Physical Damage as Extra Fire Damage"
+          ],
+          "templates": [
+            "Gain #% of Physical Damage as Extra Fire Damage"
+          ],
+          "ranges": [
+            [
+              70,
+              130
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideMonsterFlaskDegenOnHit",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "Enemies lose 6 Flask Charges every 3 seconds and cannot gain Flask Charges for 6 seconds after being Hit"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideMonsterFlaskDegenOnHit",
+          "altar": "exarch",
+          "lines": [
+            "Enemies lose 6 Flask Charges every 3 seconds and cannot gain Flask Charges for 6 seconds after being Hit"
+          ],
+          "templates": [
+            "Enemies lose # Flask Charges every # seconds and cannot gain Flask Charges for # seconds after being Hit"
+          ],
+          "ranges": [
+            [
+              6,
+              6
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideMonsterIncreasedArea",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "(70-130)% increased Area of Effect"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideMonsterIncreasedArea",
+          "altar": "exarch",
+          "lines": [
+            "(70-130)% increased Area of Effect"
+          ],
+          "templates": [
+            "#% increased Area of Effect"
+          ],
+          "ranges": [
+            [
+              70,
+              130
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsideMonsterIncreasedEvasion",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "(250-500)% increased Evasion Rating"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsideMonsterIncreasedEvasion",
+          "altar": "exarch",
+          "lines": [
+            "(250-500)% increased Evasion Rating"
+          ],
+          "templates": [
+            "#% increased Evasion Rating"
+          ],
+          "ranges": [
+            [
+              250,
+              500
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideMonsterChilledGroundOnDeath",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "Drops Chilled Ground on Death, lasting 3 seconds"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideMonsterChilledGroundOnDeath",
+          "altar": "eater",
+          "lines": [
+            "Drops Chilled Ground on Death, lasting 3 seconds"
+          ],
+          "templates": [
+            "Drops Chilled Ground on Death, lasting # seconds"
+          ],
+          "ranges": [
+            [
+              3,
+              3
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideMonsterColdAndLightningResist",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "+80% to Cold Resistance",
+        "+80% to Lightning Resistance",
+        "+10% to maximum Cold Resistance",
+        "+10% to maximum Lightning Resistance"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideMonsterColdAndLightningResist",
+          "altar": "eater",
+          "lines": [
+            "+80% to Cold Resistance",
+            "+80% to Lightning Resistance",
+            "+10% to maximum Cold Resistance",
+            "+10% to maximum Lightning Resistance"
+          ],
+          "templates": [
+            "+#% to Cold Resistance",
+            "+#% to Lightning Resistance",
+            "+#% to maximum Cold Resistance",
+            "+#% to maximum Lightning Resistance"
+          ],
+          "ranges": [
+            [
+              80,
+              80
+            ],
+            [
+              80,
+              80
+            ],
+            [
+              10,
+              10
+            ],
+            [
+              10,
+              10
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideMonsterColdDamage",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "Gain (70-130)% of Physical Damage as Extra Cold Damage"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideMonsterColdDamage",
+          "altar": "eater",
+          "lines": [
+            "Gain (70-130)% of Physical Damage as Extra Cold Damage"
+          ],
+          "templates": [
+            "Gain #% of Physical Damage as Extra Cold Damage"
+          ],
+          "ranges": [
+            [
+              70,
+              130
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideMonsterExtraProjectiles",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "Skills fire (3-5) additional Projectiles"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideMonsterExtraProjectiles",
+          "altar": "eater",
+          "lines": [
+            "Skills fire (3-5) additional Projectiles"
+          ],
+          "templates": [
+            "Skills fire # additional Projectiles"
+          ],
+          "ranges": [
+            [
+              3,
+              5
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideMonsterGraspingVineStackOnHit",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "Inflict 1 Grasping Vine on Hit"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideMonsterGraspingVineStackOnHit",
+          "altar": "eater",
+          "lines": [
+            "Inflict 1 Grasping Vine on Hit"
+          ],
+          "templates": [
+            "Inflict # Grasping Vine on Hit"
+          ],
+          "ranges": [
+            [
+              1,
+              1
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideMonsterLightningDamage",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "Gain (70-130)% of Physical Damage as Extra Lightning Damage"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideMonsterLightningDamage",
+          "altar": "eater",
+          "lines": [
+            "Gain (70-130)% of Physical Damage as Extra Lightning Damage"
+          ],
+          "templates": [
+            "Gain #% of Physical Damage as Extra Lightning Damage"
+          ],
+          "ranges": [
+            [
+              70,
+              130
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideMonsterOverwhelm",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "Hits have (50-80)% chance to ignore Enemy Physical Damage Reduction"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideMonsterOverwhelm",
+          "altar": "eater",
+          "lines": [
+            "Hits have (50-80)% chance to ignore Enemy Physical Damage Reduction"
+          ],
+          "templates": [
+            "Hits have #% chance to ignore Enemy Physical Damage Reduction"
+          ],
+          "ranges": [
+            [
+              50,
+              80
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideMonsterPhysicalDamageReduction",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "(50-80)% additional Physical Damage Reduction"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideMonsterPhysicalDamageReduction",
+          "altar": "eater",
+          "lines": [
+            "(50-80)% additional Physical Damage Reduction"
+          ],
+          "templates": [
+            "#% additional Physical Damage Reduction"
+          ],
+          "ranges": [
+            [
+              50,
+              80
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideMonsterRemoveChargeOnHit",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "100% chance to remove a random Charge from Enemy on Hit"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideMonsterRemoveChargeOnHit",
+          "altar": "eater",
+          "lines": [
+            "100% chance to remove a random Charge from Enemy on Hit"
+          ],
+          "templates": [
+            "#% chance to remove a random Charge from Enemy on Hit"
+          ],
+          "ranges": [
+            [
+              100,
+              100
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideMonsterShockedGroundOnDeath",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "Create Shocked Ground on Death, lasting 3 seconds"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideMonsterShockedGroundOnDeath",
+          "altar": "eater",
+          "lines": [
+            "Create Shocked Ground on Death, lasting 3 seconds"
+          ],
+          "templates": [
+            "Create Shocked Ground on Death, lasting # seconds"
+          ],
+          "ranges": [
+            [
+              3,
+              3
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideMonsterSpeed",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "(30-50)% increased Movement Speed",
+        "(30-50)% increased Attack Speed",
+        "(30-50)% increased Cast Speed"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideMonsterSpeed",
+          "altar": "eater",
+          "lines": [
+            "(30-50)% increased Movement Speed",
+            "(30-50)% increased Attack Speed",
+            "(30-50)% increased Cast Speed"
+          ],
+          "templates": [
+            "#% increased Movement Speed",
+            "#% increased Attack Speed",
+            "#% increased Cast Speed"
+          ],
+          "ranges": [
+            [
+              30,
+              50
+            ],
+            [
+              30,
+              50
+            ],
+            [
+              30,
+              50
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsideMonsterSupressSpells",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "minions",
+      "lines": [
+        "+100% chance to Suppress Spell Damage",
+        "Prevent +(20-30)% of Suppressed Spell Damage"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsideMonsterSupressSpells",
+          "altar": "eater",
+          "lines": [
+            "+100% chance to Suppress Spell Damage",
+            "Prevent +(20-30)% of Suppressed Spell Damage"
+          ],
+          "templates": [
+            "+#% chance to Suppress Spell Damage",
+            "Prevent +#% of Suppressed Spell Damage"
+          ],
+          "ranges": [
+            [
+              100,
+              100
+            ],
+            [
+              20,
+              30
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsidePlayerBurningGroundWhenHit",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "(15-20)% chance for Enemies to drop Burning Ground when Hitting you, no more than once every 2 seconds"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsidePlayerBurningGroundWhenHit",
+          "altar": "exarch",
+          "lines": [
+            "(15-20)% chance for Enemies to drop Burning Ground when Hitting you, no more than once every 2 seconds"
+          ],
+          "templates": [
+            "#% chance for Enemies to drop Burning Ground when Hitting you, no more than once every # seconds"
+          ],
+          "ranges": [
+            [
+              15,
+              20
+            ],
+            [
+              2,
+              2
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsidePlayerChaosDegenDuringFlaskDuration",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "Take 600.0 Chaos Damage per second during any Flask Effect"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsidePlayerChaosDegenDuringFlaskDuration",
+          "altar": "exarch",
+          "lines": [
+            "Take 600.0 Chaos Damage per second during any Flask Effect"
+          ],
+          "templates": [
+            "Take # Chaos Damage per second during any Flask Effect"
+          ],
+          "ranges": [
+            [
+              600,
+              600
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsidePlayerChaosMonsterAura",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "Nearby Enemies Gain 100% of their Physical Damage as Extra Chaos Damage"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsidePlayerChaosMonsterAura",
+          "altar": "exarch",
+          "lines": [
+            "Nearby Enemies Gain 100% of their Physical Damage as Extra Chaos Damage"
+          ],
+          "templates": [
+            "Nearby Enemies Gain #% of their Physical Damage as Extra Chaos Damage"
+          ],
+          "ranges": [
+            [
+              100,
+              100
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsidePlayerCurseReflect",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "Curses you inflict are reflected back to you"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsidePlayerCurseReflect",
+          "altar": "exarch",
+          "lines": [
+            "Curses you inflict are reflected back to you"
+          ],
+          "templates": [
+            "Curses you inflict are reflected back to you"
+          ],
+          "ranges": [],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsidePlayerFireMonsterAura",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "Nearby Enemies Gain 100% of their Physical Damage as Extra Fire Damage"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsidePlayerFireMonsterAura",
+          "altar": "exarch",
+          "lines": [
+            "Nearby Enemies Gain 100% of their Physical Damage as Extra Fire Damage"
+          ],
+          "templates": [
+            "Nearby Enemies Gain #% of their Physical Damage as Extra Fire Damage"
+          ],
+          "ranges": [
+            [
+              100,
+              100
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsidePlayerIncreasedFlaskChargesUsed",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "(20-40)% increased Flask Charges used",
+        "(60-40)% reduced Flask Effect Duration"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsidePlayerIncreasedFlaskChargesUsed",
+          "altar": "exarch",
+          "lines": [
+            "(20-40)% increased Flask Charges used",
+            "(60-40)% reduced Flask Effect Duration"
+          ],
+          "templates": [
+            "#% increased Flask Charges used",
+            "#% reduced Flask Effect Duration"
+          ],
+          "ranges": [
+            [
+              20,
+              40
+            ],
+            [
+              40,
+              60
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsidePlayerMeteorOnFlaskUse",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "30% chance to be targeted by a Meteor when you use a Flask"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsidePlayerMeteorOnFlaskUse",
+          "altar": "exarch",
+          "lines": [
+            "30% chance to be targeted by a Meteor when you use a Flask"
+          ],
+          "templates": [
+            "#% chance to be targeted by a Meteor when you use a Flask"
+          ],
+          "ranges": [
+            [
+              30,
+              30
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsidePlayerReducedArmourAndEvasion",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "-3000 to Armour",
+        "-3000 to Evasion Rating"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsidePlayerReducedArmourAndEvasion",
+          "altar": "exarch",
+          "lines": [
+            "-3000 to Armour",
+            "-3000 to Evasion Rating"
+          ],
+          "templates": [
+            "-# to Armour",
+            "-# to Evasion Rating"
+          ],
+          "ranges": [
+            [
+              -3000,
+              -3000
+            ],
+            [
+              -3000,
+              -3000
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsidePlayerReducedFireAndChaosResist",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "-(60-40)% to Fire Resistance",
+        "-(60-40)% to Chaos Resistance"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsidePlayerReducedFireAndChaosResist",
+          "altar": "exarch",
+          "lines": [
+            "-(60-40)% to Fire Resistance",
+            "-(60-40)% to Chaos Resistance"
+          ],
+          "templates": [
+            "-#% to Fire Resistance",
+            "-#% to Chaos Resistance"
+          ],
+          "ranges": [
+            [
+              -60,
+              -40
+            ],
+            [
+              -60,
+              -40
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "CleansingAltarDownsidePlayerScorched",
+      "altars": [
+        "exarch"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "(25-35)% chance to be Scorched when Hit",
+        "All Damage taken from Hits can Scorch you"
+      ],
+      "weights": {
+        "exarch": 1000
+      },
+      "variants": [
+        {
+          "id": "CleansingAltarDownsidePlayerScorched",
+          "altar": "exarch",
+          "lines": [
+            "(25-35)% chance to be Scorched when Hit",
+            "All Damage taken from Hits can Scorch you"
+          ],
+          "templates": [
+            "#% chance to be Scorched when Hit",
+            "All Damage taken from Hits can Scorch you"
+          ],
+          "ranges": [
+            [
+              25,
+              35
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsidePlayerChilledGroundWhenHit",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "(25-35)% chance for Enemies to drop Chilled Ground when Hitting you, no more than once every 2 seconds"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsidePlayerChilledGroundWhenHit",
+          "altar": "eater",
+          "lines": [
+            "(25-35)% chance for Enemies to drop Chilled Ground when Hitting you, no more than once every 2 seconds"
+          ],
+          "templates": [
+            "#% chance for Enemies to drop Chilled Ground when Hitting you, no more than once every # seconds"
+          ],
+          "ranges": [
+            [
+              25,
+              35
+            ],
+            [
+              2,
+              2
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsidePlayerColdMonsterAura",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "Nearby Enemies Gain 100% of their Physical Damage as Extra Cold Damage"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsidePlayerColdMonsterAura",
+          "altar": "eater",
+          "lines": [
+            "Nearby Enemies Gain 100% of their Physical Damage as Extra Cold Damage"
+          ],
+          "templates": [
+            "Nearby Enemies Gain #% of their Physical Damage as Extra Cold Damage"
+          ],
+          "ranges": [
+            [
+              100,
+              100
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsidePlayerLightningMonsterAura",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "Nearby Enemies Gain 100% of their Physical Damage as Extra Lightning Damage"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsidePlayerLightningMonsterAura",
+          "altar": "eater",
+          "lines": [
+            "Nearby Enemies Gain 100% of their Physical Damage as Extra Lightning Damage"
+          ],
+          "templates": [
+            "Nearby Enemies Gain #% of their Physical Damage as Extra Lightning Damage"
+          ],
+          "ranges": [
+            [
+              100,
+              100
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsidePlayerNonDamagingAilmentsReflectedToSelf",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "Non-Damaging Ailments you inflict are reflected back to you"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsidePlayerNonDamagingAilmentsReflectedToSelf",
+          "altar": "eater",
+          "lines": [
+            "Non-Damaging Ailments you inflict are reflected back to you"
+          ],
+          "templates": [
+            "Non-Damaging Ailments you inflict are reflected back to you"
+          ],
+          "ranges": [],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsidePlayerRandomProjectileDirection",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "Projectiles are fired in random directions"
+      ],
+      "weights": {
+        "eater": 400
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsidePlayerRandomProjectileDirection",
+          "altar": "eater",
+          "lines": [
+            "Projectiles are fired in random directions"
+          ],
+          "templates": [
+            "Projectiles are fired in random directions"
+          ],
+          "ranges": [],
+          "weight": 400
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsidePlayerReducedColdAndLightningResist",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "-(60-40)% to Cold Resistance",
+        "-(60-40)% to Lightning Resistance"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsidePlayerReducedColdAndLightningResist",
+          "altar": "eater",
+          "lines": [
+            "-(60-40)% to Cold Resistance",
+            "-(60-40)% to Lightning Resistance"
+          ],
+          "templates": [
+            "-#% to Cold Resistance",
+            "-#% to Lightning Resistance"
+          ],
+          "ranges": [
+            [
+              -60,
+              -40
+            ],
+            [
+              -60,
+              -40
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsidePlayerReducedPhysicalDamageReduction",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "-(60-40)% additional Physical Damage Reduction"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsidePlayerReducedPhysicalDamageReduction",
+          "altar": "eater",
+          "lines": [
+            "-(60-40)% additional Physical Damage Reduction"
+          ],
+          "templates": [
+            "-#% additional Physical Damage Reduction"
+          ],
+          "ranges": [
+            [
+              -60,
+              -40
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsidePlayerSapped",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "(25-35)% chance to be Sapped when Hit",
+        "All Damage taken from Hits can Sap you"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsidePlayerSapped",
+          "altar": "eater",
+          "lines": [
+            "(25-35)% chance to be Sapped when Hit",
+            "All Damage taken from Hits can Sap you"
+          ],
+          "templates": [
+            "#% chance to be Sapped when Hit",
+            "All Damage taken from Hits can Sap you"
+          ],
+          "ranges": [
+            [
+              25,
+              35
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsidePlayerShockedGroundWhenHit",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "(25-35)% chance for Enemies to drop Shocked Ground when Hitting you, no more than once every 2 seconds"
+      ],
+      "weights": {
+        "eater": 1000
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsidePlayerShockedGroundWhenHit",
+          "altar": "eater",
+          "lines": [
+            "(25-35)% chance for Enemies to drop Shocked Ground when Hitting you, no more than once every 2 seconds"
+          ],
+          "templates": [
+            "#% chance for Enemies to drop Shocked Ground when Hitting you, no more than once every # seconds"
+          ],
+          "ranges": [
+            [
+              25,
+              35
+            ],
+            [
+              2,
+              2
+            ]
+          ],
+          "weight": 1000
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsidePlayerTaintedEndurance",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "(20-10)% reduced Recovery Rate of Life, Mana and Energy Shield per Endurance Charge"
+      ],
+      "weights": {
+        "eater": 400
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsidePlayerTaintedEndurance",
+          "altar": "eater",
+          "lines": [
+            "(20-10)% reduced Recovery Rate of Life, Mana and Energy Shield per Endurance Charge"
+          ],
+          "templates": [
+            "#% reduced Recovery Rate of Life, Mana and Energy Shield per Endurance Charge"
+          ],
+          "ranges": [
+            [
+              10,
+              20
+            ]
+          ],
+          "weight": 400
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsidePlayerTaintedFrenzy",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "(50-30)% reduced Defences per Frenzy Charge"
+      ],
+      "weights": {
+        "eater": 400
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsidePlayerTaintedFrenzy",
+          "altar": "eater",
+          "lines": [
+            "(50-30)% reduced Defences per Frenzy Charge"
+          ],
+          "templates": [
+            "#% reduced Defences per Frenzy Charge"
+          ],
+          "ranges": [
+            [
+              30,
+              50
+            ]
+          ],
+          "weight": 400
+        }
+      ]
+    },
+    {
+      "id": "TangledAltarDownsidePlayerTaintedPower",
+      "altars": [
+        "eater"
+      ],
+      "side": "downside",
+      "target": "player",
+      "lines": [
+        "-(40-20)% to Critical Strike Multiplier per Power Charge"
+      ],
+      "weights": {
+        "eater": 400
+      },
+      "variants": [
+        {
+          "id": "TangledAltarDownsidePlayerTaintedPower",
+          "altar": "eater",
+          "lines": [
+            "-(40-20)% to Critical Strike Multiplier per Power Charge"
+          ],
+          "templates": [
+            "-#% to Critical Strike Multiplier per Power Charge"
+          ],
+          "ranges": [
+            [
+              -40,
+              -20
+            ]
+          ],
+          "weight": 400
+        }
+      ]
+    }
+  ]
+}

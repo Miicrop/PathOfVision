@@ -1,0 +1,4 @@
+__pycache__/
+.pytest_cache/
+tools/gen_mods/.cache/
+.remember/

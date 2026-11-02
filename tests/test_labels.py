@@ -28,3 +28,14 @@ def test_keywords_are_colored_as_whole_words_in_any_case():
     assert '<span style="color:#00f">Cold</span>' in out
     assert "&amp;" in out and "&lt;x&gt;" in out      # text is escaped
     assert "Firestorm" in out and out.count("<span") == 2
+
+
+def test_rolled_values_skip_fixed_numbers_and_flag_unread_ranges():
+    from prototype.labels import rolled_values
+    data = ["(25-35)% chance to be Sapped when Hit", "All Damage taken from Hits can Sap you"]
+    assert rolled_values(data, ["32% chance to be Sapped when Hit", data[1]]) == [("32%", True)]
+    assert rolled_values(data, data) == [("25-35%", False)]
+    shocked = ["Create Shocked Ground on Death, lasting 3 seconds"]
+    assert rolled_values(shocked, shocked) == []
+    crit = ["-(40-20)% to Critical Strike Multiplier per Power Charge"]
+    assert rolled_values(crit, ["-27% to Critical Strike Multiplier per Power Charge"]) == [("-27%", True)]

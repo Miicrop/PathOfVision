@@ -63,3 +63,22 @@ def color_keywords(text: str, keywords: dict[str, str]) -> str:
                                          sorted(keywords, key=len, reverse=True)) + r")\b", re.IGNORECASE)
     return pattern.sub(lambda m: f'<span style="color:{colors[html.unescape(m.group(1)).lower()]}">{m.group(1)}</span>',
                        escaped)
+
+
+SLOT_RE = re.compile(r"(-?)(\(-?[\d.]+--?[\d.]+\)|\d+(?:\.\d+)?)(%?)")   # sign, value or range, percent
+
+
+def rolled_values(data_lines: list[str], display_lines: list[str]) -> list[tuple[str, bool]]:
+    """The values that roll (ranges in the data) as shown text, and whether each was read in game.
+
+    Fixed numbers ("lasting 3 seconds", "100% chance") are left out; they say nothing about the roll.
+    """
+    out = []
+    for data, shown in zip(data_lines, display_lines):
+        for d, s in zip(SLOT_RE.finditer(data), SLOT_RE.finditer(shown)):
+            if not d.group(2).startswith("("):
+                continue
+            read = not s.group(2).startswith("(")
+            value = s.group(2) if read else s.group(2)[1:-1]
+            out.append((f"{d.group(1)}{value}{d.group(3)}", read))
+    return out

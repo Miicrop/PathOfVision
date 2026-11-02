@@ -23,7 +23,8 @@ from PySide6.QtWidgets import (QFrame, QGraphicsDropShadowEffect, QGraphicsOpaci
                                QWidget)
 
 from . import settings
-from .labels import KEYWORDS_PATH, LABELS_PATH, Label, color_keywords, load_keywords, load_labels, render_alias
+from .labels import (KEYWORDS_PATH, LABELS_PATH, Label, color_keywords, load_keywords, load_labels, render_alias,
+                     rolled_values)
 from .live import AltarView
 from .match import Match
 from .verdict import ADAPT, AVOID, CONSIDER, NEUTRAL, TAKE, UNREADABLE
@@ -58,6 +59,7 @@ class Style:
     font_size: int = 15
     tiers: str = "text"                  # see settings.TIER_STYLES
     other_opacity: float = 0.6           # the option that is not the pick
+    values: bool = True                  # column with the rolled values
     keywords: dict[str, str] = field(default_factory=dict, hash=False, compare=False)
 
     @property
@@ -150,7 +152,7 @@ def _option_box(view: AltarView, position: str, icons: _Icons, labels: dict[str,
         icon.setPixmap(pixmap)
     row.addWidget(icon, 0, Qt.AlignVCenter)
 
-    # One row per mod in columns: sign | mod icon | alias or text | tier
+    # One row per mod in columns: sign | mod icon | alias or text | values | tier
     show_text = style.tiers in ("text", "both")
     tint = style.tiers in ("highlight", "both")
     size = style.font_size
@@ -165,7 +167,7 @@ def _option_box(view: AltarView, position: str, icons: _Icons, labels: dict[str,
             back = QFrame()
             red, green, blue = (int(tier_color[i:i + 2], 16) for i in (1, 3, 5))
             back.setStyleSheet(f"background: rgba({red}, {green}, {blue}, {TIER_TINT_ALPHA}); border-radius: 3px;")
-            grid.addWidget(back, r, 0, 1, 4)
+            grid.addWidget(back, r, 0, 1, 5)
         sign = _span("+", "#4fbf6a", True) if m.card.side == "upside" else _span("−", "#e05a4f", True)
         grid.addWidget(_label(sign, size=size), r, 0)
         label = labels.get(m.card.id)
@@ -179,8 +181,13 @@ def _option_box(view: AltarView, position: str, icons: _Icons, labels: dict[str,
             grid.addWidget(pic, r, 1)
         text = color_keywords(mod_text(m, option.lines, labels), style.keywords)
         grid.addWidget(_label(f'<span style="color:#d8d8d8">{text}</span>', size=size), r, 2)
+        if style.values:
+            # Read values in the text color, unread ones as their range in grey.
+            shown = " / ".join(_span(v, "#d8d8d8" if read else "#6f757d")
+                               for v, read in rolled_values(m.card.lines[m.variant], m.display(option.lines)))
+            grid.addWidget(_label(shown, Qt.AlignRight, size), r, 3)
         if show_text:
-            grid.addWidget(_label(_span(tier, tier_color, True), Qt.AlignRight, size), r, 3)
+            grid.addWidget(_label(_span(tier, tier_color, True), Qt.AlignRight, size), r, 4)
         grid.setRowMinimumHeight(r, style.mod_icon)   # rows with and without icon look the same
     grid.setColumnMinimumWidth(1, style.mod_icon)     # texts line up across boxes
     grid.setColumnStretch(2, 1)
@@ -334,7 +341,8 @@ class Hud(QWidget):
             config = self._settings.value
             tiers = config["hud_tiers"] if config["hud_tiers"] in settings.TIER_STYLES else "text"
             opacity = min(1.0, max(0.1, float(config["hud_other_opacity"])))
-            self._style = Style(int(config["hud_font_size"]), tiers, opacity, self._keywords.value)
+            self._style = Style(int(config["hud_font_size"]), tiers, opacity, bool(config["hud_values"]),
+                                self._keywords.value)
             self._shown = ()   # force a rebuild with the new texts and sizes
 
     def resizeEvent(self, event):

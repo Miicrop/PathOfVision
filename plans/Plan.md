@@ -12,7 +12,7 @@ The altar scanner is meant as the first module of a bigger "PoE helper". Other m
 
 - **Shared core:** screen capture, trigger detection by template, OCR with preprocessing, fuzzy matching against a generated data file, tier profiles, verdict engine, HUD, tier board.
 - **Per mechanic (a module):** trigger template(s), where the text sits relative to the trigger, the data generator for its mods, the verdict rules, HUD layout tweaks.
-- Before adding the second mechanic, split `prototype/` into `core/` and `mechanics/altar/` along these lines. Until then, avoid hard-coding altar specifics into the shared pieces.
+- The Python prototype stays a single altar module; it only proves the approach and shows what is needed. The core/mechanic split is designed into the final version (Phase 4 port).
 
 ## 2. Ground rules (ToS)
 

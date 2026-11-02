@@ -19,7 +19,7 @@ from typing import Callable
 
 from PySide6.QtCore import QObject, Qt, Signal
 from PySide6.QtGui import QColor, QPixmap
-from PySide6.QtWidgets import (QFrame, QGraphicsDropShadowEffect, QGridLayout, QHBoxLayout, QLabel, QVBoxLayout,
+from PySide6.QtWidgets import (QFrame, QGraphicsDropShadowEffect, QGraphicsOpacityEffect, QGridLayout, QHBoxLayout, QLabel, QVBoxLayout,
                                QWidget)
 
 from . import settings
@@ -57,6 +57,7 @@ class Style:
     """What the user can tune; icon sizes follow the font size."""
     font_size: int = 15
     tiers: str = "text"                  # see settings.TIER_STYLES
+    other_opacity: float = 0.6           # the option that is not the pick
     keywords: dict[str, str] = field(default_factory=dict, hash=False, compare=False)
 
     @property
@@ -123,7 +124,10 @@ def _option_box(view: AltarView, position: str, icons: _Icons, labels: dict[str,
     color = VERDICT_COLORS[verdict.verdict]
     box = QFrame()
     box.setObjectName("opt")
-    chosen = view.recommendation.choice == position
+    pick = view.recommendation.choice or view.recommendation.about   # "Your call" still names an option
+    chosen = pick == position
+    # The other option is dimmed, unless it is ADAPT - BRICK: that one has an S tier upside worth a look.
+    dimmed = pick is not None and not chosen and verdict.verdict != ADAPT
     # Opaque when chosen, so the glow behind it does not tint the background.
     box.setStyleSheet(BOX_STYLE.format(name="opt", color=color, width=3 if chosen else 2, alpha=255 if chosen else 228))
     if chosen:
@@ -180,7 +184,12 @@ def _option_box(view: AltarView, position: str, icons: _Icons, labels: dict[str,
     grid.setColumnMinimumWidth(1, style.mod_icon)     # texts line up across boxes
     grid.setColumnStretch(2, 1)
     row.addLayout(grid, 1)
-    return _with_legend(box, _span(verdict.verdict, color, True), style)
+    wrapper = _with_legend(box, _span(verdict.verdict, color, True), style)
+    if dimmed and style.other_opacity < 1:
+        fade = QGraphicsOpacityEffect(wrapper)
+        fade.setOpacity(style.other_opacity)
+        wrapper.setGraphicsEffect(fade)
+    return wrapper
 
 
 def _with_legend(box: QFrame, rich: str, style: Style) -> QWidget:
@@ -315,7 +324,8 @@ class Hud(QWidget):
         if any([w.refresh() for w in (self._labels, self._keywords, self._settings)]):
             config = self._settings.value
             tiers = config["hud_tiers"] if config["hud_tiers"] in settings.TIER_STYLES else "text"
-            self._style = Style(int(config["hud_font_size"]), tiers, self._keywords.value)
+            opacity = min(1.0, max(0.1, float(config["hud_other_opacity"])))
+            self._style = Style(int(config["hud_font_size"]), tiers, opacity, self._keywords.value)
             self._shown = ()   # force a rebuild with the new texts and sizes
 
     def resizeEvent(self, event):

@@ -11,9 +11,10 @@ SETTINGS_PATH = ROOT / "settings.json"
 PROFILES_DIR = ROOT / "data" / "profiles"
 # HUD: centered at the bottom; hud_bottom = px between the HUD and the bottom edge (above the skill bar).
 # hud_font_size scales text and icons. hud_tiers: "off", "text", "highlight" (row tinted in the tier
-# color) or "both".
-DEFAULTS = {"profile": "default.json", "hud_bottom": 190, "hud_offset_x": 0,
-            "hud_font_size": 15, "hud_tiers": "text"}
+# color) or "both". hud_other_opacity: 0.1-1, how visible the option that is not the pick stays
+# (1 = no dimming; an ADAPT - BRICK option is never dimmed).
+DEFAULTS = {"profile": "default.json", "hud_bottom": 60, "hud_offset_x": 0,
+            "hud_font_size": 15, "hud_tiers": "text", "hud_other_opacity": 0.6}
 TIER_STYLES = ("off", "text", "highlight", "both")
 
 

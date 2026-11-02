@@ -1,0 +1,14 @@
+{
+  "name": "HUD test: ADAPT",
+  "readOnly": true,
+  "modsVersion": "3.29.3.3",
+  "upsides": {
+    "s": ["TangleAltarUpsideMonsterJewellersOrb"],
+    "a": ["TangleAltarUpsideBossOrbOfAlteration"],
+    "b": []
+  },
+  "downsides": {
+    "dangerous": [],
+    "brick": ["TangledAltarDownsideMonsterShockedGroundOnDeath"]
+  }
+}

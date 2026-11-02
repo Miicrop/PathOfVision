@@ -127,7 +127,8 @@ def _option_box(view: AltarView, position: str, icons: _Icons, labels: dict[str,
     pick = view.recommendation.choice or view.recommendation.about   # "Your call" still names an option
     chosen = pick == position
     # The other option is dimmed, unless it is ADAPT - BRICK: that one has an S tier upside worth a look.
-    dimmed = pick is not None and not chosen and verdict.verdict != ADAPT
+    # When both are AVOID ("Leave this altar alone") both are dimmed.
+    dimmed = (pick is not None and not chosen and verdict.verdict != ADAPT) or _leave_alone(view)
     # Opaque when chosen, so the glow behind it does not tint the background.
     box.setStyleSheet(BOX_STYLE.format(name="opt", color=color, width=3 if chosen else 2, alpha=255 if chosen else 228))
     if chosen:
@@ -192,6 +193,10 @@ def _option_box(view: AltarView, position: str, icons: _Icons, labels: dict[str,
     return wrapper
 
 
+def _leave_alone(view: AltarView) -> bool:
+    return all(v.verdict == AVOID for v in view.verdicts.values())
+
+
 def _with_legend(box: QFrame, rich: str, style: Style) -> QWidget:
     """Put a small label on the box's top-left border, like a fieldset legend."""
     wrapper = QWidget()
@@ -215,7 +220,11 @@ def _recommendation_box(view: AltarView, style: Style) -> QFrame:
     focus = rec.choice or rec.about
     color = VERDICT_COLORS[view.verdicts[focus].verdict] if focus else "#e0a33a"
     arrow = ARROWS.get(focus, "")   # point at the option the line is about
-    text = _span(f"{arrow}  {rec.text}  {arrow}" if arrow else rec.text, color, True)
+    if _leave_alone(view):
+        color, arrow = VERDICT_COLORS[AVOID], "⚠"
+    # Segoe UI Symbol draws the signs in one color; the default font would pick the color emoji for ⚠.
+    sign = f'<span style="font-family:\'Segoe UI Symbol\'">{_span(arrow, color, True)}</span>' if arrow else ""
+    text = f"{sign}&nbsp;&nbsp;{_span(rec.text, color, True)}&nbsp;&nbsp;{sign}" if arrow else _span(rec.text, color, True)
     if not view.complete:
         text += "<br>" + _span("partly hidden, verdict may change", "#9aa0a6")
     box = QFrame()

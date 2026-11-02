@@ -10,7 +10,11 @@ ROOT = Path(__file__).resolve().parents[1]
 SETTINGS_PATH = ROOT / "settings.json"
 PROFILES_DIR = ROOT / "data" / "profiles"
 # HUD: centered at the bottom; hud_bottom = px between the HUD and the bottom edge (above the skill bar).
-DEFAULTS = {"profile": "default.json", "hud_bottom": 190, "hud_offset_x": 0}
+# hud_font_size scales text and icons. hud_tiers: "off", "text", "highlight" (row tinted in the tier
+# color) or "both".
+DEFAULTS = {"profile": "default.json", "hud_bottom": 190, "hud_offset_x": 0,
+            "hud_font_size": 15, "hud_tiers": "text"}
+TIER_STYLES = ("off", "text", "highlight", "both")
 
 
 def load() -> dict:

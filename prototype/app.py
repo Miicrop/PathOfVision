@@ -45,10 +45,9 @@ def main(argv: list[str] | None = None) -> int:
     signal.signal(signal.SIGINT, lambda *_: app.exit(0))
     wake = QTimer(app, interval=200, timeout=lambda: None)
     wake.start()
-    config = settings.load()
     source = ReplaySource(sorted(args.replay.glob("*.png")), args.hold) if args.replay else ScreenSource(args.monitor)
     mon = source.monitor
-    hud = Hud(mon, config["hud_bottom"], config["hud_offset_x"])
+    hud = Hud(mon)   # reads its position and style from settings.json, live
     bridge = Bridge()
     bridge.views.connect(hud.show_views)
 

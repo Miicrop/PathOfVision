@@ -1,0 +1,10 @@
+{
+  "about": "Words colored in the HUD text (whole words, any case). Value: CSS color. Longer keywords win over shorter ones.",
+  "keywords": {
+    "Fire": "#ff7a45",
+    "Cold": "#5cb8ff",
+    "Lightning": "#ffe14d",
+    "Chaos": "#d77cff",
+    "Physical": "#c8a97e"
+  }
+}

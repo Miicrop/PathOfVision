@@ -95,3 +95,16 @@ def test_display_fills_read_values_into_clean_text(cards):
     lines = ["33% CHANCE TO BE SAPPED WHEN HIT 78 GOLD", "ALL DAMAGE TAKEN FROM HITS CAN SAP YOU"]
     (match,), _ = match_box(lines, cards, "player", None)
     assert match.display(lines) == ["33% chance to be Sapped when Hit", "All Damage taken from Hits can Sap you"]
+
+
+@pytest.mark.parametrize("data, ocr, shown", [
+    ("Create Shocked Ground on Death, lasting 3 seconds",
+     "100% CHANCE TO CREATE SHOCKED GROUND ON DEATH, LASTING 3 SECONDS",
+     "Create Shocked Ground on Death, lasting 3 seconds"),
+    ("(1.6-3.2)% chance to drop an additional Orb of Fusing", "4,3% CHANCE TO DROP AN ADDITIONAL ORB OF FUSING",
+     "4.3% chance to drop an additional Orb of Fusing"),
+    ("-(60-40)% to Cold Resistance", "-52% TO COLD RESISTANCE", "-52% to Cold Resistance"),
+])
+def test_fill_values_aligns_by_words(data, ocr, shown):
+    from prototype.match import _fill_values
+    assert _fill_values(data, ocr) == shown

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import difflib
 import itertools
 import json
 import re
@@ -27,6 +28,35 @@ def normalize(text: str) -> str:
     text = re.sub(r"(?<=\d) +(?=%)", "", text)                       # 33 % -> 33%
     text = re.sub(r"(?<=\d),(?=\d)", ".", text)                       # 2,5% -> 2.5%
     return re.sub(r"\s+", " ", to_template(text)).strip()
+
+
+def _fill_values(data_line: str, ocr_line: str) -> str:
+    """Put the numbers read in game into the data text's value slots.
+
+    Slots are matched to OCR numbers by the words around them, because the two texts do
+    not always have the same numbers ("100% chance to create Shocked Ground ... 3 seconds"
+    in game vs. "Create Shocked Ground ... 3 seconds" in the data).
+    """
+    ocr_line = re.sub(r"(?<=\d),(?=\d)", ".", ocr_line)   # 4,3% -> 4.3%
+    data_tokens = VALUE_SLOT_RE.split(data_line)             # text pieces between the slots
+    slots = VALUE_SLOT_RE.findall(data_line)
+    tokenize = lambda text: [w for w in re.split(r"[^A-Z#]+", VALUE_SLOT_RE.sub(" # ", text).upper()) if w]
+    data_words, ocr_words = tokenize(data_line), tokenize(ocr_line)
+    ocr_values = iter(NUMBER_RE.findall(ocr_line))
+    ocr_slot_values = [next(ocr_values) if w == "#" else None for w in ocr_words]
+
+    filled: dict[int, str] = {}
+    slot_at = [k for k, w in enumerate(data_words) if w == "#"]   # data word index of each slot
+    for block in difflib.SequenceMatcher(None, data_words, ocr_words, autojunk=False).get_matching_blocks():
+        for offset in range(block.size):
+            d, o = block.a + offset, block.b + offset
+            if data_words[d] == "#" and d in slot_at:
+                filled[slot_at.index(d)] = ocr_slot_values[o]
+    out = data_tokens[0]
+    for n, slot in enumerate(slots):
+        out += filled.get(n) or slot
+        out += data_tokens[n + 1]
+    return out
 
 
 def parse_header(text: str) -> str | None:
@@ -79,15 +109,8 @@ class Match:
 
     def display(self, ocr_lines: list[str]) -> list[str]:
         """The mod's clean text with the rolled values filled in where they were read."""
-        out = []
-        for text, i in zip(self.card.lines[self.variant], self.assign):
-            values = NUMBER_RE.findall(ocr_lines[i]) if i is not None else []
-            slots = VALUE_SLOT_RE.findall(text)
-            if values and len(values) >= len(slots):
-                filled = iter(values)
-                text = VALUE_SLOT_RE.sub(lambda _: next(filled), text)
-            out.append(text)
-        return out
+        return [_fill_values(text, ocr_lines[i]) if i is not None else text
+                for text, i in zip(self.card.lines[self.variant], self.assign)]
 
 
 def _values(line: str) -> list[float]:

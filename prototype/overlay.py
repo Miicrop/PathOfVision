@@ -25,7 +25,6 @@ VERDICT_COLORS = {TAKE: "#4fbf6a", CONSIDER: "#e0a33a", ADAPT: "#d65db1", AVOID:
 TIER_LABELS = {"s": ("S", "#f2c84b"), "a": ("A", "#b48cf0"), "b": ("B", "#6fa4dc"),
                "dangerous": ("Dangerous", "#e0a33a"), "brick": ("Brick", "#e05a4f")}
 TARGETS = {"player": "Player", "minions": "Eldritch Minions", "boss": "Map Boss", None: ""}
-ALTARS = {"eater": ("Eater of Worlds", "#4fb3d9"), "exarch": ("Searing Exarch", "#e0643c")}
 MAX_ALTARS = 2
 MAX_LINE = 64
 ICON_HEIGHT = 46
@@ -101,16 +100,15 @@ def _option_box(view: AltarView, position: str, icons: _Icons) -> QFrame:
 def _recommendation_box(view: AltarView) -> QFrame:
     rec = view.recommendation
     color = VERDICT_COLORS[view.verdicts[rec.choice].verdict] if rec.choice else "#e0a33a"
-    name, altar_color = ALTARS[view.altar.altar]
-    head = _span(name.upper(), altar_color, True)
+    text = _span(rec.text, color, True)
     if not view.complete:
-        head += "&nbsp;&nbsp;" + _span("partly hidden", "#9aa0a6")
+        text += "<br>" + _span("partly hidden, verdict may change", "#9aa0a6")
     box = QFrame()
     box.setObjectName("rec")
     box.setStyleSheet(BOX_STYLE.format(name="rec", color="#3a3f4b"))
     col = QVBoxLayout(box)
     col.setContentsMargins(12, 6, 12, 6)
-    col.addWidget(_label(f"{head}<br>{_span(rec.text, color, True)}", Qt.AlignHCenter))
+    col.addWidget(_label(text, Qt.AlignHCenter))
     return box
 
 
@@ -175,8 +173,18 @@ class Hud(QWidget):
                 old.deleteLater()
             for view in views:
                 self._layout.addWidget(_altar_column(view, self._icons), 0, Qt.AlignBottom)
-            self.adjustSize()
-            mon = self._monitor
-            self.move(mon["left"] + (mon["width"] - self.width()) // 2 + self._offset_x,
-                      mon["top"] + mon["height"] - self.height() - self._bottom)
+            self._layout.activate()
+            self.resize(self._layout.sizeHint())
         self.show()
+        self._anchor()
+
+    def resizeEvent(self, event):
+        # Qt may finish sizing the new boxes only after they are shown; re-anchor on every
+        # size change, otherwise the panel grows to the right and down from its old corner.
+        super().resizeEvent(event)
+        self._anchor()
+
+    def _anchor(self):
+        mon = self._monitor
+        self.move(mon["left"] + (mon["width"] - self.width()) // 2 + self._offset_x,
+                  mon["top"] + mon["height"] - self.height() - self._bottom)

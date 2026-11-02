@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import time
+from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Iterator
@@ -19,6 +20,7 @@ from .verdict import OptionInput, OptionVerdict, Profile, Recommendation, judge,
 TRACK_DISTANCE = 250   # px an icon may move between scans (camera follows the character)
 TRACK_TIMEOUT = 1.5    # s without seeing an icon before its altar is dropped
 REREAD_INTERVAL = 0.5  # s between reads of an altar that is not completely readable yet
+SAME_ALTAR_OVERLAP = 0.6   # share of mods two reads must have in common to be the same altar
 
 
 class ScreenSource:
@@ -89,23 +91,32 @@ class Scanner:
     def scan(self) -> list[AltarView]:
         img = self.source.grab()
         now = time.monotonic()
+        unclaimed = list(self.tracks)
         for icon in find_icons(img):
-            track = min(self.tracks, default=None,
-                        key=lambda t: abs(t.altar.icon.x - icon.x) + abs(t.altar.icon.y - icon.y))
-            if track and abs(track.altar.icon.x - icon.x) + abs(track.altar.icon.y - icon.y) > TRACK_DISTANCE:
+            track = min(unclaimed, default=None, key=lambda t: _distance(t.altar, icon))
+            if track and _distance(track.altar, icon) > TRACK_DISTANCE:
                 track = None
-            if track and (track.complete or now - track.last_read < REREAD_INTERVAL):
+            if track:
+                unclaimed.remove(track)
                 track.last_seen = now
                 track.altar.icon = icon   # follow the camera
-                continue
+                if track.complete or now - track.last_read < REREAD_INTERVAL:
+                    continue
             altar = read_altar(img, icon, self.ocr, self.cards)
             if altar is None:
                 continue
-            complete = all(o.complete for o in altar.options)
-            if track:
-                track.altar, track.last_seen, track.last_read, track.complete = altar, now, now, complete
+            # Running moves the icon further than TRACK_DISTANCE between scans, so an altar
+            # is also recognized by its content: the same mods on the same positions.
+            if track is None:
+                track = next((t for t in self.tracks if _same_altar(t.altar, altar)), None)
+            if track is None:
+                self.tracks.append(TrackedAltar(altar, now, now, _complete(altar)))
+                continue
+            track.last_seen, track.last_read = now, now
+            if _quality(altar) >= _quality(track.altar):
+                track.altar, track.complete = altar, _complete(altar)
             else:
-                self.tracks.append(TrackedAltar(altar, now, now, complete))
+                track.altar.icon = altar.icon
         self.tracks = [t for t in self.tracks if now - t.last_seen <= TRACK_TIMEOUT]
         return [self._view(t) for t in self.tracks]
 
@@ -121,6 +132,28 @@ class Scanner:
         }
         verdicts = {pos: judge(opt, profile) for pos, opt in options.items()}
         return AltarView(track.altar, track.complete, options, verdicts, recommend(options, verdicts))
+
+
+def _distance(altar: Altar, icon) -> int:
+    return abs(altar.icon.x - icon.x) + abs(altar.icon.y - icon.y)
+
+
+def _complete(altar: Altar) -> bool:
+    return all(o.complete for o in altar.options)
+
+
+def _quality(altar: Altar) -> tuple:
+    """Which of two reads of the same altar is better: complete, more mods, fewer partial ones."""
+    matches = [m for o in altar.options for m in o.matches]
+    return _complete(altar), len(matches), -sum(m.partial for m in matches), sum(m.score for m in matches)
+
+
+def _same_altar(a: Altar, b: Altar, min_overlap: float = SAME_ALTAR_OVERLAP) -> bool:
+    """Same mods on the same positions; values are ignored since partly hidden reads differ."""
+    sig = lambda altar: Counter((o.position, m.card.id) for o in altar.options for m in o.matches)
+    sa, sb = sig(a), sig(b)
+    smaller = min(sum(sa.values()), sum(sb.values()))
+    return smaller > 0 and sum((sa & sb).values()) / smaller >= min_overlap
 
 
 def frames(scanner: Scanner, hz: float) -> Iterator[list[AltarView]]:

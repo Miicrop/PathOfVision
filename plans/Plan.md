@@ -213,9 +213,9 @@ tests/                   # unit + recognition accuracy tests
 
 ### Phase 3 – Live prototype (Python) 🔶 (built 2026-11-02, waiting for a real mapping session)
 - Run: `.venv\Scripts\python -m prototype.app` (tray icon: "Settings board", "Quit"). Without the game: `--replay tests/fixtures/screens`. Board alone: `python -m prototype.board`.
-- `live.py`: capture with `mss` (primary monitor by default), icon search at 4 Hz, OCR only for new altars. Altars are tracked by icon position across scans; once both boxes are read completely, an altar is not read again. Incomplete altars (cut off, covered by HUD) are re-read every 0.5 s.
+- `live.py`: capture with `mss` (primary monitor by default), icon search at 4 Hz, OCR only for new altars. Altars are tracked by icon position across scans and, because running moves the icon too far between scans, also by content (≥ 60 % of the same mods on the same positions; values ignored). The better read wins (complete, more mods). Once both boxes are read completely, an altar is not read again; incomplete altars (cut off, covered by HUD) are re-read every 0.5 s.
 - `verdict.py`: verdict engine with unit tests for every row of the verdict table and the recommendation rules. New verdict `UNREADABLE` when no mod of an option could be read; the recommendation then waits ("Can't read both options yet.").
-- `overlay.py`: frameless, always-on-top, click-through, never takes focus. Shows up to two altars (closest to the screen center). Mod text comes from `mods.json` with the read values filled in, so stray OCR text (gold labels, NPC lines) never shows up.
+- `overlay.py`: frameless, always-on-top, click-through, never takes focus; centered at the bottom (`hud_bottom`, `hud_offset_x` in `settings.json`). Per altar it mirrors the game: top option box, recommendation box in the middle (where the altar icon sits), bottom option box. Box borders carry the verdict color; each option shows its target as the matching half of the altar icon (cropped from screenshots, blue = Eater, red = Exarch). Up to two altars side by side. Mod text comes from `mods.json` with the read values filled in, so stray OCR text (gold labels, NPC lines) never shows up.
 - `board.py` + `ui/board/`: the tier board grown from the mockup, on the real 201 cards. **Change of plan:** hosted in Qt WebEngine (already part of PySide6) instead of pywebview, so the board opens from the same process. The page talks to Python through a five-call adapter (`connectBackend()` in `board.js`); the WebView2 port only replaces that adapter.
 - Files: the board writes `data/profiles/*.json` and `settings.json` (active profile, HUD position); the scanner checks both on every scan, so changes apply instantly. User profiles and `settings.json` are not in git.
 - Measured on the desktop without altars: **1.96 % total CPU** (47 % of one of 24 threads) at 4 Hz. Most of it is the `mss` screen grab (~35 ms); `dxcam` (DXGI) is the next lever if needed.
@@ -234,6 +234,8 @@ tests/                   # unit + recognition accuracy tests
 - **Profile hotkey switching** (e.g. per farm strategy).
 - **Roll value scaling:** a high roll scores better than a low roll within the same tier. Needs the player's atlas scaling, since in-game values exceed the base ranges.
 - **Target from the icon halves:** classify crown/figure/group in the icon to know a box's target even when its header is hidden.
+- **Compact HUD (next):** the HUD repeats the full mod text, which is a lot to read mid-fight. Idea: a short keyword plus an icon per mod (e.g. "Divine ×3", "Sap"). Needs a hand-made keyword/icon table per mod, so it is a data task.
+- **Icon licensing:** the target icons are crops of game art. Fine for personal use; check before a public release.
 - **Partial reads:** show "incomplete" in the HUD when a box is cut off by HUD or screen edges, instead of a verdict on half the mods.
 - **Configurable thresholds** per profile (e.g. which upside tiers trigger CONSIDER / ADAPT - BRICK).
 - **Combination rules** ("downside X only matters together with upside Y").

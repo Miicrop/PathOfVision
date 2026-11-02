@@ -9,7 +9,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SETTINGS_PATH = ROOT / "settings.json"
 PROFILES_DIR = ROOT / "data" / "profiles"
-DEFAULTS = {"profile": "default.json", "hud_x": 40, "hud_y": 260}
+# HUD: centered at the bottom; hud_bottom = px between the HUD and the bottom edge (above the skill bar).
+DEFAULTS = {"profile": "default.json", "hud_bottom": 190, "hud_offset_x": 0}
 
 
 def load() -> dict:

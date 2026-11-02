@@ -40,10 +40,9 @@ def main(argv: list[str] | None = None) -> int:
     config = settings.load()
     source = ReplaySource(sorted(args.replay.glob("*.png")), args.hold) if args.replay else ScreenSource(args.monitor)
     mon = source.monitor
-    hud = Hud(mon["left"] + config["hud_x"], mon["top"] + config["hud_y"])
+    hud = Hud(mon, config["hud_bottom"], config["hud_offset_x"])
     bridge = Bridge()
-    center = (mon["width"] // 2, mon["height"] // 2)
-    bridge.views.connect(lambda views: hud.show_views(views, center))
+    bridge.views.connect(hud.show_views)
 
     board = None
 

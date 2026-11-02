@@ -219,7 +219,7 @@ tests/                   # unit + recognition accuracy tests
   - **Header hidden** (screen edge, buff bar): the target is inferred as the one that explains the most lines.
   - **HUD covers boxes**: buff bar, flask bar and skill bar draw on top of altar boxes. The one remaining miss is a Rarity line almost fully behind the flask bar.
 
-### Phase 3 – Live prototype (Python) 🔶 (built 2026-11-02, waiting for a real mapping session)
+### Phase 3 – Live prototype (Python) ✅ (done 2026-11-02)
 - Run: `.venv\Scripts\python -m prototype.app` (tray icon: "Settings board", "Quit"). Without the game: `--replay tests/fixtures/screens`. Board alone: `python -m prototype.board`.
 - `live.py`: capture with `mss` (primary monitor by default), icon search at 4 Hz, OCR only for new altars. Altars are tracked by icon position across scans and, because running moves the icon too far between scans, also by content (≥ 60 % of the same mods on the same positions; values ignored). The better read wins (complete, more mods). Once both boxes are read completely, an altar is not read again; incomplete altars (cut off, covered by HUD) are re-read every 0.5 s.
 - `verdict.py`: verdict engine with unit tests for every row of the verdict table and the recommendation rules. New verdict `UNREADABLE` when no mod of an option could be read; the recommendation then waits ("Can't read both options yet.").
@@ -227,7 +227,9 @@ tests/                   # unit + recognition accuracy tests
 - `board.py` + `ui/board/`: the tier board grown from the mockup, on the real 201 cards. **Change of plan:** hosted in Qt WebEngine (already part of PySide6) instead of pywebview, so the board opens from the same process. The page talks to Python through a five-call adapter (`connectBackend()` in `board.js`); the WebView2 port only replaces that adapter.
 - Files: the board writes `data/profiles/*.json` and `settings.json` (active profile, HUD position); the scanner checks both on every scan, so changes apply instantly. User profiles and `settings.json` are not in git.
 - Measured on the desktop without altars: **1.96 % total CPU** (47 % of one of 24 threads) at 4 Hz. Most of it is the `mss` screen grab (~35 ms); `dxcam` (DXGI) is the next lever if needed.
-- **Done when:** a real mapping session shows correct verdicts with no noticeable FPS impact (CPU idle load from stage 1 ≤ 3 %). Open: the in-game test.
+- **Done when:** a real mapping session shows correct verdicts with no noticeable FPS impact (CPU idle load from stage 1 ≤ 3 %). ✅
+- In-game result (2026-11-02, `--stats`, 3440×1440, 4 Hz): CPU **1.1–2.2 % total** without an altar, 1.1–1.9 % with an altar on screen; scans take ~85 ms (one 305 ms spike when a new altar is read). FPS without / with tool: hideout 126 / 126, map 166–175 / 166–172 with the HUD shown. One run without an altar in view dipped to ~160 (low 139) right after entering the map; since the heavier run with HUD matched the baseline, this is taken as scene noise. Verdicts were correct in all of the user's sessions.
+- Possible lever if ever needed: lower the scan rate (e.g. 2 Hz) while no altar is on screen; nearly all idle load is the full-frame icon search.
 
 ### Phase 4 – Distributable app
 - Decision gate after Phase 3: port to **C#/.NET** (WPF overlay, WebView2 hosting `ui/board`, Windows.Graphics.Capture, Windows.Media.Ocr, OpenCvSharp; single-file `.exe`) or ship Python via Nuitka if it is good enough. Current preference: C#.

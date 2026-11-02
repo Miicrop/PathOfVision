@@ -28,6 +28,7 @@
   --font-body: "Segoe UI", system-ui, sans-serif;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }   /* display rules below must not override it */
 html, body { background: var(--bg); color: var(--fg); margin: 0; }
 body { font-family: var(--font-body); font-size: 14px; line-height: 1.4; padding: 20px 16px 40px; }
 .app { max-width: 1600px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
@@ -99,3 +100,4 @@ button.btn:disabled { opacity: .4; cursor: default; }
 .hud input[type="range"] { width: 220px; accent-color: var(--gold); }
 .hud input[type="number"] { width: 80px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 5px 8px; }
 .hud output { min-width: 48px; font-variant-numeric: tabular-nums; }
+button.btn[aria-expanded="true"] { border-color: var(--gold); }

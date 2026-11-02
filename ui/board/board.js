@@ -205,7 +205,7 @@ $("del").addEventListener("click", async () => {
   await openProfile(result.active);
 });
 
-// HUD settings: written to settings.json right away; the overlay reloads the file by itself.
+// Overlay settings: written to settings.json right away; the overlay reloads the file by itself.
 let hud = {}, hudDefaults = {}, pending = {};
 
 function renderSettings() {
@@ -235,11 +235,13 @@ function changeSetting(key, value) {
   }, 150);
 }
 
-$("hud-toggle").addEventListener("click", e => {
-  const open = $("hud").hidden;
+function showSettingsPanel(open) {
   $("hud").hidden = !open;
-  e.currentTarget.setAttribute("aria-expanded", String(open));
-});
+  $("hud-toggle").setAttribute("aria-expanded", String(open));
+  try { localStorage.setItem("overlaySettingsOpen", open ? "1" : ""); } catch { /* storage may be blocked */ }
+}
+$("hud-toggle").addEventListener("click", () => showSettingsPanel($("hud").hidden));
+try { showSettingsPanel(localStorage.getItem("overlaySettingsOpen") === "1"); } catch { showSettingsPanel(false); }
 $("s-font").addEventListener("input", e => changeSetting("hud_font_size", Number(e.target.value)));
 $("s-opacity").addEventListener("input", e => changeSetting("hud_other_opacity", Number(e.target.value) / 100));
 $("s-bottom").addEventListener("change", e => changeSetting("hud_bottom", Number(e.target.value)));

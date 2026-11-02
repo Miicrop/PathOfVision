@@ -18,7 +18,7 @@
       <select id="profile"></select>
       <button class="btn" id="dup" type="button">Duplicate</button>
       <button class="btn" id="del" type="button">Delete</button>
-      <button class="btn" id="hud-toggle" type="button" aria-expanded="false" aria-controls="hud">HUD settings</button>
+      <button class="btn" id="hud-toggle" type="button" aria-expanded="false" aria-controls="hud">Overlay settings</button>
       <span class="saved" id="saved" aria-live="polite"></span>
     </div>
   </header>
@@ -28,7 +28,7 @@
   </div>
   <div class="notice error" id="err" hidden></div>
 
-  <section class="filters hud" id="hud" aria-label="HUD settings" hidden>
+  <section class="filters hud" id="hud" aria-label="Overlay settings" hidden>
     <span class="lbl">Text size</span>
     <div class="ctl">
       <input type="range" id="s-font" min="10" max="24" step="1">
@@ -47,16 +47,17 @@
       <button type="button" data-v="true">On</button>
       <button type="button" data-v="false">Off</button>
     </div>
-    <span class="lbl">Other option</span>
+    <span class="lbl">Alpha</span>
     <div class="ctl">
       <input type="range" id="s-opacity" min="10" max="100" step="5">
       <output id="o-opacity" for="s-opacity"></output>
-      <small>how visible the option that is not the pick stays (ADAPT - BRICK is never dimmed)</small>
+      <small>of the option that is not the pick (ADAPT - BRICK is never dimmed)</small>
     </div>
     <span class="lbl">Position</span>
     <div class="ctl">
-      <label>From bottom <input type="number" id="s-bottom" min="0" max="2000" step="5"> px</label>
-      <label>Horizontal offset <input type="number" id="s-offset" min="-3000" max="3000" step="10"> px</label>
+      <label>X <input type="number" id="s-offset" min="-3000" max="3000" step="10"> px</label>
+      <label>Y <input type="number" id="s-bottom" min="0" max="2000" step="5"> px</label>
+      <small>Anchor: bottom center of the screen. X moves right (negative: left), Y moves up.</small>
     </div>
     <span></span>
     <div class="ctl">

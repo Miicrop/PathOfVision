@@ -17,12 +17,11 @@
     "Chaos": "#d8a7d3",
     "Poison": "#d8a7d3",
     "Physical": "#c79d93",
-
+    "Phys": "#c79d93",
     "Armour": "#a88f65",
     "Evasion": "#a88f65",
     "Energy Shield": "#a88f65",
     "Defences": "#a88f65",
-
     "Projectiles": "#da8049",
     "Projectile": "#da8049",
     "AoE": "#b3f7fd",
@@ -35,7 +34,6 @@
     "Penetrates": "#c96d6d",
     "Exposure": "#c96d6d",
     "Flask": "#b3f7fd",
-
     "Chaos Orb": "#d8d8d8",
     "Physical Damage": "#d8d8d8"
   }

@@ -53,7 +53,7 @@
     },
     "TangledAltarDownsidePlayerTaintedEndurance": {
       "text": "player - (20-10)% reduced Recovery Rate of Life, Mana and Energy Shield per Endurance Charge",
-      "alias": "reduced Recovery Rate per Endurance Charge",
+      "alias": "Reduced Recovery Rate per Endurance Charge",
       "icon": ""
     },
     "CleansingAltarDownsidePlayerIncreasedFlaskChargesUsed": {
@@ -93,7 +93,7 @@
     },
     "TangledAltarDownsidePlayerReducedPhysicalDamageReduction": {
       "text": "player - -(60-40)% additional Physical Damage Reduction",
-      "alias": "reduced Physical Damage Reduction",
+      "alias": "Reduced Physical Damage Reduction",
       "icon": ""
     },
     "TangledAltarDownsidePlayerReducedColdAndLightningResist": {
@@ -483,7 +483,7 @@
     },
     "CleansingAltarDownsideMonsterIncreasedEvasion": {
       "text": "minions - (250-500)% increased Evasion Rating",
-      "alias": "increased Evasion Rating",
+      "alias": "Increased Evasion Rating",
       "icon": ""
     },
     "TangledAltarDownsideMonsterSpeed": {
@@ -493,12 +493,12 @@
     },
     "TangledAltarDownsideMonsterPhysicalDamageReduction": {
       "text": "minions - (50-80)% additional Physical Damage Reduction",
-      "alias": "increased Physical Damage Reduction",
+      "alias": "Increased Physical Damage Reduction",
       "icon": ""
     },
     "CleansingAltarDownsideMonsterIncreasedArea": {
       "text": "minions - (70-130)% increased Area of Effect",
-      "alias": "increased AoE",
+      "alias": "Increased AoE",
       "icon": ""
     },
     "TangledAltarDownsideMonsterSupressSpells": {
@@ -513,17 +513,17 @@
     },
     "TangledAltarDownsideMonsterColdAndLightningResist": {
       "text": "minions - +80% to Cold Resistance / +80% to Lightning Resistance / +10% to maximum Cold Resistance / +10% to maximum Lightning Resistance",
-      "alias": "increased Cold and Lightning Resistance",
+      "alias": "Increased Cold and Lightning Resistance",
       "icon": ""
     },
     "CleansingAltarDownsideMonsterFireAndChaosResist": {
       "text": "minions - +80% to Fire Resistance / +80% to Chaos Resistance / +10% to maximum Fire Resistance / +10% to maximum Chaos Resistance",
-      "alias": "increased Fire and Chaos Resistance",
+      "alias": "Increased Fire and Chaos Resistance",
       "icon": ""
     },
     "TangledAltarDownsideMonsterRemoveChargeOnHit": {
       "text": "minions - 100% chance to remove a random Charge from Enemy on Hit",
-      "alias": "remove Charge on Hit",
+      "alias": "Remove Charge on Hit",
       "icon": ""
     },
     "CleansingAltarDownsideMonsterConsecratedGroundOnDeath": {
@@ -918,12 +918,12 @@
     },
     "CleansingAltarDownsideBossIncreasedArmourAndEvasion": {
       "text": "boss - (100-200)% increased Armour / (100-200)% increased Evasion Rating",
-      "alias": "increased Armour & Evasion",
+      "alias": "Increased Armour & Evasion",
       "icon": ""
     },
     "TangledAltarDownsideBossPhysicalDamageReduction": {
       "text": "boss - (50-70)% additional Physical Damage Reduction",
-      "alias": "increased Physical Damage Reduction",
+      "alias": "Increased Physical Damage Reduction",
       "icon": ""
     },
     "TangledAltarDownsideBossSuppressSpells": {
@@ -968,7 +968,7 @@
     },
     "TangledAltarDownsideBossPenetrateElementalResistances": {
       "text": "boss - Damage Penetrates (15-25)% of Enemy Elemental Resistances / Gain (50-80)% of Physical Damage as Extra Damage of a random Element",
-      "alias": "Penetrate Elemental Resistances + Phys as Random Element",
+      "alias": "Penetrates Elemental Resistances + Phys as Random Element",
       "icon": ""
     },
     "CleansingAltarDownsideBossRemoveFlaskChargeOnHit": {

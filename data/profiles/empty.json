@@ -3,12 +3,23 @@
   "readOnly": true,
   "modsVersion": "3.29.3.3",
   "upsides": {
-    "s": [
-      "TangleAltarUpsideBossDivineOrb",
-      "TangleAltarUpsideMonsterDivineOrb"
+    "columns": [
+      {
+        "name": "B",
+        "ids": []
+      },
+      {
+        "name": "A",
+        "ids": []
+      }
     ],
-    "a": [],
-    "b": []
+    "top": {
+      "name": "S",
+      "ids": [
+        "TangleAltarUpsideBossDivineOrb",
+        "TangleAltarUpsideMonsterDivineOrb"
+      ]
+    }
   },
   "downsides": {
     "dangerous": [],

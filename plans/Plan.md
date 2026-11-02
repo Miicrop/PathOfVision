@@ -57,7 +57,7 @@ Search: _______
 ```
 
 - Filters combine (AND). Choosing an altar also shows generic mods.
-- **Upside board:** `Unrated | B | A | S`. Order inside a column = priority (top = best).
+- **Upside board:** `Unrated | own columns … | top column`. Unrated (fixed, left) means NEUTRAL. The user adds, names, moves and deletes the columns in between; all of them count as rated, further right = higher priority. The top column (fixed, right, renamable; "S" by default) is the only one that can make a Brick workable. Order inside a column = priority (top = best). Old profiles (`s`/`a`/`b`) are upgraded to columns B, A and top S.
 - **Downside board:** `Fine | Dangerous | Brick`. Unrated downsides count as Fine.
 - New mods after a data update land in Unrated/Fine and are flagged as new.
 - Cards show: altar tag(s) (generic = Eater tag + Exarch tag), target, mod text with value range, weight, "rare" marker for low weights.
@@ -70,11 +70,11 @@ Per option, using the best upside tier and the worst downside tier:
 
 | Downside (worst) | Upside (best) | Verdict |
 |---|---|---|
-| Brick | S | **ADAPT - BRICK** (a brick by default, workable with build adjustments) |
-| Brick | below S | **AVOID** |
-| Dangerous | B / A / S | **CONSIDER** |
+| Brick | top column | **ADAPT - BRICK** (a brick by default, workable with build adjustments) |
+| Brick | any other column or Unrated | **AVOID** |
+| Dangerous | any rated column | **CONSIDER** |
 | Dangerous | Unrated | **AVOID** |
-| Fine | B / A / S | **TAKE** |
+| Fine | any rated column | **TAKE** |
 | Fine | Unrated | **NEUTRAL** |
 
 Assumption: users sort strictly, so anything rated B or better is worth considering. Thresholds can be changed later (see Future).
@@ -147,7 +147,8 @@ Your call: check the Dangerous downside against your build.
   "name": "Default",
   "readOnly": true,
   "modsVersion": "…",
-  "upsides":   { "s": ["id1", "id2"], "a": [], "b": [] },
+  "upsides":   { "columns": [{ "name": "B", "ids": [] }, { "name": "A", "ids": [] }],
+                "top": { "name": "S", "ids": ["id1", "id2"] } },
   "downsides": { "dangerous": ["id3"], "brick": ["id4"] }
 }
 ```
@@ -244,7 +245,7 @@ tests/                   # unit + recognition accuracy tests
 - **Profile hotkey switching** (e.g. per farm strategy).
 - **Roll value scaling:** a high roll scores better than a low roll within the same tier. Needs the player's atlas scaling, since in-game values exceed the base ranges.
 - **Target from the icon halves:** classify crown/figure/group in the icon to know a box's target even when its header is hidden.
-- **Compact HUD (in progress):** the HUD repeated the full mod text, which is a lot to read mid-fight. Done: `data/labels.json` (hand-made, one entry per card, kept in sync by `tools/gen_mods`: new cards get an empty entry, the `text` reference copy is refreshed, aliases and icons are never touched). `alias` replaces the full text in the HUD (`#` = next read value, `#2` = second value; empty alias = full text), `icon` names a file in `prototype/assets/mods/`. HUD rows are columns: sign | icon | alias or text | tier. Edits to labels.json apply while running. Aliases are filled in for all 201 cards. Currency, Eldritch and scarab icons (52, used by 104 cards) are the original item art: game tables `BaseItemTypes` → `ItemVisualIdentity.DDSFile` exported with `pathofexile-dat`, then `Art/2DItems/Currency/…` converted to PNG. Scarab categories use the base tier icon (`LesserScarab…`); Influence uses the Shaper scarab. HUD options in `settings.json`, applied while running: `hud_font_size` (icons scale with it), `hud_tiers` = `off` / `text` / `highlight` (row tinted in the tier color) / `both`. `hud_other_opacity` (default 0.6) dims the option that is not the pick; the pick (firm choice, or the option a "Your call" names) gets a glow in its verdict color; an ADAPT - BRICK option is never dimmed. Keyword colors in `data/keywords.json` (whole words, any case; starts with the elements, chaos and physical). Composed icons (Pillow, from original art): `div-card-*` = divination card with the reward item in the corner (incubator style; uniques via `UniqueStashLayout`, e.g. Kaom's Heart, Starforge), `dup-*` = representative item with a ×2 badge. Currency, div cards, gems, maps, scarabs, uniques, jewellery, armour and weapons use the standard reward symbols players know from incubators/delirium orbs (UI sprites `Heist/Blueprints/Rewards/HeistReward*`; gem with "20" / "20%" for levelled / quality gems). Quantity/Rarity/Experience use letter tiles (Q green, R rare-yellow, XP blue). Downsides stay without icon for now (decided 2026-11-02, not relevant enough).
+- **Compact HUD (in progress):** the HUD repeated the full mod text, which is a lot to read mid-fight. Done: `data/labels.json` (hand-made, one entry per card, kept in sync by `tools/gen_mods`: new cards get an empty entry, the `text` reference copy is refreshed, aliases and icons are never touched). `alias` replaces the full text in the HUD (`#` = next read value, `#2` = second value; empty alias = full text), `icon` names a file in `prototype/assets/mods/`. HUD rows are columns: sign | icon | alias or text | values. Edits to labels.json apply while running. Aliases are filled in for all 201 cards. Currency, Eldritch and scarab icons (52, used by 104 cards) are the original item art: game tables `BaseItemTypes` → `ItemVisualIdentity.DDSFile` exported with `pathofexile-dat`, then `Art/2DItems/Currency/…` converted to PNG. Scarab categories use the base tier icon (`LesserScarab…`); Influence uses the Shaper scarab. HUD options in `settings.json`, applied while running: `hud_font_size` (icons scale with it), `hud_tiers` = `highlight` / `off` (row tint: top upside column gold, other rated columns purple, Dangerous orange, Brick red; the tier text column was dropped with the custom columns). `hud_other_opacity` (default 0.6) dims the option that is not the pick; the pick (firm choice, or the option a "Your call" names) gets a glow in its verdict color; an ADAPT - BRICK option is never dimmed. Keyword colors in `data/keywords.json` (whole words, any case; starts with the elements, chaos and physical). Composed icons (Pillow, from original art): `div-card-*` = divination card with the reward item in the corner (incubator style; uniques via `UniqueStashLayout`, e.g. Kaom's Heart, Starforge), `dup-*` = representative item with a ×2 badge. Currency, div cards, gems, maps, scarabs, uniques, jewellery, armour and weapons use the standard reward symbols players know from incubators/delirium orbs (UI sprites `Heist/Blueprints/Rewards/HeistReward*`; gem with "20" / "20%" for levelled / quality gems). Quantity/Rarity/Experience use letter tiles (Q green, R rare-yellow, XP blue). Downsides stay without icon for now (decided 2026-11-02, not relevant enough).
 - ~~**Original icon files**~~ ✅ done: extracted from the game bundles (Steam install, `Bundles2`) with the npm package `pathofexile-dat`. Sprite index `art/uiimages1.txt` → `Art/2DArt/UIImages/InGame/AtlasAltar/4k/{Top,Bottom}Icon{Boss,Player,InfluencedMonsters}{Tangled,CleansingFire}` (200×100) plus `{Top,Bottom}IconFrame`, composed into `prototype/assets/target_{target}_{top|bottom}_{altar}.png`. The same sheet also has the altar backgrounds and outer frames. Still open: check GGG's terms before shipping game art in a public release.
 - **Partial reads:** show "incomplete" in the HUD when a box is cut off by HUD or screen edges, instead of a verdict on half the mods.
 - **Configurable thresholds** per profile (e.g. which upside tiers trigger CONSIDER / ADAPT - BRICK).

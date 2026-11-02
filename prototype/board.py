@@ -20,6 +20,7 @@ from PySide6.QtWidgets import QApplication
 
 from . import settings
 from .settings import PROFILES_DIR, ROOT
+from .verdict import upgrade_upsides
 
 BOARD_HTML = ROOT / "ui" / "board" / "index.html"
 MODS_PATH = ROOT / "data" / "mods.json"
@@ -29,7 +30,11 @@ class BoardApi(QObject):
     """Slots take and return JSON strings to keep the bridge format-neutral (WebView2 later)."""
 
     def _profile(self, file: str) -> dict:
-        return json.loads((PROFILES_DIR / file).read_text(encoding="utf-8"))
+        """A profile with its upsides in the column format (older files are upgraded on read)."""
+        profile = json.loads((PROFILES_DIR / file).read_text(encoding="utf-8"))
+        profile["upsides"] = upgrade_upsides(profile.get("upsides", {}))
+        profile.setdefault("downsides", {})
+        return profile
 
     def _profiles(self) -> list[dict]:
         out = []

@@ -10,13 +10,13 @@ ROOT = Path(__file__).resolve().parents[1]
 SETTINGS_PATH = ROOT / "settings.json"
 PROFILES_DIR = ROOT / "data" / "profiles"
 # HUD: centered at the bottom; hud_bottom = px between the HUD and the bottom edge (above the skill bar).
-# hud_font_size scales text and icons. hud_tiers: "off", "text", "highlight" (row tinted in the tier
-# color) or "both". hud_other_opacity: 0.1-1, how visible the option that is not the pick stays
+# hud_font_size scales text and icons. hud_tiers: "off" or "highlight" (row tinted by its tier:
+# top upside column gold, other rated columns purple, Dangerous orange, Brick red). hud_other_opacity: 0.1-1, how visible the option that is not the pick stays
 # (1 = no dimming; an ADAPT - BRICK option is never dimmed). hud_values: column with the rolled values.
 DEFAULTS = {"profile": "default.json", "hud_bottom": 60, "hud_offset_x": 0,
-            "hud_font_size": 15, "hud_tiers": "text", "hud_other_opacity": 0.6,
+            "hud_font_size": 15, "hud_tiers": "highlight", "hud_other_opacity": 0.6,
             "hud_values": True}
-TIER_STYLES = ("off", "text", "highlight", "both")
+TIER_STYLES = ("off", "highlight")
 HUD_KEYS = ("hud_font_size", "hud_tiers", "hud_values", "hud_other_opacity", "hud_bottom", "hud_offset_x")
 
 
@@ -26,7 +26,8 @@ def clean(key: str, value):
         if key == "hud_font_size":
             return min(24, max(10, int(value)))
         if key == "hud_tiers":
-            return value if value in TIER_STYLES else DEFAULTS[key]
+            # "text" / "both" came from the old tier text column, which no longer exists.
+            return "highlight" if value in ("text", "both") else value if value in TIER_STYLES else DEFAULTS[key]
         if key == "hud_values":
             return bool(value)
         if key == "hud_other_opacity":

@@ -27,13 +27,13 @@ from .labels import (KEYWORDS_PATH, LABELS_PATH, Label, color_keywords, load_key
                      rolled_values)
 from .live import AltarView
 from .match import Match
-from .verdict import ADAPT, AVOID, CONSIDER, NEUTRAL, TAKE, UNREADABLE
+from .verdict import ADAPT, AVOID, CONSIDER, NEUTRAL, RATED, TAKE, TOP, UNREADABLE
 
 ASSETS = Path(__file__).resolve().parent / "assets"
 VERDICT_COLORS = {TAKE: "#4fbf6a", CONSIDER: "#e0a33a", ADAPT: "#d65db1", AVOID: "#e05a4f",
                   NEUTRAL: "#9aa0a6", UNREADABLE: "#5d6168"}
-TIER_LABELS = {"s": ("S", "#f2c84b"), "a": ("A", "#b48cf0"), "b": ("B", "#6fa4dc"),
-               "dangerous": ("Dangerous", "#e0a33a"), "brick": ("Brick", "#e05a4f")}
+# Row tint per tier kind: top upside column, the user columns in between, risky downsides.
+TIER_TINTS = {TOP: "#f2c84b", RATED: "#b48cf0", "dangerous": "#e0a33a", "brick": "#e05a4f"}
 MAX_ALTARS = 2
 MAX_LINE = 64
 TIER_TINT_ALPHA = 60   # 0-255, background of a highlighted row
@@ -57,7 +57,7 @@ def _span(text: str, color: str, bold: bool = False) -> str:
 class Style:
     """What the user can tune; icon sizes follow the font size."""
     font_size: int = 15
-    tiers: str = "text"                  # see settings.TIER_STYLES
+    tiers: str = "highlight"             # see settings.TIER_STYLES
     other_opacity: float = 0.6           # the option that is not the pick
     values: bool = True                  # column with the rolled values
     keywords: dict[str, str] = field(default_factory=dict, hash=False, compare=False)
@@ -152,22 +152,20 @@ def _option_box(view: AltarView, position: str, icons: _Icons, labels: dict[str,
         icon.setPixmap(pixmap)
     row.addWidget(icon, 0, Qt.AlignVCenter)
 
-    # One row per mod in columns: sign | mod icon | alias or text | values | tier
-    show_text = style.tiers in ("text", "both")
-    tint = style.tiers in ("highlight", "both")
+    # One row per mod in columns: sign | mod icon | alias or text | values
+    tint = style.tiers == "highlight"
     size = style.font_size
     grid = QGridLayout()
     grid.setHorizontalSpacing(6)
     grid.setVerticalSpacing(1)
     for r, m in enumerate(sorted(option.matches, key=lambda m: m.card.side != "upside")):
-        tier_key = verdict.tiers.get(m.card.id)
-        tier, tier_color = TIER_LABELS.get(tier_key, ("Unrated" if m.card.side == "upside" else "Fine", "#6f757d"))
-        if tint and tier_key in TIER_LABELS:
+        tier_color = TIER_TINTS.get(verdict.tiers.get(m.card.id))
+        if tint and tier_color:
             # Added first, so the row's other widgets are drawn on top of it.
             back = QFrame()
             red, green, blue = (int(tier_color[i:i + 2], 16) for i in (1, 3, 5))
             back.setStyleSheet(f"background: rgba({red}, {green}, {blue}, {TIER_TINT_ALPHA}); border-radius: 3px;")
-            grid.addWidget(back, r, 0, 1, 5)
+            grid.addWidget(back, r, 0, 1, 4)
         sign = _span("+", "#4fbf6a", True) if m.card.side == "upside" else _span("−", "#e05a4f", True)
         grid.addWidget(_label(sign, size=size), r, 0)
         label = labels.get(m.card.id)
@@ -186,8 +184,6 @@ def _option_box(view: AltarView, position: str, icons: _Icons, labels: dict[str,
             shown = " / ".join(_span(v, "#d8d8d8" if read else "#6f757d")
                                for v, read in rolled_values(m.card.lines[m.variant], m.display(option.lines)))
             grid.addWidget(_label(shown, Qt.AlignRight, size), r, 3)
-        if show_text:
-            grid.addWidget(_label(_span(tier, tier_color, True), Qt.AlignRight, size), r, 4)
         grid.setRowMinimumHeight(r, style.mod_icon)   # rows with and without icon look the same
     grid.setColumnMinimumWidth(1, style.mod_icon)     # texts line up across boxes
     grid.setColumnStretch(2, 1)

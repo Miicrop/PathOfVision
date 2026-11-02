@@ -3,6 +3,8 @@
 import json
 from pathlib import Path
 
+from prototype.verdict import upgrade_upsides
+
 DATA = Path(__file__).resolve().parents[1] / "data"
 MODS = json.loads((DATA / "mods.json").read_text(encoding="utf-8"))
 CARDS = {c["id"]: c for c in MODS["mods"]}
@@ -26,8 +28,10 @@ def test_profiles_reference_existing_mods_on_the_right_side():
     assert PROFILES
     for path in PROFILES:
         profile = json.loads(path.read_text(encoding="utf-8"))
+        up = upgrade_upsides(profile["upsides"])   # user profiles may still be in the old s/a/b format
+        up_lists = {c["name"]: c["ids"] for c in up["columns"]} | {"top": up["top"]["ids"]}
         seen = []
-        for side, tiers in (("upside", profile["upsides"]), ("downside", profile["downsides"])):
+        for side, tiers in (("upside", up_lists), ("downside", profile["downsides"])):
             for tier, ids in tiers.items():
                 for mod_id in ids:
                     assert mod_id in CARDS, f"{path.name}: unknown mod {mod_id}"
@@ -39,7 +43,7 @@ def test_profiles_reference_existing_mods_on_the_right_side():
 def test_default_profile_is_read_only():
     default = json.loads((DATA / "profiles" / "default.json").read_text(encoding="utf-8"))
     assert default["readOnly"] is True
-    assert set(default["upsides"]) == {"s", "a", "b"}
+    assert set(default["upsides"]) == {"columns", "top"}
     assert set(default["downsides"]) == {"dangerous", "brick"}
 
 
@@ -53,5 +57,5 @@ def test_labels_cover_every_card_and_icons_exist():
 def test_empty_template_only_rates_divine_orbs():
     empty = json.loads((DATA / "profiles" / "empty.json").read_text(encoding="utf-8"))
     assert empty["readOnly"] is True
-    assert sorted(empty["upsides"]["s"]) == ["TangleAltarUpsideBossDivineOrb", "TangleAltarUpsideMonsterDivineOrb"]
-    assert not any(empty["upsides"][t] for t in ("a", "b")) and not any(empty["downsides"].values())
+    assert sorted(empty["upsides"]["top"]["ids"]) == ["TangleAltarUpsideBossDivineOrb", "TangleAltarUpsideMonsterDivineOrb"]
+    assert not any(c["ids"] for c in empty["upsides"]["columns"]) and not any(empty["downsides"].values())

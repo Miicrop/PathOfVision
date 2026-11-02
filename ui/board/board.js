@@ -27,24 +27,15 @@ function connectBackend() {
 
 const ALTAR = { eater: ["Eater", "var(--eater)"], exarch: ["Exarch", "var(--exarch)"] };
 const TARGET = { player: "Player", minions: "Minions", boss: "Map Boss" };
-const COLS = {
-  upside: [
-    { id: null, name: "Unrated", tier: "var(--t-un)" },
-    { id: "b", name: "B", tier: "var(--t-b)" },
-    { id: "a", name: "A", tier: "var(--t-a)" },
-    { id: "s", name: "S", tier: "var(--t-s)" },
-  ],
-  downside: [
-    { id: null, name: "Fine", tier: "var(--t-fine)", hint: "Unrated downsides count as fine" },
-    { id: "dangerous", name: "Dangerous", tier: "var(--t-danger)", hint: "Gives a warning" },
-    { id: "brick", name: "Brick", tier: "var(--t-brick)", hint: "Never take, unless the upside is S tier" },
-  ],
-};
-const LISTS = { upside: "upsides", downside: "downsides" };   // profile keys
+const DOWN_COLS = [
+  { key: null, name: "Fine", tier: "var(--t-fine)", hint: "Unrated downsides count as fine" },
+  { key: "dangerous", name: "Dangerous", tier: "var(--t-danger)", hint: "Gives a warning" },
+  { key: "brick", name: "Brick", tier: "var(--t-brick)", hint: "Never take, unless the upside is in the top column" },
+];
 
 let api, state, byId, profile, file;
 let dragging = null;                                   // id of the card being dragged
-const dropMark = document.createElement("div");         // gold line where the card will land
+const dropMark = document.createElement("div");         // line where the card will land
 dropMark.className = "drop-mark";
 const filter = { altar: "both", side: "all", target: "all", q: "" };
 const $ = id => document.getElementById(id);
@@ -60,26 +51,70 @@ function visible(m) {
   return true;
 }
 
-// Ids in a column, in priority order. The unrated / fine column holds everything not listed.
-function columnIds(side, tier) {
-  const lists = profile[LISTS[side]];
-  if (tier) return (lists[tier] || []).filter(id => byId[id]);
-  const listed = new Set(Object.values(lists).flat());
+// Columns left to right. `list` is the profile array behind a column (null = everything not listed).
+// Upsides: Unrated | the user's own columns | top column (the only one that can outweigh a Brick).
+function columnsFor(side) {
+  if (side === "downside") return DOWN_COLS.map(c => ({ ...c, list: c.key ? (profile.downsides[c.key] ||= []) : null }));
+  const up = profile.upsides;
+  return [
+    { kind: "unrated", name: "Unrated", tier: "var(--t-un)", list: null },
+    ...up.columns.map((c, index) => ({ kind: "col", index, name: c.name, tier: "var(--t-a)", list: c.ids })),
+    { kind: "top", name: up.top.name, tier: "var(--t-s)", list: up.top.ids,
+      title: "Top column: the only one that can make a Brick downside worth it (ADAPT - BRICK)" },
+  ];
+}
+
+const allLists = side => columnsFor(side).map(c => c.list).filter(Boolean);
+
+// Ids in a column, in priority order.
+function columnIds(side, col) {
+  if (col.list) return col.list.filter(id => byId[id]);
+  const listed = new Set(allLists(side).flat());
   return state.mods.filter(m => m.side === side && !listed.has(m.id)).map(m => m.id);
 }
 
-function moveCard(id, tier, beforeId) {
+function moveCard(id, side, colIndex, beforeId) {
   if (profile.readOnly) return;
-  const side = byId[id].side;
-  const lists = profile[LISTS[side]];
-  for (const key of Object.keys(lists)) lists[key] = lists[key].filter(x => x !== id);
-  if (tier) {
-    const list = lists[tier] || (lists[tier] = []);
-    const at = beforeId ? list.indexOf(beforeId) : -1;
-    if (at >= 0) list.splice(at, 0, id); else list.push(id);
+  for (const list of allLists(side)) {
+    const at = list.indexOf(id);
+    if (at >= 0) list.splice(at, 1);
+  }
+  const target = columnsFor(side)[colIndex].list;
+  if (target) {
+    const at = beforeId ? target.indexOf(beforeId) : -1;
+    if (at >= 0) target.splice(at, 0, id); else target.push(id);
   }
   render();
   save();
+}
+
+// Column management (upsides only): add, rename, move, delete.
+function editColumns(change) {
+  if (profile.readOnly) return;
+  change(profile.upsides);
+  render();
+  save();
+}
+function addColumn() {
+  const name = prompt("Name of the new column:", "New column");
+  if (name && name.trim()) editColumns(up => up.columns.push({ name: name.trim(), ids: [] }));
+}
+function renameColumn(col) {
+  const name = prompt("Column name:", col.name);
+  if (!name || !name.trim()) return;
+  editColumns(up => { (col.kind === "top" ? up.top : up.columns[col.index]).name = name.trim(); });
+}
+function moveColumn(col, step) {
+  editColumns(up => {
+    const to = col.index + step;
+    if (to < 0 || to >= up.columns.length) return;
+    [up.columns[col.index], up.columns[to]] = [up.columns[to], up.columns[col.index]];
+  });
+}
+function deleteColumn(col) {
+  const count = profile.upsides.columns[col.index].ids.length;
+  if (count && !confirm(`Delete "${col.name}"? Its ${count} cards go back to Unrated.`)) return;
+  editColumns(up => up.columns.splice(col.index, 1));
 }
 
 async function save() {
@@ -105,8 +140,8 @@ function cardEl(m, colIndex, colCount) {
     </div>
     <div class="txt"></div>
     <div class="moves">
-      <button type="button" data-move="-1" aria-label="Move to lower column" ${profile.readOnly || colIndex === 0 ? "disabled" : ""}>‹</button>
-      <button type="button" data-move="1" aria-label="Move to higher column" ${profile.readOnly || colIndex === colCount - 1 ? "disabled" : ""}>›</button>
+      <button type="button" data-move="-1" aria-label="Move to the column on the left" ${profile.readOnly || colIndex === 0 ? "disabled" : ""}>‹</button>
+      <button type="button" data-move="1" aria-label="Move to the column on the right" ${profile.readOnly || colIndex === colCount - 1 ? "disabled" : ""}>›</button>
     </div>`;
   el.querySelector(".txt").textContent = text(m);
   el.addEventListener("dragstart", e => {
@@ -122,26 +157,62 @@ function cardEl(m, colIndex, colCount) {
     document.querySelectorAll(".col.over").forEach(c => c.classList.remove("over"));
   });
   el.querySelectorAll("[data-move]").forEach(b => b.addEventListener("click", () => {
-    const next = COLS[m.side][colIndex + Number(b.dataset.move)];
-    if (next) moveCard(m.id, next.id, null);
+    const to = colIndex + Number(b.dataset.move);
+    if (to >= 0 && to < colCount) moveCard(m.id, m.side, to, null);
   }));
   return el;
+}
+
+function headerEl(col, count, colCount) {
+  const header = document.createElement("header");
+  const name = document.createElement("b");
+  name.textContent = col.name;
+  if (col.title) name.title = col.title;
+  header.appendChild(name);
+  const tools = document.createElement("span");
+  tools.className = "tools";
+  const tool = (label, title, action, disabled = false) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = label;
+    b.title = title;
+    b.setAttribute("aria-label", `${title}: ${col.name}`);
+    b.disabled = disabled;
+    b.addEventListener("click", action);
+    tools.appendChild(b);
+  };
+  if (!profile.readOnly && col.kind === "col") {
+    const last = profile.upsides.columns.length - 1;
+    tool("‹", "Move column left", () => moveColumn(col, -1), col.index === 0);
+    tool("›", "Move column right", () => moveColumn(col, 1), col.index === last);
+  }
+  if (!profile.readOnly && (col.kind === "col" || col.kind === "top")) tool("✎", "Rename column", () => renameColumn(col));
+  if (!profile.readOnly && col.kind === "col") tool("×", "Delete column", () => deleteColumn(col));
+  header.appendChild(tools);
+  const counter = document.createElement("span");
+  counter.className = "count";
+  counter.textContent = count;
+  header.appendChild(counter);
+  return header;
 }
 
 function renderBoard(side) {
   const wrap = $("cols-" + side);
   const scrolled = [...wrap.querySelectorAll(".list")].map(l => l.scrollTop);   // keep each column where it was
   wrap.innerHTML = "";
-  COLS[side].forEach((col, i) => {
-    const ids = columnIds(side, col.id).filter(id => visible(byId[id]));
+  const cols = columnsFor(side);
+  wrap.style.gridTemplateColumns = `repeat(${cols.length}, minmax(230px, 1fr))`;
+  cols.forEach((col, i) => {
+    const ids = columnIds(side, col).filter(id => visible(byId[id]));
     const colEl = document.createElement("div");
     colEl.className = "col";
     colEl.style.setProperty("--tier", col.tier);
-    colEl.innerHTML = `<header><b>${col.name}</b><span>${ids.length}</span></header>${col.hint ? `<div class="hint">${col.hint}</div>` : ""}`;
+    colEl.appendChild(headerEl(col, ids.length, cols.length));
+    if (col.hint) colEl.insertAdjacentHTML("beforeend", `<div class="hint">${col.hint}</div>`);
     const list = document.createElement("div");
     list.className = "list";
     if (!ids.length) list.innerHTML = `<div class="empty">${profile.readOnly ? "No cards" : "Drop cards here"}</div>`;
-    ids.forEach(id => list.appendChild(cardEl(byId[id], i, COLS[side].length)));
+    ids.forEach(id => list.appendChild(cardEl(byId[id], i, cols.length)));
     // The whole column is the drop target; over its header the card goes to the top.
     colEl.addEventListener("dragover", e => {
       if (profile.readOnly || !dragging || byId[dragging].side !== side) return;
@@ -167,7 +238,7 @@ function renderBoard(side) {
       let next = dropMark.nextElementSibling;
       while (next && (!next.classList.contains("card") || next.classList.contains("dragging"))) next = next.nextElementSibling;
       dropMark.remove();
-      moveCard(id, col.id, next ? next.dataset.id : null);
+      moveCard(id, side, i, next ? next.dataset.id : null);
     });
     colEl.appendChild(list);
     wrap.appendChild(colEl);
@@ -197,6 +268,7 @@ function render() {
   $("board-downside").hidden = filter.side === "upside";
   $("ro").hidden = !profile.readOnly;
   $("del").disabled = profile.readOnly;
+  $("add-col").hidden = profile.readOnly;
   renderBoard("upside");
   renderBoard("downside");
 }
@@ -205,7 +277,7 @@ async function openProfile(name) {
   if (!state.profiles.some(p => p.file === name)) state.profiles = (await api.getState()).profiles;
   file = name;
   profile = await api.loadProfile(file);
-  profile.upsides ||= {};
+  profile.upsides ||= { columns: [], top: { name: "S", ids: [] } };
   profile.downsides ||= {};
   await api.setActive(file);   // the selected profile is the one the overlay uses
   renderProfiles();
@@ -224,6 +296,7 @@ document.querySelectorAll(".seg[data-filter]").forEach(seg => seg.addEventListen
   filter[seg.dataset.filter] = b.dataset.v;
   render();
 }));
+$("add-col").addEventListener("click", addColumn);
 $("q").addEventListener("input", e => { filter.q = e.target.value.trim().toLowerCase(); render(); });
 $("profile").addEventListener("change", e => openProfile(e.target.value));
 $("dup").addEventListener("click", async () => {

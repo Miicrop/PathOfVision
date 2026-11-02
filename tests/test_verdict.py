@@ -1,7 +1,7 @@
 import pytest
 
-from prototype.verdict import (ADAPT, AVOID, CONSIDER, NEUTRAL, TAKE, OptionInput, Profile, judge,
-                               recommend)
+from prototype.verdict import (ADAPT, AVOID, CONSIDER, NEUTRAL, TAKE, TOP, OptionInput, Profile, judge,
+                               recommend, upgrade_upsides)
 
 PROFILE = Profile(
     "test",
@@ -26,7 +26,7 @@ def test_verdict_table(up, down, verdict):
 
 def test_best_upside_and_worst_downside_count():
     v = judge(OptionInput("boss", ["u_b", "u_s2"], ["d_fine", "d_dan", "d_brick"]), PROFILE)
-    assert (v.up_tier, v.up_pos, v.down_tier, v.verdict) == ("s", 1, "brick", ADAPT)
+    assert (v.up_tier, v.up_pos, v.down_tier, v.verdict) == (TOP, 1, "brick", ADAPT)
 
 
 def options(top, bottom):
@@ -67,7 +67,7 @@ def test_neutral_takes_minions():
 def test_default_profile_loads():
     from pathlib import Path
     profile = Profile.load(Path(__file__).resolve().parents[1] / "data" / "profiles" / "default.json")
-    assert profile.read_only and profile.upsides["s"]
+    assert profile.read_only and profile.upsides["top"]["ids"]
 
 
 def test_unreadable_option_blocks_the_recommendation():
@@ -75,3 +75,20 @@ def test_unreadable_option_blocks_the_recommendation():
     rec_input = options(OptionInput(None, [], []), OptionInput("player", ["u_s1"], []))
     assert rec_input[1]["top"].verdict == UNREADABLE
     assert recommend(*rec_input).text == "Can't read both options yet."
+
+
+def test_old_profiles_are_upgraded_to_columns():
+    up = upgrade_upsides({"s": ["x"], "a": ["y"], "b": ["z"]})
+    assert up == {"columns": [{"name": "B", "ids": ["z"]}, {"name": "A", "ids": ["y"]}], "top": {"name": "S", "ids": ["x"]}}
+
+
+def test_custom_columns_rank_by_position_and_only_top_adapts():
+    profile = Profile("cols", {"columns": [{"name": "Meh", "ids": ["u_meh"]}, {"name": "Good", "ids": ["u_good"]},
+                                           {"name": "Great", "ids": ["u_great"]}],
+                               "top": {"name": "Jackpot", "ids": ["u_top"]}},
+                      {"dangerous": [], "brick": ["d_brick"]})
+    assert judge(OptionInput("boss", ["u_great"], ["d_brick"]), profile).verdict == AVOID
+    assert judge(OptionInput("boss", ["u_top"], ["d_brick"]), profile).verdict == ADAPT
+    assert judge(OptionInput("boss", ["u_meh"], []), profile).verdict == TAKE
+    opts = {"top": OptionInput("boss", ["u_meh"], []), "bottom": OptionInput("player", ["u_great"], [])}
+    assert recommend(opts, {k: judge(o, profile) for k, o in opts.items()}).choice == "bottom"

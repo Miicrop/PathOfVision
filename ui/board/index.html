@@ -37,10 +37,8 @@
     </div>
     <span class="lbl">Tiers</span>
     <div class="seg" data-setting="hud_tiers">
-      <button type="button" data-v="off">Off</button>
-      <button type="button" data-v="text">Text</button>
       <button type="button" data-v="highlight">Highlight</button>
-      <button type="button" data-v="both">Both</button>
+      <button type="button" data-v="off">Off</button>
     </div>
     <span class="lbl">Values</span>
     <div class="seg" data-setting="hud_values">
@@ -93,20 +91,21 @@
   </section>
 
   <section class="board" id="board-upside">
-    <h2>Upsides <small>Drag to rank. Higher in a column means higher priority.</small></h2>
+    <h2>Upsides <small>Drag to rank. Columns further right and cards higher in a column win. Only the top column can outweigh a Brick.</small>
+      <button class="btn small" id="add-col" type="button">+ Column</button></h2>
     <div class="cols-wrap"><div class="cols up" id="cols-upside"></div></div>
   </section>
   <section class="board" id="board-downside">
-    <h2>Downsides <small>The worst downside decides. Brick vetoes the option unless the upside is S tier.</small></h2>
+    <h2>Downsides <small>The worst downside decides. Brick vetoes the option unless the upside is in the top column.</small></h2>
     <div class="cols-wrap"><div class="cols down" id="cols-downside"></div></div>
   </section>
 
   <section class="legend" aria-label="Verdicts">
     <b style="color:var(--v-take)">TAKE</b><span>Rated upside, no risky downside</span>
     <b style="color:var(--v-consider)">CONSIDER</b><span>Rated upside with a Dangerous downside</span>
-    <b style="color:var(--v-adapt)">ADAPT - BRICK</b><span>S-tier upside with a Brick downside. Only if your build can adjust.</span>
+    <b style="color:var(--v-adapt)">ADAPT - BRICK</b><span>Top column upside with a Brick downside. Only if your build can adjust.</span>
     <b style="color:var(--v-neutral)">NEUTRAL</b><span>Unrated upside, no risky downside</span>
-    <b style="color:var(--v-avoid)">AVOID</b><span>Brick below S, or Dangerous with an unrated upside</span>
+    <b style="color:var(--v-avoid)">AVOID</b><span>Brick without a top column upside, or Dangerous with an unrated upside</span>
   </section>
 </div>
 

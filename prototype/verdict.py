@@ -9,33 +9,49 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 
-UP_TIERS = ("s", "a", "b")                 # best first
 DOWN_TIERS = ("brick", "dangerous")        # worst first
-UP_RANK = {"s": 3, "a": 2, "b": 1, None: 0}
+# Upside columns, left to right: Unrated | user columns ... | top. Every column right of Unrated is
+# rated (TAKE / CONSIDER); only the top column can make a Brick workable (ADAPT - BRICK).
+TOP, RATED = "top", "rated"                # tier kinds for display
 
 TAKE, CONSIDER, ADAPT, AVOID, NEUTRAL = "TAKE", "CONSIDER", "ADAPT - BRICK", "AVOID", "NEUTRAL"
 UNREADABLE = "UNREADABLE"   # no mod of the option could be read
 
 
+def upgrade_upsides(upsides: dict) -> dict:
+    """Upsides in the column format; old profiles ({"s", "a", "b"}) become top = S, columns = [B, A]."""
+    if "top" in upsides or "columns" in upsides:
+        return {"columns": [{"name": c.get("name", ""), "ids": list(c.get("ids", []))} for c in upsides.get("columns", [])],
+                "top": {"name": upsides.get("top", {}).get("name", "S"), "ids": list(upsides.get("top", {}).get("ids", []))}}
+    return {"columns": [{"name": "B", "ids": list(upsides.get("b", []))}, {"name": "A", "ids": list(upsides.get("a", []))}],
+            "top": {"name": "S", "ids": list(upsides.get("s", []))}}
+
+
 @dataclass
 class Profile:
     name: str
-    upsides: dict[str, list[str]]
+    upsides: dict                         # {"columns": [{"name", "ids"}, ...], "top": {"name", "ids"}}
     downsides: dict[str, list[str]]
     read_only: bool = False
+
+    def __post_init__(self):
+        self.upsides = upgrade_upsides(self.upsides)
 
     @classmethod
     def load(cls, path: Path) -> "Profile":
         data = json.loads(Path(path).read_text(encoding="utf-8"))
         return cls(data["name"], data.get("upsides", {}), data.get("downsides", {}), data.get("readOnly", False))
 
-    def up_tier(self, mod_id: str) -> tuple[str | None, int]:
-        """(tier, position in its column); unrated mods get (None, large)."""
-        for tier in UP_TIERS:
-            ids = self.upsides.get(tier, [])
-            if mod_id in ids:
-                return tier, ids.index(mod_id)
-        return None, 10**6
+    def up_tier(self, mod_id: str) -> tuple[str | None, int, int]:
+        """(kind, rank, position in its column). Rank grows to the right: unrated 0, top highest."""
+        columns = self.upsides["columns"]
+        top = self.upsides["top"]["ids"]
+        if mod_id in top:
+            return TOP, len(columns) + 1, top.index(mod_id)
+        for i in range(len(columns) - 1, -1, -1):
+            if mod_id in columns[i]["ids"]:
+                return RATED, i + 1, columns[i]["ids"].index(mod_id)
+        return None, 0, 10**6
 
     def down_tier(self, mod_id: str) -> str | None:
         for tier in DOWN_TIERS:
@@ -54,20 +70,21 @@ class OptionInput:
 @dataclass
 class OptionVerdict:
     verdict: str
-    up_tier: str | None          # best upside tier
+    up_tier: str | None          # kind of the best upside: TOP, RATED or None (unrated)
     up_pos: int                  # position of that upside in its column (lower = higher priority)
     down_tier: str | None        # worst downside tier
-    tiers: dict[str, str | None] = field(default_factory=dict)   # mod id -> tier, for display
+    tiers: dict[str, str | None] = field(default_factory=dict)   # mod id -> TOP / RATED / dangerous / brick
+    up_rank: int = 0             # column rank of the best upside (higher = further right)
 
 
 def judge(option: OptionInput, profile: Profile) -> OptionVerdict:
     tiers: dict[str, str | None] = {}
-    best_tier, best_pos = None, 10**6
+    best_tier, best_rank, best_pos = None, 0, 10**6
     for mod_id in option.upsides:
-        tier, pos = profile.up_tier(mod_id)
+        tier, rank, pos = profile.up_tier(mod_id)
         tiers[mod_id] = tier
-        if (UP_RANK[tier], -pos) > (UP_RANK[best_tier], -best_pos):
-            best_tier, best_pos = tier, pos
+        if (rank, -pos) > (best_rank, -best_pos):
+            best_tier, best_rank, best_pos = tier, rank, pos
 
     worst = None
     for mod_id in option.downsides:
@@ -80,12 +97,12 @@ def judge(option: OptionInput, profile: Profile) -> OptionVerdict:
     if not option.upsides and not option.downsides:
         verdict = UNREADABLE
     elif worst == "brick":
-        verdict = ADAPT if best_tier == "s" else AVOID
+        verdict = ADAPT if best_tier == TOP else AVOID
     elif worst == "dangerous":
         verdict = CONSIDER if rated else AVOID
     else:
         verdict = TAKE if rated else NEUTRAL
-    return OptionVerdict(verdict, best_tier, best_pos, worst, tiers)
+    return OptionVerdict(verdict, best_tier, best_pos, worst, tiers, best_rank)
 
 
 @dataclass
@@ -99,7 +116,7 @@ def recommend(options: dict[str, OptionInput], verdicts: dict[str, OptionVerdict
     """Recommendation line for one altar; keys are "top" and "bottom"."""
     def strength(pos: str):
         v = verdicts[pos]
-        return UP_RANK[v.up_tier], -v.up_pos
+        return v.up_rank, -v.up_pos
 
     def minions_option(allowed: set[str]) -> str | None:
         return next((p for p, o in options.items() if o.target == "minions" and verdicts[p].verdict in allowed), None)

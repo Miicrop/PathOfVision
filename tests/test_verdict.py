@@ -41,10 +41,15 @@ def test_take_prefers_higher_tier_then_column_position():
     assert rec.choice == "bottom"
 
 
-def test_risky_is_your_call_with_minions_fallback():
-    rec = recommend(*options(OptionInput("player", ["u_s1"], ["d_dan"]), OptionInput("minions", ["u_x"], [])))
+def test_risky_is_your_call_with_safe_other_option():
+    rec = recommend(*options(OptionInput("player", ["u_s1"], ["d_dan"]), OptionInput("boss", ["u_x"], [])))
     assert (rec.choice, rec.about) == (None, "top")
-    assert "Your call: top" in rec.text and "bottom option (Minions)" in rec.text
+    assert rec.text == "Be careful. Bottom is safe."
+
+
+def test_adapt_text_without_safe_option():
+    rec = recommend(*options(OptionInput("player", ["u_x"], ["d_dan"]), OptionInput("boss", ["u_s1"], ["d_brick"])))
+    assert (rec.choice, rec.about, rec.text) == (None, "bottom", "Brick downside, good upside.")
 
 
 def test_both_avoid():

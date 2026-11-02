@@ -81,9 +81,9 @@ Assumption: users sort strictly, so anything rated B or better is worth consider
 
 Recommendation line under the two options:
 1. One or two TAKE → pick the better one (higher tier, then higher position in the column).
-2. Otherwise CONSIDER or ADAPT - BRICK present → "Your call" with the reason shown.
-3. Both AVOID → "Leave this altar alone."
-4. Otherwise (NEUTRAL) → "Take the Minions option" if one option targets minions (safe default advice for new players).
+2. Otherwise CONSIDER or ADAPT - BRICK present → "your call", no firm pick; the HUD arrows point at the better risky option. Text: "Be careful." (CONSIDER) or "Brick downside, good upside." (ADAPT), plus "Top/Bottom is safe." when the other option is NEUTRAL.
+3. Both AVOID → "Leave this altar alone." (red, warning signs, both options dimmed).
+4. Otherwise (NEUTRAL) → "Nothing rated. Take the … option.", preferring a minions option (safe default for new players; the text no longer mentions minions).
 
 HUD panel (fixed position):
 

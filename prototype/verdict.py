@@ -115,14 +115,15 @@ def recommend(options: dict[str, OptionInput], verdicts: dict[str, OptionVerdict
     risky = [p for p, v in verdicts.items() if v.verdict in (CONSIDER, ADAPT)]
     if risky:
         best = max(risky, key=strength)
-        reason = "Brick downside, needs build adjustments" if verdicts[best].verdict == ADAPT else "check the Dangerous downside"
-        fallback = minions_option({NEUTRAL})
-        tail = f" Safe fallback: the {fallback} option (Minions)." if fallback and fallback != best else ""
-        return Recommendation(None, f"Your call: {best} option, {reason}.{tail}", about=best)
+        # The HUD arrows point at `best`, so the text does not repeat which option it is.
+        reason = "Brick downside, good upside." if verdicts[best].verdict == ADAPT else "Be careful."
+        other = "bottom" if best == "top" else "top"
+        tail = f" {other.title()} is safe." if verdicts[other].verdict == NEUTRAL else ""
+        return Recommendation(None, reason + tail, about=best)
 
     if all(v.verdict == AVOID for v in verdicts.values()):
         return Recommendation(None, "Leave this altar alone.")
 
+    # Minions is the safe default for new players; the text no longer says so (hidden for now).
     neutral = minions_option({NEUTRAL}) or next(p for p, v in verdicts.items() if v.verdict == NEUTRAL)
-    who = " (Minions)" if options[neutral].target == "minions" else ""
-    return Recommendation(neutral, f"Nothing rated. Take the {neutral} option{who}.")
+    return Recommendation(neutral, f"Nothing rated. Take the {neutral} option.")

@@ -4,16 +4,19 @@ Usage:
     python -m prototype.app                                  # scan the primary monitor
     python -m prototype.app --replay tests/fixtures/screens  # cycle through screenshots instead
 
+Quit via the tray icon ("Quit") or Ctrl+C in the terminal.
 Passive screen reading only: the app never sends input to the game.
 """
 
 from __future__ import annotations
 
 import argparse
+import signal
 import sys
 import threading
 from pathlib import Path
 
+from PySide6.QtCore import QTimer
 from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 
@@ -37,6 +40,11 @@ def main(argv: list[str] | None = None) -> int:
 
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)   # closing the board keeps the overlay running
+    # Ctrl+C in the terminal quits too. Python handles signals only when it runs on the main
+    # thread, which the Qt event loop blocks, so a timer hands control back regularly.
+    signal.signal(signal.SIGINT, lambda *_: app.exit(0))
+    wake = QTimer(app, interval=200, timeout=lambda: None)
+    wake.start()
     config = settings.load()
     source = ReplaySource(sorted(args.replay.glob("*.png")), args.hold) if args.replay else ScreenSource(args.monitor)
     mon = source.monitor

@@ -201,7 +201,8 @@ function renderBoard(side) {
   const scrolled = [...wrap.querySelectorAll(".list")].map(l => l.scrollTop);   // keep each column where it was
   wrap.innerHTML = "";
   const cols = columnsFor(side);
-  wrap.style.gridTemplateColumns = `repeat(${cols.length}, minmax(230px, 1fr))`;
+  // Columns keep a readable width; wide screens show more of them instead of wider cards.
+  wrap.style.gridTemplateColumns = `repeat(${cols.length}, minmax(240px, 340px))`;
   cols.forEach((col, i) => {
     const ids = columnIds(side, col).filter(id => visible(byId[id]));
     const colEl = document.createElement("div");
@@ -268,7 +269,8 @@ function render() {
   $("board-downside").hidden = filter.side === "upside";
   $("ro").hidden = !profile.readOnly;
   $("del").disabled = profile.readOnly;
-  $("add-col").hidden = profile.readOnly;
+  $("add-col").disabled = profile.readOnly;
+  $("add-col").title = profile.readOnly ? "Read-only profile: duplicate it to add columns" : "Add a column left of the top column";
   renderBoard("upside");
   renderBoard("downside");
 }

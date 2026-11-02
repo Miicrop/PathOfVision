@@ -61,9 +61,7 @@ button.btn:disabled { opacity: .4; cursor: default; }
 .board h2 { font-family: var(--font-display); font-weight: 700; font-size: 19px; margin: 0 0 8px; font-variant: small-caps; letter-spacing: .04em; display: flex; align-items: baseline; gap: 10px; }
 .board h2 small { font-family: var(--font-body); font-variant: normal; font-weight: 400; font-size: 13px; color: var(--muted); letter-spacing: 0; }
 .cols-wrap { overflow-x: auto; padding-bottom: 4px; }
-.cols { display: grid; gap: 10px; }
-.cols.up { grid-template-columns: repeat(4, minmax(230px, 1fr)); }
-.cols.down { grid-template-columns: repeat(3, minmax(230px, 1fr)); }
+.cols { display: grid; gap: 10px; justify-content: start; }
 
 .col { background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--tier); border-radius: 6px; display: flex; flex-direction: column; min-width: 0; }
 .col header { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 10px 4px; }

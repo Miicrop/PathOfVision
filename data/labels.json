@@ -1,0 +1,1010 @@
+{
+  "about": "Short labels for the HUD, edited by hand. alias: shown instead of the full text (empty = full text); '#' is replaced by the next read value, '#2' by the second one. icon: file name in prototype/assets/mods/ without .png. text is a reference copy refreshed by tools/gen_mods; edits to it are overwritten.",
+  "labels": {
+    "TangledAltarUpsidePlayerIncreasedQuantity": {
+      "text": "player + (10-20)% increased Quantity of Items found in this Area",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsidePlayerIncreasedRarity": {
+      "text": "player + (15-30)% increased Rarity of Items found in this Area",
+      "alias": "",
+      "icon": ""
+    },
+    "HardModeTangledAltarUpsidePlayerIncreasedExperience": {
+      "text": "player + (8-12)% increased Experience gain",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsidePlayerDuplicateDroppedCurrency": {
+      "text": "player + Basic Currency Items dropped by slain Enemies have (15-30)% chance to be Duplicated",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsidePlayerDuplicateDroppedDivinationCards": {
+      "text": "player + Divination Cards dropped by slain Enemies have (15-30)% chance to be Duplicated",
+      "alias": "",
+      "icon": ""
+    },
+    "HardModeTangledAltarUpsidePlayerDuplicateDroppedGems": {
+      "text": "player + Gems dropped by slain Enemies have (10-15)% chance to be Duplicated",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsidePlayerDuplicateDroppedMaps": {
+      "text": "player + Maps dropped by slain Enemies have (15-30)% chance to be Duplicated",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsidePlayerDuplicateDroppedScarabs": {
+      "text": "player + Scarabs dropped by slain Enemies have (15-30)% chance to be Duplicated",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsidePlayerDuplicateDroppedUniques": {
+      "text": "player + Unique Items dropped by slain Enemies have (15-30)% chance to be Duplicated",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsidePlayerBurningGroundWhenHit": {
+      "text": "player - (15-20)% chance for Enemies to drop Burning Ground when Hitting you, no more than once every 2 seconds",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsidePlayerTaintedEndurance": {
+      "text": "player - (20-10)% reduced Recovery Rate of Life, Mana and Energy Shield per Endurance Charge",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsidePlayerIncreasedFlaskChargesUsed": {
+      "text": "player - (20-40)% increased Flask Charges used / (60-40)% reduced Flask Effect Duration",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsidePlayerChilledGroundWhenHit": {
+      "text": "player - (25-35)% chance for Enemies to drop Chilled Ground when Hitting you, no more than once every 2 seconds",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsidePlayerShockedGroundWhenHit": {
+      "text": "player - (25-35)% chance for Enemies to drop Shocked Ground when Hitting you, no more than once every 2 seconds",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsidePlayerSapped": {
+      "text": "player - (25-35)% chance to be Sapped when Hit / All Damage taken from Hits can Sap you",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsidePlayerScorched": {
+      "text": "player - (25-35)% chance to be Scorched when Hit / All Damage taken from Hits can Scorch you",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsidePlayerTaintedFrenzy": {
+      "text": "player - (50-30)% reduced Defences per Frenzy Charge",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsidePlayerTaintedPower": {
+      "text": "player - -(40-20)% to Critical Strike Multiplier per Power Charge",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsidePlayerReducedPhysicalDamageReduction": {
+      "text": "player - -(60-40)% additional Physical Damage Reduction",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsidePlayerReducedColdAndLightningResist": {
+      "text": "player - -(60-40)% to Cold Resistance / -(60-40)% to Lightning Resistance",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsidePlayerReducedFireAndChaosResist": {
+      "text": "player - -(60-40)% to Fire Resistance / -(60-40)% to Chaos Resistance",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsidePlayerReducedArmourAndEvasion": {
+      "text": "player - -3000 to Armour / -3000 to Evasion Rating",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsidePlayerMeteorOnFlaskUse": {
+      "text": "player - 30% chance to be targeted by a Meteor when you use a Flask",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsidePlayerCurseReflect": {
+      "text": "player - Curses you inflict are reflected back to you",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsidePlayerChaosMonsterAura": {
+      "text": "player - Nearby Enemies Gain 100% of their Physical Damage as Extra Chaos Damage",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsidePlayerColdMonsterAura": {
+      "text": "player - Nearby Enemies Gain 100% of their Physical Damage as Extra Cold Damage",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsidePlayerFireMonsterAura": {
+      "text": "player - Nearby Enemies Gain 100% of their Physical Damage as Extra Fire Damage",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsidePlayerLightningMonsterAura": {
+      "text": "player - Nearby Enemies Gain 100% of their Physical Damage as Extra Lightning Damage",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsidePlayerNonDamagingAilmentsReflectedToSelf": {
+      "text": "player - Non-Damaging Ailments you inflict are reflected back to you",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsidePlayerRandomProjectileDirection": {
+      "text": "player - Projectiles are fired in random directions",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsidePlayerChaosDegenDuringFlaskDuration": {
+      "text": "player - Take 600.0 Chaos Damage per second during any Flask Effect",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterScarabAbyss": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Abyss Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterScarabStrongbox": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Ambush Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterScarabAnarchy": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Anarchy Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideMonsterAncientOrb": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Ancient Orb",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterScarabBeasts": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Bestiary Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterScarabBetrayal": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Betrayal Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterScarabBeyond": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Beyond Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideMonsterBlessedOrb": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Blessed Orb",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterScarabBlight": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Blight Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterScarabBreach": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Breach Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterScarabMaps": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Cartography Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterChaosOrb": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Chaos Orb",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideMonsterChromaticOrb": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Chromatic Orb",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterScarabDelirium": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Delirium Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterDivinationCardsCurrencyBasic": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards Basic Currency",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterDivinationCardsGems": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards Gems",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterDivinationCardsCurrencyLeague": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards League Currency",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterDivinationCardsGemsLevelled": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards Levelled Gems",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterDivinationCardsGemsQuality": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards Quality Gems",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterDivinationCardsUniqueJewellery": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards Unique Jewellery",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterDivinationCardsCorrupted": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards a Corrupted Item",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterDivinationCardsUniqueCorrupted": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards a Corrupted Unique Item",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterDivinationCardsMap": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards a Map",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterDivinationCardsUniqueArmour": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards a Unique Armour",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterDivinationCardsMapUnique": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards a Unique Map",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterDivinationCardsUniqueWeapon": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards a Unique Weapon",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterDivinationCardsGivesOtherDivinationCards": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Divination Card which rewards other Divination Cards",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterScarabDivination": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Divination Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideMonsterDivineOrb": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Divine Orb",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterScarabDomination": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Domination Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterEnkindlingOrb": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Enkindling Orb",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterScarabEssence": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Essence Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideMonsterExaltedOrb": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Exalted Orb",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterScarabExpedition": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Expedition Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterGemcuttersPrism": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Gemcutter's Prism",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterGlassblowersBauble": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Glassblower's Bauble",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterGrandEldritchEmber": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Grand Eldritch Ember",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideMonsterGrandEldritchIchor": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Grand Eldritch Ichor",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterGreaterEldritchEmber": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Greater Eldritch Ember",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideMonsterGreaterEldritchIchor": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Greater Eldritch Ichor",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterScarabHarvest": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Harvest Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterScarabIncursion": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Incursion Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterScarabInfluence": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Influence Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterInstillingOrb": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Instilling Orb",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideMonsterJewellersOrb": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Jeweller's Orb",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterScarabSettlers": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Kalguuran Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterScarabLegion": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Legion Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterLesserEldritchEmber": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Lesser Eldritch Ember",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideMonsterLesserEldritchIchor": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Lesser Eldritch Ichor",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterScarabMisc": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Miscellaneous Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideMonsterOrbOfAlteration": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Orb of Alteration",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterOrbOfAnnulment": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Orb of Annulment",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterOrbOfBinding": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Orb of Binding",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideMonsterFusingOrb": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Orb of Fusing",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterOrbOfRegret": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Orb of Regret",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterOrbOfScouring": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Orb of Scouring",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterOrbOfUnmaking": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Orb of Unmaking",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideMonsterRegalOrb": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Regal Orb",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterScarabRitual": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Ritual Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterScarabSulphite": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Sulphite Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterScarabUniques": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Titanic Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterScarabTorment": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Torment Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterScarabMercenaries": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Trarthan Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideMonsterScarabUltimatum": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Ultimatum Scarab",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideMonsterVaalOrb": {
+      "text": "minions + (1.6-3.2)% chance to drop an additional Vaal Orb",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideMonsterIncreasedEvasion": {
+      "text": "minions - (250-500)% increased Evasion Rating",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideMonsterSpeed": {
+      "text": "minions - (30-50)% increased Movement Speed / (30-50)% increased Attack Speed / (30-50)% increased Cast Speed",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideMonsterPhysicalDamageReduction": {
+      "text": "minions - (50-80)% additional Physical Damage Reduction",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideMonsterIncreasedArea": {
+      "text": "minions - (70-130)% increased Area of Effect",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideMonsterSupressSpells": {
+      "text": "minions - +100% chance to Suppress Spell Damage / Prevent +(20-30)% of Suppressed Spell Damage",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideMonsterArmour": {
+      "text": "minions - +50000 to Armour",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideMonsterColdAndLightningResist": {
+      "text": "minions - +80% to Cold Resistance / +80% to Lightning Resistance / +10% to maximum Cold Resistance / +10% to maximum Lightning Resistance",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideMonsterFireAndChaosResist": {
+      "text": "minions - +80% to Fire Resistance / +80% to Chaos Resistance / +10% to maximum Fire Resistance / +10% to maximum Chaos Resistance",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideMonsterRemoveChargeOnHit": {
+      "text": "minions - 100% chance to remove a random Charge from Enemy on Hit",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideMonsterConsecratedGroundOnDeath": {
+      "text": "minions - Create Consecrated Ground on Death, lasting 6 seconds",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideMonsterShockedGroundOnDeath": {
+      "text": "minions - Create Shocked Ground on Death, lasting 3 seconds",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideMonsterBurningGroundOnDeath": {
+      "text": "minions - Drops Burning Ground on Death, lasting 3 seconds",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideMonsterChilledGroundOnDeath": {
+      "text": "minions - Drops Chilled Ground on Death, lasting 3 seconds",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideMonsterFlaskDegenOnHit": {
+      "text": "minions - Enemies lose 6 Flask Charges every 3 seconds and cannot gain Flask Charges for 6 seconds after being Hit",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideMonsterChaosDamage": {
+      "text": "minions - Gain (70-130)% of Physical Damage as Extra Chaos Damage",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideMonsterColdDamage": {
+      "text": "minions - Gain (70-130)% of Physical Damage as Extra Cold Damage",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideMonsterFireDamage": {
+      "text": "minions - Gain (70-130)% of Physical Damage as Extra Fire Damage",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideMonsterLightningDamage": {
+      "text": "minions - Gain (70-130)% of Physical Damage as Extra Lightning Damage",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideMonsterOverwhelm": {
+      "text": "minions - Hits have (50-80)% chance to ignore Enemy Physical Damage Reduction",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideMonsterGraspingVineStackOnHit": {
+      "text": "minions - Inflict 1 Grasping Vine on Hit",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideMonsterExposureOnHit": {
+      "text": "minions - Inflict Fire, Cold, and Lightning Exposure on Hit / Gain (70-130)% of Physical Damage as Extra Damage of a random Element",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideMonsterExtraProjectiles": {
+      "text": "minions - Skills fire (3-5) additional Projectiles",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossScarabAbyss": {
+      "text": "boss + Final Boss drops (2-4) additional Abyss Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossScarabStrongbox": {
+      "text": "boss + Final Boss drops (2-4) additional Ambush Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossScarabAnarchy": {
+      "text": "boss + Final Boss drops (2-4) additional Anarchy Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideBossAncientOrb": {
+      "text": "boss + Final Boss drops (2-4) additional Ancient Orbs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossScarabBeasts": {
+      "text": "boss + Final Boss drops (2-4) additional Bestiary Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossScarabBetrayal": {
+      "text": "boss + Final Boss drops (2-4) additional Betrayal Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossScarabBeyond": {
+      "text": "boss + Final Boss drops (2-4) additional Beyond Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideBossBlessedOrb": {
+      "text": "boss + Final Boss drops (2-4) additional Blessed Orbs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossScarabBlight": {
+      "text": "boss + Final Boss drops (2-4) additional Blight Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossScarabBreach": {
+      "text": "boss + Final Boss drops (2-4) additional Breach Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossScarabMaps": {
+      "text": "boss + Final Boss drops (2-4) additional Cartography Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossChaosOrb": {
+      "text": "boss + Final Boss drops (2-4) additional Chaos Orbs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideBossChromaticOrb": {
+      "text": "boss + Final Boss drops (2-4) additional Chromatic Orbs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossScarabDelirium": {
+      "text": "boss + Final Boss drops (2-4) additional Delirium Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossDivinationCardsCurrencyBasic": {
+      "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward Basic Currency",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossDivinationCardsGems": {
+      "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward Gems",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossDivinationCardsCurrencyLeague": {
+      "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward League Currency",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossDivinationCardsGemsLevelled": {
+      "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward Levelled Gems",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossDivinationCardsGemsQuality": {
+      "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward Quality Gems",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossDivinationCardsUniqueJewellery": {
+      "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward Unique Jewellery",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossDivinationCardsCorrupted": {
+      "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward a Corrupted Item",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossDivinationCardsUniqueCorrupted": {
+      "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward a Corrupted Unique Item",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossDivinationCardsMap": {
+      "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward a Map",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossDivinationCardsUniqueArmour": {
+      "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward a Unique Armour",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossDivinationCardsMapUnique": {
+      "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward a Unique Map",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossDivinationCardsUniqueWeapon": {
+      "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward a Unique Weapon",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossDivinationCardsGivesOtherDivinationCards": {
+      "text": "boss + Final Boss drops (2-4) additional Divination Cards which reward other Divination Cards",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossScarabDivination": {
+      "text": "boss + Final Boss drops (2-4) additional Divination Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideBossDivineOrb": {
+      "text": "boss + Final Boss drops (2-4) additional Divine Orbs",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossScarabDomination": {
+      "text": "boss + Final Boss drops (2-4) additional Domination Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossEnkindlingOrb": {
+      "text": "boss + Final Boss drops (2-4) additional Enkindling Orbs",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossScarabEssence": {
+      "text": "boss + Final Boss drops (2-4) additional Essence Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideBossExaltedOrb": {
+      "text": "boss + Final Boss drops (2-4) additional Exalted Orbs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossScarabExpedition": {
+      "text": "boss + Final Boss drops (2-4) additional Expedition Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossGemcuttersPrism": {
+      "text": "boss + Final Boss drops (2-4) additional Gemcutter's Prisms",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossGlassblowersBauble": {
+      "text": "boss + Final Boss drops (2-4) additional Glassblower's Baubles",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossGrandEldritchEmber": {
+      "text": "boss + Final Boss drops (2-4) additional Grand Eldritch Embers",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideBossGrandEldritchIchor": {
+      "text": "boss + Final Boss drops (2-4) additional Grand Eldritch Ichors",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossGreaterEldritchEmber": {
+      "text": "boss + Final Boss drops (2-4) additional Greater Eldritch Embers",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideBossGreaterEldritchIchor": {
+      "text": "boss + Final Boss drops (2-4) additional Greater Eldritch Ichors",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossScarabHarvest": {
+      "text": "boss + Final Boss drops (2-4) additional Harvest Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossScarabIncursion": {
+      "text": "boss + Final Boss drops (2-4) additional Incursion Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossScarabInfluence": {
+      "text": "boss + Final Boss drops (2-4) additional Influence Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossInstillingOrb": {
+      "text": "boss + Final Boss drops (2-4) additional Instilling Orbs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideBossJewellersOrb": {
+      "text": "boss + Final Boss drops (2-4) additional Jeweller's Orbs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossScarabSettlers": {
+      "text": "boss + Final Boss drops (2-4) additional Kalguuran Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossScarabLegion": {
+      "text": "boss + Final Boss drops (2-4) additional Legion Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossLesserEldritchEmber": {
+      "text": "boss + Final Boss drops (2-4) additional Lesser Eldritch Embers",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideBossLesserEldritchIchor": {
+      "text": "boss + Final Boss drops (2-4) additional Lesser Eldritch Ichors",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossScarabMisc": {
+      "text": "boss + Final Boss drops (2-4) additional Miscellaneous Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideBossOrbOfAlteration": {
+      "text": "boss + Final Boss drops (2-4) additional Orbs of Alteration",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossOrbOfAnnulment": {
+      "text": "boss + Final Boss drops (2-4) additional Orbs of Annulment",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossOrbOfBinding": {
+      "text": "boss + Final Boss drops (2-4) additional Orbs of Binding",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideBossFusingOrb": {
+      "text": "boss + Final Boss drops (2-4) additional Orbs of Fusing",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossOrbOfRegret": {
+      "text": "boss + Final Boss drops (2-4) additional Orbs of Regret",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossOrbOfScouring": {
+      "text": "boss + Final Boss drops (2-4) additional Orbs of Scouring",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossOrbOfUnmaking": {
+      "text": "boss + Final Boss drops (2-4) additional Orbs of Unmaking",
+      "alias": "",
+      "icon": ""
+    },
+    "TangleAltarUpsideBossRegalOrb": {
+      "text": "boss + Final Boss drops (2-4) additional Regal Orbs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossScarabRitual": {
+      "text": "boss + Final Boss drops (2-4) additional Ritual Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAtlarUpsideBossScarabSulphite": {
+      "text": "boss + Final Boss drops (2-4) additional Sulphite Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossScarabUniques": {
+      "text": "boss + Final Boss drops (2-4) additional Titanic Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossScarabTorment": {
+      "text": "boss + Final Boss drops (2-4) additional Torment Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossScarabMercenaries": {
+      "text": "boss + Final Boss drops (2-4) additional Trarthan Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarUpsideBossScarabUltimatum": {
+      "text": "boss + Final Boss drops (2-4) additional Ultimatum Scarabs",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarUpsideBossVaalOrb": {
+      "text": "boss + Final Boss drops (2-4) additional Vaal Orbs",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideBossIncreasedArmourAndEvasion": {
+      "text": "boss - (100-200)% increased Armour / (100-200)% increased Evasion Rating",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideBossPhysicalDamageReduction": {
+      "text": "boss - (50-70)% additional Physical Damage Reduction",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideBossSuppressSpells": {
+      "text": "boss - +100% chance to Suppress Spell Damage / Prevent +(20-30)% of Suppressed Spell Damage",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideBossArmour": {
+      "text": "boss - +50000 to Armour",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideBossColdAndLightningResist": {
+      "text": "boss - +80% to Cold Resistance / +80% to Lightning Resistance / +10% to maximum Cold Resistance / +10% to maximum Lightning Resistance",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideBossFireAndChaosResist": {
+      "text": "boss - +80% to Fire Resistance / +80% to Chaos Resistance / +10% to maximum Fire Resistance / +10% to maximum Chaos Resistance",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideBossBlindOnHit": {
+      "text": "boss - 100% Global chance to Blind Enemies on hit / (100-200)% increased Blind Effect",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideBossCoveredInAshOnHit": {
+      "text": "boss - Cover Enemies in Ash on Hit / Gain (50-80)% of Physical Damage as Extra Fire Damage",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideBossCoveredInFrostOnHit": {
+      "text": "boss - Cover Enemies in Frost on Hit / Gain (50-80)% of Physical Damage as Extra Cold Damage",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideBossConsecrateOnHit": {
+      "text": "boss - Create Consecrated Ground on Hit, lasting 6 seconds",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideBossPenetrateElementalResistances": {
+      "text": "boss - Damage Penetrates (15-25)% of Enemy Elemental Resistances / Gain (50-80)% of Physical Damage as Extra Damage of a random Element",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideBossRemoveFlaskChargeOnHit": {
+      "text": "boss - Enemies lose 6 Flask Charges every 3 seconds and cannot gain Flask Charges for 6 seconds after being Hit",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideBossMaxLifeAsEnergyShield": {
+      "text": "boss - Gain (50-70)% of Maximum Life as Extra Maximum Energy Shield",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideBossPhysToAddAsChaos": {
+      "text": "boss - Gain (70-130)% of Physical Damage as Extra Chaos Damage / All Damage from Hits can Poison / Poison on Hit",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideBossPhysToAddAsCold": {
+      "text": "boss - Gain (70-130)% of Physical Damage as Extra Cold Damage / All Damage with Hits can Chill",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideBossPhysToAddAsFire": {
+      "text": "boss - Gain (70-130)% of Physical Damage as Extra Fire Damage / All Damage can Ignite / Hits always Ignite",
+      "alias": "",
+      "icon": ""
+    },
+    "TangledAltarDownsideBossPhysToAddAsLightning": {
+      "text": "boss - Gain (70-130)% of Physical Damage as Extra Lightning Damage / All Damage can Shock / Hits always Shock",
+      "alias": "",
+      "icon": ""
+    },
+    "CleansingAltarDownsideBossHinderAura": {
+      "text": "boss - Nearby Enemies are Hindered, with 40% reduced Movement Speed",
+      "alias": "",
+      "icon": ""
+    }
+  }
+}

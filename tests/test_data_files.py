@@ -7,6 +7,8 @@ DATA = Path(__file__).resolve().parents[1] / "data"
 MODS = json.loads((DATA / "mods.json").read_text(encoding="utf-8"))
 CARDS = {c["id"]: c for c in MODS["mods"]}
 PROFILES = sorted((DATA / "profiles").glob("*.json"))
+LABELS = json.loads((DATA / "labels.json").read_text(encoding="utf-8"))["labels"]
+MOD_ICONS = DATA.parent / "prototype" / "assets" / "mods"
 
 
 def test_mods_have_unique_ids_and_variants():
@@ -39,3 +41,10 @@ def test_default_profile_is_read_only():
     assert default["readOnly"] is True
     assert set(default["upsides"]) == {"s", "a", "b"}
     assert set(default["downsides"]) == {"dangerous", "brick"}
+
+
+def test_labels_cover_every_card_and_icons_exist():
+    assert set(LABELS) == set(CARDS), "run python -m tools.gen_mods --offline to sync data/labels.json"
+    for cid, entry in LABELS.items():
+        if entry["icon"]:
+            assert (MOD_ICONS / f"{entry['icon']}.png").exists(), f"{cid}: missing icon {entry['icon']}.png"

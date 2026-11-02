@@ -6,7 +6,9 @@ Usage:
     python -m tools.gen_mods --input mods.min.json --game-version 3.29.3.3
 
 Every run prints a diff (added / removed / changed cards) against the
-existing data/mods.json before overwriting it.
+existing data/mods.json before overwriting it. It also keeps data/labels.json
+(hand-made short labels per card) in sync: new cards get an empty entry, the
+reference text is refreshed, aliases and icons are never touched.
 """
 
 from __future__ import annotations
@@ -172,6 +174,36 @@ def diff_mods(old: dict | None, new: dict) -> list[str]:
     return lines
 
 
+LABELS_ABOUT = ("Short labels for the HUD, edited by hand. alias: shown instead of the full text "
+                "(empty = full text); '#' is replaced by the next read value, '#2' by the second one. "
+                "icon: file name in prototype/assets/mods/ without .png. "
+                "text is a reference copy refreshed by tools/gen_mods; edits to it are overwritten.")
+TARGET_ORDER = {"player": 0, "minions": 1, "boss": 2}
+SIDE_SIGNS = {"upside": "+", "downside": "-"}
+
+
+def sync_labels(mods: dict, old: dict | None) -> tuple[dict, list[str]]:
+    """labels.json for the given cards, keeping every alias and icon from the old file.
+
+    Labels of cards that no longer exist are kept (and reported) so no hand work is lost.
+    """
+    old_labels = (old or {}).get("labels", {})
+    cards = sorted(mods["mods"], key=lambda c: (TARGET_ORDER[c["target"]], c["side"] != "upside", c["lines"]))
+    labels = {}
+    for card in cards:
+        entry = old_labels.get(card["id"], {})
+        labels[card["id"]] = {
+            "text": f"{card['target']} {SIDE_SIGNS[card['side']]} {' / '.join(card['lines'])}",
+            "alias": entry.get("alias", ""),
+            "icon": entry.get("icon", ""),
+        }
+    notes = [f"? unused label {cid} (card no longer exists)" for cid in old_labels if cid not in labels]
+    for cid in old_labels:
+        if cid not in labels:
+            labels[cid] = old_labels[cid]
+    return {"about": LABELS_ABOUT, "labels": labels}, notes
+
+
 def fetch(url: str, cache_name: str, offline: bool) -> bytes:
     path = CACHE_DIR / cache_name
     if offline:
@@ -189,6 +221,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--game-version", help="game version label (default: RePoE version.txt)")
     parser.add_argument("--offline", action="store_true", help="use the cached download")
     parser.add_argument("--out", type=Path, default=OUT_PATH)
+    parser.add_argument("--labels", type=Path, help="labels file to keep in sync (default: labels.json next to --out)")
     parser.add_argument("--dry-run", action="store_true", help="print the diff without writing")
     args = parser.parse_args(argv)
     sys.stdout.reconfigure(errors="replace")  # Windows consoles default to cp1252
@@ -204,9 +237,18 @@ def main(argv: list[str] | None = None) -> int:
     print(f"{len(new['mods'])} cards from {variant_count} spawnable mods (game {game_version})")
     print("\n".join(diff) if diff else "no changes")
 
+    labels_path = args.labels or args.out.parent / "labels.json"
+    old_labels = json.loads(labels_path.read_text(encoding="utf-8")) if labels_path.exists() else None
+    labels, notes = sync_labels(new, old_labels)
+    missing = sum(1 for entry in labels["labels"].values() if not entry["alias"])
+    print(f"labels: {len(labels['labels']) - missing} with alias, {missing} without")
+    if notes:
+        print("\n".join(notes))
+
     if not args.dry_run:
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(json.dumps(new, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        labels_path.write_text(json.dumps(labels, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return 0
 
 

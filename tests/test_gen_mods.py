@@ -1,4 +1,4 @@
-from tools.gen_mods.gen_mods import build_mods, diff_mods, parse_ranges, to_template
+from tools.gen_mods.gen_mods import build_mods, diff_mods, parse_ranges, sync_labels, to_template
 
 
 def raw_mod(text, tag, weight=1000, blocked="primordial_altar_downside"):
@@ -84,3 +84,21 @@ def test_diff_reports_added_removed_changed():
     assert diff[1].startswith("- removed TangleAltarUpsideMonsterDivineOrb")
     assert diff[2] == "~ changed TangledAltarDownsidePlayerSapped: lines, variants"
     assert diff_mods(old, old) == []
+
+
+def test_sync_labels_keeps_hand_work_and_adds_new_cards():
+    mods = build_mods(RAW, "test")
+    old = {"labels": {
+        "TangledAltarDownsidePlayerSapped": {"text": "stale", "alias": "Sap #%", "icon": "sap"},
+        "GoneAltarUpsidePlayerSomething": {"text": "old", "alias": "Gone", "icon": ""},
+    }}
+    labels, notes = sync_labels(mods, old)
+    entries = labels["labels"]
+    sap = entries["TangledAltarDownsidePlayerSapped"]
+    assert (sap["alias"], sap["icon"]) == ("Sap #%", "sap")
+    assert sap["text"].startswith("player - (25-35)% chance to be Sapped")
+    assert entries["TangleAltarUpsideMonsterDivineOrb"] == {
+        "text": "minions + (1.6-3.2)% chance to drop an additional Divine Orb", "alias": "", "icon": ""}
+    assert entries["GoneAltarUpsidePlayerSomething"]["alias"] == "Gone"
+    assert notes == ["? unused label GoneAltarUpsidePlayerSomething (card no longer exists)"]
+    assert set(entries) - {"GoneAltarUpsidePlayerSomething"} == {c["id"] for c in mods["mods"]}

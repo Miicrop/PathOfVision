@@ -2,7 +2,8 @@
 
 Per altar it mirrors the in-game layout: top option box, recommendation box (where the
 altar icon sits in game), bottom option box. Box borders carry the verdict color, and each
-option shows its target as the matching half of the altar icon.
+option shows its target as the matching half of the altar icon. Mods are listed in columns
+(sign, icon, alias or full text, tier); aliases and icons come from data/labels.json.
 """
 
 from __future__ import annotations
@@ -14,9 +15,11 @@ from pathlib import Path
 
 from PySide6.QtCore import QObject, Qt, Signal
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QFrame, QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
+from .labels import LABELS_PATH, Label, load_labels, render_alias
 from .live import AltarView
+from .match import Match
 from .verdict import ADAPT, AVOID, CONSIDER, NEUTRAL, TAKE, UNREADABLE
 
 ASSETS = Path(__file__).resolve().parent / "assets"
@@ -28,6 +31,7 @@ TARGETS = {"player": "Player", "minions": "Eldritch Minions", "boss": "Map Boss"
 MAX_ALTARS = 2
 MAX_LINE = 64
 ICON_HEIGHT = 46
+MOD_ICON_SIZE = 18
 BOX_STYLE = "QFrame#{name} {{ background: rgba(12, 14, 20, 228); border: 2px solid {color}; border-radius: 6px; }}"
 
 
@@ -68,8 +72,25 @@ class _Icons:
             self._cache[key] = pixmap.scaledToHeight(ICON_HEIGHT, Qt.SmoothTransformation)
         return self._cache[key]
 
+    def mod(self, name: str) -> QPixmap | None:
+        """Mod icon from assets/mods/<name>.png; None if the file does not exist."""
+        key = ("mod", name, "")
+        if key not in self._cache:
+            pixmap = QPixmap(str(ASSETS / "mods" / f"{name}.png"))
+            self._cache[key] = None if pixmap.isNull() else pixmap.scaled(
+                MOD_ICON_SIZE, MOD_ICON_SIZE, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        return self._cache[key]
 
-def _option_box(view: AltarView, position: str, icons: _Icons) -> QFrame:
+
+def mod_text(match: Match, ocr_lines: list[str], labels: dict[str, Label]) -> str:
+    """The alias with the read values filled in, or the full mod text if the card has no alias."""
+    display = match.display(ocr_lines)
+    label = labels.get(match.card.id)
+    text = render_alias(label.alias, display) if label and label.alias else " / ".join(display)
+    return text if len(text) <= MAX_LINE else text[:MAX_LINE - 1] + "…"
+
+
+def _option_box(view: AltarView, position: str, icons: _Icons, labels: dict[str, Label]) -> QFrame:
     option = next(o for o in view.altar.options if o.position == position)
     verdict = view.verdicts[position]
     color = VERDICT_COLORS[verdict.verdict]
@@ -89,15 +110,28 @@ def _option_box(view: AltarView, position: str, icons: _Icons) -> QFrame:
         icon.setPixmap(pixmap)
     row.addWidget(icon, 0, Qt.AlignTop)
 
-    lines = [f"{_span(verdict.verdict, color, True)}&nbsp;&nbsp;{_span(TARGETS[option.target], '#9aa0a6')}"]
-    for m in sorted(option.matches, key=lambda m: m.card.side != "upside"):
-        text = " / ".join(m.display(option.lines))
-        text = text if len(text) <= MAX_LINE else text[:MAX_LINE - 1] + "…"
+    # One row per mod in columns: sign | mod icon | alias or text | tier
+    grid = QGridLayout()
+    grid.setHorizontalSpacing(6)
+    grid.setVerticalSpacing(1)
+    grid.addWidget(_label(f"{_span(verdict.verdict, color, True)}&nbsp;&nbsp;{_span(TARGETS[option.target], '#9aa0a6')}"),
+                   0, 0, 1, 4)
+    for r, m in enumerate(sorted(option.matches, key=lambda m: m.card.side != "upside"), start=1):
         sign = _span("+", "#4fbf6a", True) if m.card.side == "upside" else _span("−", "#e05a4f", True)
-        label, tier_color = TIER_LABELS.get(verdict.tiers.get(m.card.id),
-                                            ("Unrated" if m.card.side == "upside" else "Fine", "#6f757d"))
-        lines.append(f"{sign} {_span(text, '#d8d8d8')}&nbsp;&nbsp;{_span(label, tier_color, True)}")
-    row.addWidget(_label("<br>".join(lines)), 1)
+        grid.addWidget(_label(sign), r, 0)
+        label = labels.get(m.card.id)
+        mod_icon = icons.mod(label.icon) if label and label.icon else None
+        if mod_icon:
+            pic = QLabel()
+            pic.setStyleSheet("background: transparent;")
+            pic.setPixmap(mod_icon)
+            grid.addWidget(pic, r, 1)
+        grid.addWidget(_label(_span(mod_text(m, option.lines, labels), "#d8d8d8")), r, 2)
+        tier, tier_color = TIER_LABELS.get(verdict.tiers.get(m.card.id),
+                                           ("Unrated" if m.card.side == "upside" else "Fine", "#6f757d"))
+        grid.addWidget(_label(_span(tier, tier_color, True), Qt.AlignRight), r, 3)
+    grid.setColumnStretch(2, 1)
+    row.addLayout(grid, 1)
     return box
 
 
@@ -116,15 +150,15 @@ def _recommendation_box(view: AltarView) -> QFrame:
     return box
 
 
-def _altar_column(view: AltarView, icons: _Icons) -> QWidget:
+def _altar_column(view: AltarView, icons: _Icons, labels: dict[str, Label]) -> QWidget:
     column = QWidget()
     column.setStyleSheet("background: transparent;")
     layout = QVBoxLayout(column)
     layout.setContentsMargins(0, 0, 0, 0)
     layout.setSpacing(6)
-    layout.addWidget(_option_box(view, "top", icons))
+    layout.addWidget(_option_box(view, "top", icons, labels))
     layout.addWidget(_recommendation_box(view), 0, Qt.AlignHCenter)
-    layout.addWidget(_option_box(view, "bottom", icons))
+    layout.addWidget(_option_box(view, "bottom", icons, labels))
     return column
 
 
@@ -145,6 +179,8 @@ class Hud(QWidget):
         self.setAttribute(Qt.WA_ShowWithoutActivating)
         self._monitor, self._bottom, self._offset_x = monitor, bottom, offset_x
         self._icons = _Icons()
+        self._labels: dict[str, Label] = {}
+        self._labels_mtime: float | None = None
         self._shown: tuple = ()
         self._layout = QHBoxLayout(self)
         self._layout.setContentsMargins(0, 0, 0, 0)
@@ -168,6 +204,7 @@ class Hud(QWidget):
         # Closest to the screen center (the character) first, then left to right.
         views = sorted(views, key=lambda v: abs(v.altar.icon.x - cx) + abs(v.altar.icon.y - cy))[:MAX_ALTARS]
         views.sort(key=lambda v: v.altar.icon.x)
+        self._reload_labels()
         signature = tuple(_signature(v) for v in views)
         if signature != self._shown:
             self._shown = signature
@@ -176,11 +213,21 @@ class Hud(QWidget):
                 old.setParent(None)   # out of the layout now, so adjustSize ignores it
                 old.deleteLater()
             for view in views:
-                self._layout.addWidget(_altar_column(view, self._icons), 0, Qt.AlignBottom)
+                self._layout.addWidget(_altar_column(view, self._icons, self._labels), 0, Qt.AlignBottom)
             self._layout.activate()
             self.resize(self._layout.sizeHint())
         self.show()
         self._anchor()
+
+    def _reload_labels(self):
+        """Pick up edits to labels.json while running, like profile changes."""
+        try:
+            mtime = LABELS_PATH.stat().st_mtime
+        except FileNotFoundError:
+            mtime = None
+        if mtime != self._labels_mtime:
+            self._labels_mtime, self._labels = mtime, load_labels()
+            self._shown = ()   # force a rebuild with the new texts
 
     def resizeEvent(self, event):
         # Qt may finish sizing the new boxes only after they are shown; re-anchor on every

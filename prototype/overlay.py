@@ -18,8 +18,9 @@ from pathlib import Path
 from typing import Callable
 
 from PySide6.QtCore import QObject, Qt, Signal
-from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QFrame, QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from PySide6.QtGui import QColor, QPixmap
+from PySide6.QtWidgets import (QFrame, QGraphicsDropShadowEffect, QGridLayout, QHBoxLayout, QLabel, QVBoxLayout,
+                               QWidget)
 
 from . import settings
 from .labels import KEYWORDS_PATH, LABELS_PATH, Label, color_keywords, load_keywords, load_labels, render_alias
@@ -35,7 +36,10 @@ TIER_LABELS = {"s": ("S", "#f2c84b"), "a": ("A", "#b48cf0"), "b": ("B", "#6fa4dc
 MAX_ALTARS = 2
 MAX_LINE = 64
 TIER_TINT_ALPHA = 60   # 0-255, background of a highlighted row
-BOX_STYLE = "QFrame#{name} {{ background: rgba(12, 14, 20, 228); border: 2px solid {color}; border-radius: 6px; }}"
+BOX_STYLE = ("QFrame#{name} {{ background: rgba(12, 14, 20, {alpha}); border: {width}px solid {color}; "
+             "border-radius: 6px; }}")
+GLOW = 12            # px around each option box, room for the glow of the recommended one
+ARROWS = {"top": "▲", "bottom": "▼"}
 
 
 class Bridge(QObject):
@@ -119,7 +123,15 @@ def _option_box(view: AltarView, position: str, icons: _Icons, labels: dict[str,
     color = VERDICT_COLORS[verdict.verdict]
     box = QFrame()
     box.setObjectName("opt")
-    box.setStyleSheet(BOX_STYLE.format(name="opt", color=color))
+    chosen = view.recommendation.choice == position
+    # Opaque when chosen, so the glow behind it does not tint the background.
+    box.setStyleSheet(BOX_STYLE.format(name="opt", color=color, width=3 if chosen else 2, alpha=255 if chosen else 228))
+    if chosen:
+        glow = QGraphicsDropShadowEffect(box)
+        glow.setColor(QColor(color))
+        glow.setBlurRadius(GLOW * 2)
+        glow.setOffset(0, 0)
+        box.setGraphicsEffect(glow)
     row = QHBoxLayout(box)
     row.setContentsMargins(10, 8, 12, 8)
     row.setSpacing(10)
@@ -176,14 +188,15 @@ def _with_legend(box: QFrame, rich: str, style: Style) -> QWidget:
     wrapper = QWidget()
     wrapper.setStyleSheet("background: transparent;")
     layout = QVBoxLayout(wrapper)
-    layout.setContentsMargins(0, style.legend_overlap, 0, 0)
+    top = max(style.legend_overlap, GLOW)
+    layout.setContentsMargins(GLOW, top, GLOW, GLOW)
     layout.addWidget(box)
     legend = _label(rich, size=style.font_size - 3)
     legend.setParent(wrapper)
     legend.setStyleSheet(legend.styleSheet().replace("background: transparent", "background: rgb(12, 14, 20)")
                          + " QLabel { padding: 0 5px; border-radius: 3px; }")
     legend.adjustSize()
-    legend.move(12, style.legend_overlap - legend.height() // 2 + 1)
+    legend.move(GLOW + 12, top - legend.height() // 2 + 1)
     legend.raise_()
     return wrapper
 
@@ -192,12 +205,13 @@ def _recommendation_box(view: AltarView, style: Style) -> QFrame:
     rec = view.recommendation
     focus = rec.choice or rec.about
     color = VERDICT_COLORS[view.verdicts[focus].verdict] if focus else "#e0a33a"
-    text = _span(rec.text, color, True)
+    arrow = ARROWS.get(focus, "")   # point at the option the line is about
+    text = _span(f"{arrow}  {rec.text}  {arrow}" if arrow else rec.text, color, True)
     if not view.complete:
         text += "<br>" + _span("partly hidden, verdict may change", "#9aa0a6")
     box = QFrame()
     box.setObjectName("rec")
-    box.setStyleSheet(BOX_STYLE.format(name="rec", color="#3a3f4b"))
+    box.setStyleSheet(BOX_STYLE.format(name="rec", color="#3a3f4b", width=2, alpha=228))
     col = QVBoxLayout(box)
     col.setContentsMargins(12, 6, 12, 6)
     col.addWidget(_label(text, Qt.AlignHCenter, style.font_size))
@@ -209,7 +223,7 @@ def _altar_column(view: AltarView, icons: _Icons, labels: dict[str, Label], styl
     column.setStyleSheet("background: transparent;")
     layout = QVBoxLayout(column)
     layout.setContentsMargins(0, 0, 0, 0)
-    layout.setSpacing(6)
+    layout.setSpacing(0)   # the option boxes bring their own margins (room for the glow)
     layout.addWidget(_option_box(view, "top", icons, labels, style))
     layout.addWidget(_recommendation_box(view, style), 0, Qt.AlignHCenter)
     layout.addWidget(_option_box(view, "bottom", icons, labels, style))

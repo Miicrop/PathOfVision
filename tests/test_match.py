@@ -89,3 +89,9 @@ def test_unknown_target_picks_the_best_fit(cards):
     matches, rest = match_box(lines, cards, None, None)
     assert rest == []
     assert {m.card.target for m in matches} == {"boss"}
+
+
+def test_display_fills_read_values_into_clean_text(cards):
+    lines = ["33% CHANCE TO BE SAPPED WHEN HIT 78 GOLD", "ALL DAMAGE TAKEN FROM HITS CAN SAP YOU"]
+    (match,), _ = match_box(lines, cards, "player", None)
+    assert match.display(lines) == ["33% chance to be Sapped when Hit", "All Damage taken from Hits can Sap you"]

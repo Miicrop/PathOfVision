@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Altar Tier Board</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <h1>Altar Tier Board</h1>
+      <p id="subtitle">Loading…</p>
+    </div>
+    <div class="profile">
+      <label for="profile">Profile</label>
+      <select id="profile"></select>
+      <button class="btn" id="dup" type="button">Duplicate</button>
+      <button class="btn" id="del" type="button">Delete</button>
+      <span class="saved" id="saved" aria-live="polite"></span>
+    </div>
+  </header>
+
+  <div class="notice" id="ro" hidden>
+    <strong>This profile is read-only.</strong> Duplicate it to make your own version.
+  </div>
+  <div class="notice error" id="err" hidden></div>
+
+  <section class="filters" aria-label="Filters">
+    <span class="lbl">Altar</span>
+    <div class="seg" data-filter="altar">
+      <button type="button" data-v="both" aria-pressed="true">Both</button>
+      <button type="button" data-v="eater" aria-pressed="false"><span class="dot" style="background:var(--eater)"></span>Eater of Worlds</button>
+      <button type="button" data-v="exarch" aria-pressed="false"><span class="dot" style="background:var(--exarch)"></span>Searing Exarch</button>
+    </div>
+    <span class="lbl">Side</span>
+    <div class="seg" data-filter="side">
+      <button type="button" data-v="all" aria-pressed="true">All</button>
+      <button type="button" data-v="upside" aria-pressed="false">Upsides</button>
+      <button type="button" data-v="downside" aria-pressed="false">Downsides</button>
+    </div>
+    <span class="lbl">Target</span>
+    <div class="seg" data-filter="target">
+      <button type="button" data-v="all" aria-pressed="true">All</button>
+      <button type="button" data-v="player" aria-pressed="false">Player</button>
+      <button type="button" data-v="minions" aria-pressed="false">Eldritch Minions</button>
+      <button type="button" data-v="boss" aria-pressed="false">Map Boss</button>
+    </div>
+    <span class="lbl">Search</span>
+    <div class="search-row">
+      <input type="search" id="q" placeholder="e.g. divine, scarab, sap" autocomplete="off">
+    </div>
+  </section>
+
+  <section class="board" id="board-upside">
+    <h2>Upsides <small>Drag to rank. Higher in a column means higher priority.</small></h2>
+    <div class="cols-wrap"><div class="cols up" id="cols-upside"></div></div>
+  </section>
+  <section class="board" id="board-downside">
+    <h2>Downsides <small>The worst downside decides. Brick vetoes the option unless the upside is S tier.</small></h2>
+    <div class="cols-wrap"><div class="cols down" id="cols-downside"></div></div>
+  </section>
+
+  <section class="legend" aria-label="Verdicts">
+    <b style="color:var(--v-take)">TAKE</b><span>Rated upside, no risky downside</span>
+    <b style="color:var(--v-consider)">CONSIDER</b><span>Rated upside with a Dangerous downside</span>
+    <b style="color:var(--v-adapt)">ADAPT - BRICK</b><span>S-tier upside with a Brick downside. Only if your build can adjust.</span>
+    <b style="color:var(--v-neutral)">NEUTRAL</b><span>Unrated upside, no risky downside</span>
+    <b style="color:var(--v-avoid)">AVOID</b><span>Brick below S, or Dangerous with an unrated upside</span>
+  </section>
+</div>
+
+<script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+<script src="board.js"></script>
+</body>
+</html>

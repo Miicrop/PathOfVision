@@ -58,7 +58,7 @@ def _match(gray: np.ndarray, templates) -> np.ndarray:
 
 
 def find_icons(bgr: np.ndarray, threshold: float = THRESHOLD, max_icons: int = 6) -> list[Icon]:
-    gray = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(bgr, cv2.COLOR_BGRA2GRAY if bgr.shape[2] == 4 else cv2.COLOR_BGR2GRAY)
     h, w = gray.shape
     coarse = _match(cv2.resize(gray, None, fx=COARSE_SCALE, fy=COARSE_SCALE, interpolation=cv2.INTER_AREA), _COARSE)
 
@@ -92,7 +92,7 @@ def find_icons(bgr: np.ndarray, threshold: float = THRESHOLD, max_icons: int = 6
 def altar_type(bgr: np.ndarray, icon: Icon) -> str:
     """Eater icons are blue/teal inside the ring, Exarch icons are red/orange."""
     r = RING[0] - 4
-    patch = bgr[max(icon.y - r, 0):icon.y + r, max(icon.x - r, 0):icon.x + r]
+    patch = bgr[max(icon.y - r, 0):icon.y + r, max(icon.x - r, 0):icon.x + r, :3]
     hsv = cv2.cvtColor(patch, cv2.COLOR_BGR2HSV)
     h, s, v = hsv[..., 0], hsv[..., 1], hsv[..., 2]
     vivid = (s > 90) & (v > 70)

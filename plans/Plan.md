@@ -162,7 +162,7 @@ Screen capture ──► Stage 1: altar detection (3–5 Hz, downscaled frame)
 Settings board (HTML/JS) ── writes profiles/*.json ── file watch → reload
 ```
 
-- **Settings board as HTML/JS:** the mockup grows into the real board. The prototype hosts it via `pywebview`, and the final app hosts the same files via WebView2. That way the UI isn't rewritten during the port.
+- **Settings board as HTML/JS:** the mockup grew into the real board (`ui/board/`). The prototype hosts it via Qt WebEngine, and the final app hosts the same files via WebView2. That way the UI isn't rewritten during the port.
 - **Verdict engine:** a small pure module with unit tests. It is the one piece of logic that gets ported 1:1.
 
 ## 9. Project layout (target)
@@ -211,12 +211,15 @@ tests/                   # unit + recognition accuracy tests
   - **Header hidden** (screen edge, buff bar): the target is inferred as the one that explains the most lines.
   - **HUD covers boxes**: buff bar, flask bar and skill bar draw on top of altar boxes. The one remaining miss is a Rarity line almost fully behind the flask bar.
 
-### Phase 3 – Live prototype (Python)
-- Capture via `dxcam`/Windows Graphics Capture. Stage 1 at 3–5 Hz, stage 2 on hit, crop-hash cache.
-- Verdict engine module with unit tests for every row of the verdict table.
-- HUD overlay: PySide6 frameless, topmost, click-through window. Position configurable.
-- Board hosted via `pywebview`. Profile changes reload instantly (file watch).
-- **Done when:** a real mapping session shows correct verdicts with no noticeable FPS impact (CPU idle load from stage 1 ≤ 3 %).
+### Phase 3 – Live prototype (Python) 🔶 (built 2026-11-02, waiting for a real mapping session)
+- Run: `.venv\Scripts\python -m prototype.app` (tray icon: "Settings board", "Quit"). Without the game: `--replay tests/fixtures/screens`. Board alone: `python -m prototype.board`.
+- `live.py`: capture with `mss` (primary monitor by default), icon search at 4 Hz, OCR only for new altars. Altars are tracked by icon position across scans; once both boxes are read completely, an altar is not read again. Incomplete altars (cut off, covered by HUD) are re-read every 0.5 s.
+- `verdict.py`: verdict engine with unit tests for every row of the verdict table and the recommendation rules. New verdict `UNREADABLE` when no mod of an option could be read; the recommendation then waits ("Can't read both options yet.").
+- `overlay.py`: frameless, always-on-top, click-through, never takes focus. Shows up to two altars (closest to the screen center). Mod text comes from `mods.json` with the read values filled in, so stray OCR text (gold labels, NPC lines) never shows up.
+- `board.py` + `ui/board/`: the tier board grown from the mockup, on the real 201 cards. **Change of plan:** hosted in Qt WebEngine (already part of PySide6) instead of pywebview, so the board opens from the same process. The page talks to Python through a five-call adapter (`connectBackend()` in `board.js`); the WebView2 port only replaces that adapter.
+- Files: the board writes `data/profiles/*.json` and `settings.json` (active profile, HUD position); the scanner checks both on every scan, so changes apply instantly. User profiles and `settings.json` are not in git.
+- Measured on the desktop without altars: **1.96 % total CPU** (47 % of one of 24 threads) at 4 Hz. Most of it is the `mss` screen grab (~35 ms); `dxcam` (DXGI) is the next lever if needed.
+- **Done when:** a real mapping session shows correct verdicts with no noticeable FPS impact (CPU idle load from stage 1 ≤ 3 %). Open: the in-game test.
 
 ### Phase 4 – Distributable app
 - Decision gate after Phase 3: port to **C#/.NET** (WPF overlay, WebView2 hosting `ui/board`, Windows.Graphics.Capture, Windows.Media.Ocr, OpenCvSharp; single-file `.exe`) or ship Python via Nuitka if it is good enough. Current preference: C#.
@@ -242,7 +245,7 @@ tests/                   # unit + recognition accuracy tests
 - ~~Which game data export contains the altar mods with stable IDs?~~ RePoE, domain `primordial_altar` (see Phase 1).
 - ~~How are multi-line mods represented?~~ As one mod with several lines; `lines`/`templates` keep them per line.
 - When do HardMode variants spawn? They are not Ruthless-only (seen in normal maps); maybe tied to an atlas passive or map tier.
-- The board mockup still uses made-up ids. It switches to `data/mods.json` when it moves to `ui/board/` (Phase 3).
 - How far can the boxes be from the altar icon at different camera positions and resolutions?
 - ~~Can an option have several upsides/downsides?~~ Yes, up to 3 downsides and 2 upsides seen; the box simply grows (tallest ~250 px).
 - How do boxes behave at other resolutions and UI scales? Only 3440×1440 is covered so far.
+- **Atlas passives (to test):** the test screenshots had the Eater passive allocated (upsides ~50 % stronger, which explains the values above the base ranges). The Exarch passive (reportedly a 50 % chance for an additional upside) was **not** allocated, so boxes with an extra upside line are untested. Collect a few screenshots with it.

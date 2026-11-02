@@ -17,6 +17,7 @@ HEADERS = {"PLAYER": "player", "MINION": "minions", "BOSS": "boss"}
 MIN_LINE_SCORE = 80
 LINE_MARGIN = 6       # a line may also count for templates scoring at most this much below its best
 NUMBER_RE = re.compile(r"\d+(?:\.\d+)?")
+VALUE_SLOT_RE = re.compile(r"\(-?[\d.]+--?[\d.]+\)|\d+(?:\.\d+)?")   # "(15-30)" or "100"
 
 
 def normalize(text: str) -> str:
@@ -49,6 +50,7 @@ class Card:
     altars: list[str]
     templates: list[list[str]]          # per variant: normalized template lines
     ranges: list[list[list[float]]]     # per variant
+    lines: list[list[str]] = field(default_factory=list)   # per variant: display text with ranges
 
 
 def load_cards(path: Path = MODS_PATH) -> list[Card]:
@@ -58,6 +60,7 @@ def load_cards(path: Path = MODS_PATH) -> list[Card]:
             id=m["id"], side=m["side"], target=m["target"], altars=m["altars"],
             templates=[[normalize(t) for t in v["templates"]] for v in m["variants"]],
             ranges=[v["ranges"] for v in m["variants"]],
+            lines=[v["lines"] for v in m["variants"]],
         )
         for m in mods
     ]
@@ -71,6 +74,20 @@ class Match:
     values: list[float] = field(default_factory=list)
     in_range: bool = True                # informational: atlas passives push values past the base range
     partial: bool = False                # some lines of a multi-line mod were not readable
+    variant: int = 0
+    assign: list[int | None] = field(default_factory=list)   # OCR line per template line, None if hidden
+
+    def display(self, ocr_lines: list[str]) -> list[str]:
+        """The mod's clean text with the rolled values filled in where they were read."""
+        out = []
+        for text, i in zip(self.card.lines[self.variant], self.assign):
+            values = NUMBER_RE.findall(ocr_lines[i]) if i is not None else []
+            slots = VALUE_SLOT_RE.findall(text)
+            if values and len(values) >= len(slots):
+                filled = iter(values)
+                text = VALUE_SLOT_RE.sub(lambda _: next(filled), text)
+            out.append(text)
+        return out
 
 
 def _values(line: str) -> list[float]:
@@ -153,7 +170,8 @@ def match_box(lines: list[str], cards: list[Card], target: str | None, altar: st
         # OCR values carry no sign, so compare magnitudes
         bounds = [sorted((abs(lo), abs(hi))) for lo, hi in card.ranges[vi]]
         in_range = len(values) == len(bounds) and all(lo <= v <= hi for v, (lo, hi) in zip(values, bounds))
-        matches.append(Match(card, present, round(score, 1), values, in_range, partial=len(present) < len(assign)))
+        matches.append(Match(card, present, round(score, 1), values, in_range,
+                             partial=len(present) < len(assign), variant=vi, assign=assign))
     matches.sort(key=lambda m: min(m.lines))
     unexplained = sorted(set(range(len(lines))) - {i for m in matches for i in m.lines})
     return matches, unexplained

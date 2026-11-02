@@ -32,6 +32,13 @@ class Option:
     lines: list[str]
     matches: list[Match]
     unexplained: list[str]
+    has_header: bool = True
+
+    @property
+    def complete(self) -> bool:
+        """Everything in the box was read and explained; nothing hidden or cut off."""
+        return (self.has_header and bool(self.matches) and not self.unexplained
+                and not any(m.partial for m in self.matches))
 
 
 @dataclass
@@ -52,7 +59,7 @@ class _Line:
 
 def _ocr_region(ocr: WindowsOcr, img: np.ndarray, x0: int, y0: int, x1: int, y1: int) -> list[_Line]:
     """OCR a region; returns lines in full-res coords."""
-    crop = img[y0:y1, x0:x1]
+    crop = img[y0:y1, x0:x1, :3]   # screen captures carry an alpha channel
     if crop.size == 0:
         return []
     # Box text is bright; the semi-transparent background lets dimmer game art through.
@@ -100,33 +107,40 @@ def _box_lines(lines: list[_Line], cx: float, near_y: float, upward: bool) -> li
     return block
 
 
+def read_altar(img: np.ndarray, icon: Icon, ocr: WindowsOcr, cards: list[Card]) -> Altar | None:
+    """Read both boxes of one altar; None if no box text matched (not a real altar)."""
+    h, w = img.shape[:2]
+    x0, x1 = max(icon.x - SEARCH_HALF_WIDTH, 0), min(icon.x + SEARCH_HALF_WIDTH, w)
+    top_edge, bottom_edge = icon.y - RING[1], icon.y + RING[1]
+    regions = {
+        "top": (_ocr_region(ocr, img, x0, max(top_edge - SEARCH_HEIGHT, 0), x1, top_edge), top_edge, True),
+        "bottom": (_ocr_region(ocr, img, x0, bottom_edge, x1, min(bottom_edge + SEARCH_HEIGHT, h)), bottom_edge, False),
+    }
+    options = []
+    for position, (lines, edge, upward) in regions.items():
+        block = [l.text for l in _box_lines(lines, icon.x, edge, upward)]
+        target = None
+        # The header is the box's first line; centered strays before it (gold labels, timers) go.
+        header_at = next((i for i, text in enumerate(block) if parse_header(text)), None)
+        if header_at is not None:
+            target = parse_header(block[header_at])
+            block = block[header_at + 1:]
+        # No altar filter: mods of the other altar type do show up (e.g. Embers on an Eater altar).
+        matches, rest = match_box(block, cards, target, None)
+        if target is None and matches:
+            target = matches[0].card.target
+        options.append(Option(position, target, block, matches, [block[i] for i in rest], header_at is not None))
+    if not any(o.matches for o in options):
+        return None
+    return Altar(icon, altar_type(img, icon), options)
+
+
 def read_altars(img: np.ndarray, ocr: WindowsOcr, cards: list[Card]) -> list[Altar]:
     altars = []
-    h, w = img.shape[:2]
     for icon in find_icons(img):
-        kind = altar_type(img, icon)
-        x0, x1 = max(icon.x - SEARCH_HALF_WIDTH, 0), min(icon.x + SEARCH_HALF_WIDTH, w)
-        top_edge, bottom_edge = icon.y - RING[1], icon.y + RING[1]
-        regions = {
-            "top": (_ocr_region(ocr, img, x0, max(top_edge - SEARCH_HEIGHT, 0), x1, top_edge), top_edge, True),
-            "bottom": (_ocr_region(ocr, img, x0, bottom_edge, x1, min(bottom_edge + SEARCH_HEIGHT, h)), bottom_edge, False),
-        }
-        options = []
-        for position, (lines, edge, upward) in regions.items():
-            block = [l.text for l in _box_lines(lines, icon.x, edge, upward)]
-            target = None
-            # The header is the box's first line; centered strays before it (gold labels, timers) go.
-            header_at = next((i for i, text in enumerate(block) if parse_header(text)), None)
-            if header_at is not None:
-                target = parse_header(block[header_at])
-                block = block[header_at + 1:]
-            # No altar filter: mods of the other altar type do show up (e.g. Embers on an Eater altar).
-            matches, rest = match_box(block, cards, target, None)
-            if target is None and matches:
-                target = matches[0].card.target
-            options.append(Option(position, target, block, matches, [block[i] for i in rest]))
-        if any(o.matches for o in options):   # verified: real altar boxes found
-            altars.append(Altar(icon, kind, options))
+        altar = read_altar(img, icon, ocr, cards)
+        if altar:
+            altars.append(altar)
     return altars
 
 

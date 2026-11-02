@@ -5,3 +5,6 @@ tools/gen_mods/.cache/
 tests/fixtures/screens/*.png
 tests/fixtures/screens/_raw/
 .venv/
+settings.json
+data/profiles/*
+!data/profiles/default.json

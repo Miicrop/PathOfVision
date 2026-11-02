@@ -9,4 +9,6 @@ winrt-Windows.Globalization
 winrt-Windows.Graphics.Imaging
 winrt-Windows.Media.Ocr
 winrt-Windows.Storage.Streams
+mss
+PySide6
 pytest

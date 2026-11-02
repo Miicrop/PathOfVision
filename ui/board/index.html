@@ -18,6 +18,7 @@
       <select id="profile"></select>
       <button class="btn" id="dup" type="button">Duplicate</button>
       <button class="btn" id="del" type="button">Delete</button>
+      <button class="btn" id="hud-toggle" type="button" aria-expanded="false" aria-controls="hud">HUD settings</button>
       <span class="saved" id="saved" aria-live="polite"></span>
     </div>
   </header>
@@ -26,6 +27,43 @@
     <strong>This profile is read-only.</strong> Duplicate it to make your own version.
   </div>
   <div class="notice error" id="err" hidden></div>
+
+  <section class="filters hud" id="hud" aria-label="HUD settings" hidden>
+    <span class="lbl">Text size</span>
+    <div class="ctl">
+      <input type="range" id="s-font" min="10" max="24" step="1">
+      <output id="o-font" for="s-font"></output>
+      <small>icons scale with the text</small>
+    </div>
+    <span class="lbl">Tiers</span>
+    <div class="seg" data-setting="hud_tiers">
+      <button type="button" data-v="off">Off</button>
+      <button type="button" data-v="text">Text</button>
+      <button type="button" data-v="highlight">Highlight</button>
+      <button type="button" data-v="both">Both</button>
+    </div>
+    <span class="lbl">Values</span>
+    <div class="seg" data-setting="hud_values">
+      <button type="button" data-v="true">On</button>
+      <button type="button" data-v="false">Off</button>
+    </div>
+    <span class="lbl">Other option</span>
+    <div class="ctl">
+      <input type="range" id="s-opacity" min="10" max="100" step="5">
+      <output id="o-opacity" for="s-opacity"></output>
+      <small>how visible the option that is not the pick stays (ADAPT - BRICK is never dimmed)</small>
+    </div>
+    <span class="lbl">Position</span>
+    <div class="ctl">
+      <label>From bottom <input type="number" id="s-bottom" min="0" max="2000" step="5"> px</label>
+      <label>Horizontal offset <input type="number" id="s-offset" min="-3000" max="3000" step="10"> px</label>
+    </div>
+    <span></span>
+    <div class="ctl">
+      <button class="btn" id="s-reset" type="button">Reset to defaults</button>
+      <span class="saved" id="s-saved" aria-live="polite"></span>
+    </div>
+  </section>
 
   <section class="filters" aria-label="Filters">
     <span class="lbl">Altar</span>

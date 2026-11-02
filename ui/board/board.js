@@ -1,7 +1,7 @@
 "use strict";
 
 // Backend adapter. Qt WebChannel in the Python prototype; a WebView2 host only needs
-// another implementation of these five calls.
+// another implementation of these calls.
 function connectBackend() {
   return new Promise((resolve, reject) => {
     if (typeof qt === "undefined" || typeof QWebChannel === "undefined") {
@@ -18,6 +18,8 @@ function connectBackend() {
         duplicateProfile: (file, name) => call("duplicateProfile", file, name),
         deleteProfile: file => call("deleteProfile", file),
         setActive: file => new Promise(done => b.setActive(file, done)),
+        getSettings: () => call("getSettings"),
+        saveSettings: changes => call("saveSettings", JSON.stringify(changes)),
       });
     });
   });
@@ -179,7 +181,7 @@ function showError(message) {
   $("err").hidden = false;
 }
 
-document.querySelectorAll(".seg").forEach(seg => seg.addEventListener("click", e => {
+document.querySelectorAll(".seg[data-filter]").forEach(seg => seg.addEventListener("click", e => {
   const b = e.target.closest("button");
   if (!b) return;
   seg.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
@@ -203,6 +205,53 @@ $("del").addEventListener("click", async () => {
   await openProfile(result.active);
 });
 
+// HUD settings: written to settings.json right away; the overlay reloads the file by itself.
+let hud = {}, hudDefaults = {}, pending = {};
+
+function renderSettings() {
+  $("s-font").value = hud.hud_font_size;
+  $("o-font").textContent = `${hud.hud_font_size} px`;
+  $("s-opacity").value = Math.round(hud.hud_other_opacity * 100);
+  $("o-opacity").textContent = `${Math.round(hud.hud_other_opacity * 100)} %`;
+  $("s-bottom").value = hud.hud_bottom;
+  $("s-offset").value = hud.hud_offset_x;
+  document.querySelectorAll(".seg[data-setting]").forEach(seg => seg.querySelectorAll("button").forEach(b =>
+    b.setAttribute("aria-pressed", String(b.dataset.v === String(hud[seg.dataset.setting])))));
+}
+
+function changeSetting(key, value) {
+  hud[key] = value;
+  pending[key] = value;
+  renderSettings();
+  clearTimeout(changeSetting.timer);   // sliders fire many events; write once they settle
+  changeSetting.timer = setTimeout(async () => {
+    const result = await api.saveSettings(pending);
+    pending = {};
+    hud = result.current;
+    renderSettings();
+    $("s-saved").textContent = "Saved";
+    clearTimeout(changeSetting.done);
+    changeSetting.done = setTimeout(() => ($("s-saved").textContent = ""), 1500);
+  }, 150);
+}
+
+$("hud-toggle").addEventListener("click", e => {
+  const open = $("hud").hidden;
+  $("hud").hidden = !open;
+  e.currentTarget.setAttribute("aria-expanded", String(open));
+});
+$("s-font").addEventListener("input", e => changeSetting("hud_font_size", Number(e.target.value)));
+$("s-opacity").addEventListener("input", e => changeSetting("hud_other_opacity", Number(e.target.value) / 100));
+$("s-bottom").addEventListener("change", e => changeSetting("hud_bottom", Number(e.target.value)));
+$("s-offset").addEventListener("change", e => changeSetting("hud_offset_x", Number(e.target.value)));
+document.querySelectorAll(".seg[data-setting]").forEach(seg => seg.addEventListener("click", e => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  const v = b.dataset.v;
+  changeSetting(seg.dataset.setting, v === "true" ? true : v === "false" ? false : v);
+}));
+$("s-reset").addEventListener("click", () => Object.entries(hudDefaults).forEach(([k, v]) => changeSetting(k, v)));
+
 (async () => {
   try {
     api = await connectBackend();
@@ -210,6 +259,8 @@ $("del").addEventListener("click", async () => {
     byId = Object.fromEntries(state.mods.map(m => [m.id, m]));
     $("subtitle").textContent = `${state.mods.length} mods · game ${state.gameVersion} · changes apply to the overlay instantly`;
     await openProfile(state.active);
+    ({ current: hud, defaults: hudDefaults } = await api.getSettings());
+    renderSettings();
   } catch (e) {
     $("subtitle").textContent = "";
     showError(e.message);

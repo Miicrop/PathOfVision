@@ -85,6 +85,22 @@ class BoardApi(QObject):
         current["profile"] = file
         settings.save(current)
 
+    @Slot(result=str)
+    def getSettings(self) -> str:
+        current = settings.load()
+        return json.dumps({"current": {k: settings.clean(k, current[k]) for k in settings.HUD_KEYS},
+                           "defaults": {k: settings.DEFAULTS[k] for k in settings.HUD_KEYS}})
+
+    @Slot(str, result=str)
+    def saveSettings(self, changes_json: str) -> str:
+        """Merge HUD settings into settings.json; the overlay reloads the file on its own."""
+        current = settings.load()
+        for key, value in json.loads(changes_json).items():
+            if key in settings.HUD_KEYS:
+                current[key] = settings.clean(key, value)
+        settings.save(current)
+        return json.dumps({"ok": True, "current": {k: current[k] for k in settings.HUD_KEYS}})
+
 
 class _Page(QWebEnginePage):
     def javaScriptConsoleMessage(self, level, message, line, source):

@@ -17,6 +17,27 @@ DEFAULTS = {"profile": "default.json", "hud_bottom": 60, "hud_offset_x": 0,
             "hud_font_size": 15, "hud_tiers": "text", "hud_other_opacity": 0.6,
             "hud_values": True}
 TIER_STYLES = ("off", "text", "highlight", "both")
+HUD_KEYS = ("hud_font_size", "hud_tiers", "hud_values", "hud_other_opacity", "hud_bottom", "hud_offset_x")
+
+
+def clean(key: str, value):
+    """A HUD setting coerced into its valid range; the default if it cannot be read."""
+    try:
+        if key == "hud_font_size":
+            return min(24, max(10, int(value)))
+        if key == "hud_tiers":
+            return value if value in TIER_STYLES else DEFAULTS[key]
+        if key == "hud_values":
+            return bool(value)
+        if key == "hud_other_opacity":
+            return round(min(1.0, max(0.1, float(value))), 2)
+        if key == "hud_bottom":
+            return min(2000, max(0, int(value)))
+        if key == "hud_offset_x":
+            return min(3000, max(-3000, int(value)))
+    except (TypeError, ValueError):
+        return DEFAULTS[key]
+    raise KeyError(key)
 
 
 def load() -> dict:

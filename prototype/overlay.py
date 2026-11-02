@@ -338,12 +338,13 @@ class Hud(QWidget):
     def _reload(self):
         """Pick up edits to labels, keywords and settings while running, like profile changes."""
         if any([w.refresh() for w in (self._labels, self._keywords, self._settings)]):
-            config = self._settings.value
-            tiers = config["hud_tiers"] if config["hud_tiers"] in settings.TIER_STYLES else "text"
-            opacity = min(1.0, max(0.1, float(config["hud_other_opacity"])))
-            self._style = Style(int(config["hud_font_size"]), tiers, opacity, bool(config["hud_values"]),
+            get = self._setting
+            self._style = Style(get("hud_font_size"), get("hud_tiers"), get("hud_other_opacity"), get("hud_values"),
                                 self._keywords.value)
             self._shown = ()   # force a rebuild with the new texts and sizes
+
+    def _setting(self, key: str):
+        return settings.clean(key, (self._settings.value or settings.DEFAULTS)[key])
 
     def resizeEvent(self, event):
         # Qt may finish sizing the new boxes only after they are shown; re-anchor on every
@@ -353,6 +354,5 @@ class Hud(QWidget):
 
     def _anchor(self):
         mon = self._monitor
-        config = self._settings.value or settings.DEFAULTS
-        self.move(mon["left"] + (mon["width"] - self.width()) // 2 + int(config["hud_offset_x"]),
-                  mon["top"] + mon["height"] - self.height() - int(config["hud_bottom"]))
+        self.move(mon["left"] + (mon["width"] - self.width()) // 2 + self._setting("hud_offset_x"),
+                  mon["top"] + mon["height"] - self.height() - self._setting("hud_bottom"))

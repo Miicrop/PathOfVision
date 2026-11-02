@@ -193,6 +193,17 @@ function headerEl(col, count, colCount) {
   counter.className = "count";
   counter.textContent = count;
   header.appendChild(counter);
+  if (col.kind === "top") {
+    // New columns appear left of the top column, so the button sits on it (always visible).
+    const add = document.createElement("button");
+    add.type = "button";
+    add.className = "add-col";
+    add.textContent = "+ Column";
+    add.disabled = profile.readOnly;
+    add.title = profile.readOnly ? "Read-only profile: duplicate it to add columns" : "Add a column left of this one";
+    add.addEventListener("click", addColumn);
+    header.appendChild(add);
+  }
   return header;
 }
 
@@ -269,8 +280,6 @@ function render() {
   $("board-downside").hidden = filter.side === "upside";
   $("ro").hidden = !profile.readOnly;
   $("del").disabled = profile.readOnly;
-  $("add-col").disabled = profile.readOnly;
-  $("add-col").title = profile.readOnly ? "Read-only profile: duplicate it to add columns" : "Add a column left of the top column";
   renderBoard("upside");
   renderBoard("downside");
 }
@@ -298,7 +307,6 @@ document.querySelectorAll(".seg[data-filter]").forEach(seg => seg.addEventListen
   filter[seg.dataset.filter] = b.dataset.v;
   render();
 }));
-$("add-col").addEventListener("click", addColumn);
 $("q").addEventListener("input", e => { filter.q = e.target.value.trim().toLowerCase(); render(); });
 $("profile").addEventListener("change", e => openProfile(e.target.value));
 $("dup").addEventListener("click", async () => {

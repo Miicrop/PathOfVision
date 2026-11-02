@@ -4,17 +4,17 @@
     "TangledAltarUpsidePlayerIncreasedQuantity": {
       "text": "player + (10-20)% increased Quantity of Items found in this Area",
       "alias": "Quantity",
-      "icon": ""
+      "icon": "stat-quantity"
     },
     "TangledAltarUpsidePlayerIncreasedRarity": {
       "text": "player + (15-30)% increased Rarity of Items found in this Area",
       "alias": "Rarity",
-      "icon": ""
+      "icon": "stat-rarity"
     },
     "HardModeTangledAltarUpsidePlayerIncreasedExperience": {
       "text": "player + (8-12)% increased Experience gain",
       "alias": "Experience",
-      "icon": ""
+      "icon": "stat-experience"
     },
     "TangledAltarUpsidePlayerDuplicateDroppedCurrency": {
       "text": "player + Basic Currency Items dropped by slain Enemies have (15-30)% chance to be Duplicated",

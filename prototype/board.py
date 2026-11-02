@@ -116,7 +116,10 @@ class BoardWindow(QWebEngineView):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Altar Tier Board")
-        self.resize(1500, 950)
+        # Open at 90 % of the screen, centered, so wide monitors get room for more columns.
+        area = QApplication.primaryScreen().availableGeometry()
+        self.resize(int(area.width() * 0.9), int(area.height() * 0.9))
+        self.move(area.x() + (area.width() - self.width()) // 2, area.y() + (area.height() - self.height()) // 2)
         self.setPage(_Page(self))
         self.api = BoardApi()
         self.channel = QWebChannel(self.page())

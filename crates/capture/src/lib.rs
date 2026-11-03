@@ -29,6 +29,30 @@ use windows::Win32::System::WinRT::Graphics::Capture::IGraphicsCaptureItemIntero
 use windows::Win32::System::WinRT::{RO_INIT_MULTITHREADED, RoInitialize};
 use windows::core::{Interface, factory};
 
+fn create_devices() -> anyhow::Result<(ID3D11Device, ID3D11DeviceContext, IDirect3DDevice)> {
+    let mut device = None;
+    let mut context = None;
+    unsafe {
+        D3D11CreateDevice(
+            None,
+            D3D_DRIVER_TYPE_HARDWARE,
+            HMODULE::default(),
+            D3D11_CREATE_DEVICE_BGRA_SUPPORT,
+            None,
+            D3D11_SDK_VERSION,
+            Some(&mut device),
+            None,
+            Some(&mut context),
+        )
+        .context("D3D11CreateDevice")?;
+    }
+    let device: ID3D11Device = device.context("no D3D11 device")?;
+    let context = context.context("no D3D11 device context")?;
+    let dxgi: IDXGIDevice = device.cast()?;
+    let winrt_device: IDirect3DDevice = unsafe { CreateDirect3D11DeviceFromDXGIDevice(&dxgi)? }.cast()?;
+    Ok((device, context, winrt_device))
+}
+
 /// A source of game frames (client area of the game window, RGB).
 pub trait FrameSource: Send {
     /// The newest frame, or the previous one again when nothing new arrived.
@@ -73,6 +97,26 @@ pub struct WindowCapture {
     /// Reused while the client size is unchanged; holds the last frame once `has_frame`.
     staging: Option<Staging>,
     has_frame: bool,
+    /// Grabs failed in a row; reset by a successful grab or a device reset.
+    failures: u32,
+}
+
+/// `DXGI_ERROR_DEVICE_REMOVED`.
+const DEVICE_REMOVED: i32 = 0x887A0005u32 as i32;
+/// `DXGI_ERROR_DEVICE_RESET`.
+const DEVICE_RESET: i32 = 0x887A0007u32 as i32;
+/// Consecutive failed grabs after which the GPU device is recreated whatever the error.
+const MAX_FAILURES: u32 = 3;
+
+/// Whether a failed grab calls for recreating the GPU device: the driver says it was removed or
+/// reset, or grabs keep failing for any reason.
+pub fn needs_device_reset(hresult: Option<i32>, consecutive_failures: u32) -> bool {
+    matches!(hresult, Some(DEVICE_REMOVED | DEVICE_RESET)) || consecutive_failures >= MAX_FAILURES
+}
+
+/// The HRESULT of the first Windows error in `e`'s chain, if any.
+fn hresult_of(e: &anyhow::Error) -> Option<i32> {
+    e.chain().find_map(|c| c.downcast_ref::<windows::core::Error>()).map(|w| w.code().0)
 }
 
 // SAFETY: the D3D11 device is created without D3D11_CREATE_DEVICE_SINGLETHREADED (free-threaded),
@@ -81,6 +125,8 @@ pub struct WindowCapture {
 unsafe impl Send for WindowCapture {}
 
 impl WindowCapture {
+    /// Create the capture on the thread that will use it (the app constructs it on the scanner
+    /// thread): the WinRT objects and the D3D11 immediate context are then only touched there.
     pub fn new() -> anyhow::Result<WindowCapture> {
         // Background threads have no apartment yet; an already initialized one is fine too.
         unsafe {
@@ -90,27 +136,19 @@ impl WindowCapture {
             GraphicsCaptureSession::IsSupported().unwrap_or(false),
             "Windows.Graphics.Capture is not supported on this system"
         );
-        let mut device = None;
-        let mut context = None;
-        unsafe {
-            D3D11CreateDevice(
-                None,
-                D3D_DRIVER_TYPE_HARDWARE,
-                HMODULE::default(),
-                D3D11_CREATE_DEVICE_BGRA_SUPPORT,
-                None,
-                D3D11_SDK_VERSION,
-                Some(&mut device),
-                None,
-                Some(&mut context),
-            )
-            .context("D3D11CreateDevice")?;
-        }
-        let device: ID3D11Device = device.context("no D3D11 device")?;
-        let context = context.context("no D3D11 device context")?;
-        let dxgi: IDXGIDevice = device.cast()?;
-        let winrt_device: IDirect3DDevice = unsafe { CreateDirect3D11DeviceFromDXGIDevice(&dxgi)? }.cast()?;
-        Ok(WindowCapture { device, context, winrt_device, session: None, staging: None, has_frame: false })
+        let (device, context, winrt_device) = create_devices()?;
+        Ok(WindowCapture { device, context, winrt_device, session: None, staging: None, has_frame: false, failures: 0 })
+    }
+
+    /// Recreates the D3D11 device, the WinRT device and everything built on them. The frame pool
+    /// and session are created again by the next `grab`.
+    pub fn reset_device(&mut self) -> anyhow::Result<()> {
+        self.stop();
+        self.staging = None;
+        let (device, context, winrt_device) = create_devices()?;
+        (self.device, self.context, self.winrt_device) = (device, context, winrt_device);
+        self.failures = 0;
+        Ok(())
     }
 
     fn start(&self, hwnd: isize) -> anyhow::Result<Session> {
@@ -230,8 +268,8 @@ fn client_crop(bounds: &RECT, window: &PoeWindow, avail_w: u32, avail_h: u32) ->
     (x1 > x0 && y1 > y0).then_some(D3D11_BOX { left: x0, top: y0, front: 0, right: x1, bottom: y1, back: 1 })
 }
 
-impl FrameSource for WindowCapture {
-    fn grab(&mut self, window: &PoeWindow) -> anyhow::Result<Option<Rgb>> {
+impl WindowCapture {
+    fn grab_once(&mut self, window: &PoeWindow) -> anyhow::Result<Option<Rgb>> {
         if self.session.as_ref().is_some_and(|s| s.hwnd != window.hwnd) {
             self.stop();
         }
@@ -247,6 +285,27 @@ impl FrameSource for WindowCapture {
             return Ok(None);
         }
         self.read_staging().map(Some)
+    }
+}
+
+impl FrameSource for WindowCapture {
+    fn grab(&mut self, window: &PoeWindow) -> anyhow::Result<Option<Rgb>> {
+        match self.grab_once(window) {
+            Ok(frame) => {
+                self.failures = 0;
+                Ok(frame)
+            }
+            Err(e) => {
+                self.failures += 1;
+                if needs_device_reset(hresult_of(&e), self.failures) {
+                    eprintln!("capture: recreating the GPU device after: {e:#}");
+                    if let Err(reset) = self.reset_device() {
+                        eprintln!("capture: device reset failed: {reset:#}");
+                    }
+                }
+                Err(e)
+            }
+        }
     }
 
     fn pause(&mut self) {
@@ -291,4 +350,19 @@ impl FrameSource for ReplaySource {
 
     /// Nothing to release; the cycle keeps running on the wall clock.
     fn pause(&mut self) {}
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn device_reset_policy() {
+        assert!(needs_device_reset(Some(0x887A0005u32 as i32), 1));
+        assert!(needs_device_reset(Some(0x887A0007u32 as i32), 0));
+        assert!(!needs_device_reset(Some(0x80004005u32 as i32), 2));
+        assert!(needs_device_reset(Some(0x80004005u32 as i32), 3));
+        assert!(!needs_device_reset(None, 0));
+        assert!(needs_device_reset(None, 3));
+    }
 }

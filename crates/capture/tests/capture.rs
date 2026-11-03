@@ -190,6 +190,31 @@ fn pause_then_grab_restarts() {
     assert_solid(&grab_until_some(&mut cap, &win));
 }
 
+#[test]
+fn capture_survives_device_reset() {
+    if !capture_supported() {
+        return;
+    }
+    let tw = TestWindow::spawn(300, 200);
+    let win = tw.poe_window();
+    let mut cap = WindowCapture::new().unwrap();
+    assert_solid(&grab_until_some(&mut cap, &win));
+    cap.reset_device().unwrap();
+    let deadline = Instant::now() + Duration::from_secs(1);
+    loop {
+        match cap.grab(&win) {
+            Ok(Some(img)) => {
+                assert_solid(&img);
+                break;
+            }
+            other => {
+                assert!(Instant::now() < deadline, "no frame within 1 s of the reset: {:?}", other.map(|o| o.is_some()));
+                thread::sleep(Duration::from_millis(20));
+            }
+        }
+    }
+}
+
 /// CPU time (user + kernel) of the current thread.
 fn thread_cpu() -> Duration {
     use windows::Win32::Foundation::FILETIME;

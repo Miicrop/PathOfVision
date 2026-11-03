@@ -31,6 +31,13 @@ impl ContextSource for FixedContext {
     }
 }
 
+/// A context whose game-log file can be pointed elsewhere at runtime (the settings path).
+pub trait LogOverride {
+    /// Use `path` instead of the log found next to the game exe (`None` = auto-detect).
+    /// The same path again is a no-op.
+    fn set_log_override(&mut self, path: Option<PathBuf>);
+}
+
 const LOOKUP_INTERVAL: Duration = Duration::from_secs(1);
 
 type Finder = Box<dyn FnMut() -> Option<PoeWindow> + Send>;
@@ -96,6 +103,17 @@ impl LiveContext {
         {
             self.watcher = Some(LogWatcher::new(p));
         }
+    }
+}
+
+impl LogOverride for LiveContext {
+    fn set_log_override(&mut self, path: Option<PathBuf>) {
+        if self.log_override == path {
+            return;
+        }
+        self.log_override = path;
+        // The next `current()` builds a watcher for the new file (or the auto-detected one).
+        self.reset_log();
     }
 }
 
@@ -257,5 +275,25 @@ mod tests {
         *slot.lock().unwrap() = Some(win_in(&b));
         let c = lc.current();
         assert!(c.area.is_none());
+    }
+
+    #[test]
+    fn log_override_switches_files() {
+        let t = tempfile::tempdir().unwrap();
+        let (a, b) = (t.path().join("a.txt"), t.path().join("b.txt"));
+        append(&a, MAP);
+        append(&b, HIDEOUT);
+        let mut lc =
+            LiveContext::with_window_source(Some(a), Box::new(|| None), Box::new(|_| None), Duration::ZERO);
+        assert!(lc.current().in_map());
+        lc.set_log_override(Some(b.clone()));
+        assert!(lc.watcher.is_none(), "a new path drops the watcher");
+        assert_eq!(lc.current().area.unwrap().kind, AreaKind::Hideout);
+        let read = lc.watcher.as_ref().unwrap().bytes_read();
+        assert_eq!(read, HIDEOUT.len() as u64);
+        lc.set_log_override(Some(b));
+        assert!(lc.watcher.is_some(), "the same path keeps the watcher");
+        assert_eq!(lc.current().area.unwrap().kind, AreaKind::Hideout);
+        assert_eq!(lc.watcher.as_ref().unwrap().bytes_read(), read);
     }
 }

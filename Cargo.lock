@@ -320,6 +320,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "pov-overlay"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "pov-game",
+ "windows",
+]
+
+[[package]]
 name = "pov-scan"
 version = "0.1.0"
 dependencies = [

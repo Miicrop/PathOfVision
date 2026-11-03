@@ -1,5 +1,6 @@
 // App shell for every main-window page: the left sidebar and `window.pov`.
 // Load with `defer` after shell.css. `pov.listen` passes Tauri's event object (`e.payload`).
+// Pages of other windows set `<body data-sidebar="none">` to get `window.pov` without the sidebar.
 (function () {
   "use strict";
 
@@ -50,6 +51,7 @@
     return nav;
   }
 
+  if (document.body.dataset.sidebar === "none") return;
   document.body.prepend(sidebar());
   document.body.classList.add("has-sidebar");
 })();

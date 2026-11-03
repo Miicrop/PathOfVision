@@ -60,6 +60,10 @@ pub async fn open_settings(app: AppHandle, section: Option<String>) -> Result<()
 
 pub fn open_settings_window(app: &AppHandle, section: Option<&str>) -> tauri::Result<()> {
     if let Some(w) = app.get_webview_window(SETTINGS_WINDOW) {
+        if let Some(s) = section {
+            // The page switches to that section (`settings.js`).
+            app.emit_to(SETTINGS_WINDOW, "settings:section", s)?;
+        }
         w.unminimize()?;
         w.show()?;
         return w.set_focus();

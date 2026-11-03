@@ -91,3 +91,49 @@ body { font-family: var(--font-body); font-size: 14px; line-height: 1.4; }
 .switch input:checked ~ .state { color: var(--fg); }
 .switch input:focus-visible + .track { outline: 2px solid var(--gold); outline-offset: 2px; }
 .switch input:disabled ~ * { opacity: .5; cursor: default; }
+
+/* Settings window (settings.html): section list on the left, the section's groups as forms.
+   Controls copied from the board's former settings panel (ui/modules/altar/board/board.css). */
+body.settings { display: flex; min-height: 100vh; }
+.settings .sections {
+  position: sticky; top: 0; align-self: flex-start; height: 100vh; flex: 0 0 var(--sidebar);
+  display: flex; flex-direction: column; gap: 4px; padding: 18px 10px 12px;
+  background: var(--panel); border-right: 1px solid var(--line);
+}
+.settings .sections .brand {
+  font-family: var(--font-display); font-weight: 700; font-size: 19px; color: var(--gold);
+  font-variant: small-caps; letter-spacing: .03em; padding: 0 10px 14px; margin: 0;
+}
+.settings .sections button {
+  display: block; width: 100%; text-align: left; padding: 7px 10px; margin-bottom: 4px; border-radius: 4px;
+  border: 1px solid transparent; background: transparent; color: var(--muted); cursor: pointer;
+}
+.settings .sections button:hover { color: var(--fg); border-color: var(--line); }
+.settings .sections button[aria-current="true"] { color: var(--fg); background: var(--panel-2); border-color: var(--gold); }
+.settings .page { flex: 1; }
+.settings .section-head { display: flex; align-items: baseline; gap: 14px; }
+.settings select, .settings button, .settings input { font: inherit; color: var(--fg); }
+.settings :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.settings .saved { color: var(--muted); font-size: 12px; min-width: 60px; }
+.settings button.btn { background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 6px 12px; cursor: pointer; }
+.settings button.btn:hover:not(:disabled) { border-color: var(--gold); }
+.settings #groups { display: flex; flex-direction: column; gap: 16px; }
+.settings .group {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px;
+  display: grid; grid-template-columns: auto 1fr; gap: 10px 14px; align-items: center;
+}
+.settings .group .grp {
+  grid-column: 1 / -1; margin: 4px 0 -2px; font-family: var(--font-display); font-variant: small-caps;
+  font-size: 16px; letter-spacing: .06em; color: var(--gold);
+}
+.settings .group .lbl { font-family: var(--font-display); color: var(--muted); font-size: 14px; font-variant: small-caps; letter-spacing: .08em; }
+.settings .seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.settings .seg button { background: transparent; border: 1px solid var(--line); border-radius: 4px; padding: 5px 12px; cursor: pointer; color: var(--muted); }
+.settings .seg button[aria-pressed="true"] { color: var(--fg); border-color: var(--gold); background: var(--panel-2); }
+.settings .field { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.settings .ctl { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; color: var(--muted); }
+.settings .field small { color: var(--muted); font-size: 12px; }
+.settings input[type="range"] { width: 220px; accent-color: var(--gold); }
+.settings input[type="number"] { width: 80px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 5px 8px; }
+.settings input[type="text"] { width: 420px; max-width: 100%; background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 5px 8px; }
+.settings output { min-width: 48px; font-variant-numeric: tabular-nums; color: var(--fg); }

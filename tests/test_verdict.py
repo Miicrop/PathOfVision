@@ -92,3 +92,35 @@ def test_custom_columns_rank_by_position_and_only_top_adapts():
     assert judge(OptionInput("boss", ["u_meh"], []), profile).verdict == TAKE
     opts = {"top": OptionInput("boss", ["u_meh"], []), "bottom": OptionInput("player", ["u_great"], [])}
     assert recommend(opts, {k: judge(o, profile) for k, o in opts.items()}).choice == "bottom"
+
+
+COLS = Profile("cols", {"columns": [{"name": "Scarabs", "ids": ["u_scarab"]}, {"name": "Strat", "ids": ["u_quant"]}],
+                        "top": {"name": "S", "ids": ["u_top"]}},
+               {"dangerous": ["d_dan"], "brick": ["d_brick"]})
+
+
+def recommend_with(profile, top, bottom):
+    opts = {"top": top, "bottom": bottom}
+    return recommend(opts, {k: judge(o, profile) for k, o in opts.items()})
+
+
+def test_consider_with_upside_further_right_beats_take():
+    rec = recommend_with(COLS, OptionInput("player", ["u_quant"], ["d_dan"]), OptionInput("minions", ["u_scarab"], []))
+    assert (rec.choice, rec.text) == ("top", "Take the top option.")
+
+
+def test_take_wins_over_consider_in_the_same_or_a_lower_column():
+    rec = recommend_with(COLS, OptionInput("player", ["u_scarab"], ["d_dan"]), OptionInput("minions", ["u_scarab"], []))
+    assert rec.choice == "bottom"
+    rec = recommend_with(COLS, OptionInput("player", ["u_scarab"], ["d_dan"]), OptionInput("minions", ["u_quant"], []))
+    assert rec.choice == "bottom"
+
+
+def test_key_column_is_treated_like_the_top_column():
+    profile = Profile("key", {"columns": [{"name": "Meh", "ids": ["u_meh"]}, {"name": "Strat", "ids": ["u_quant"], "key": True}],
+                              "top": {"name": "S", "ids": []}},
+                      {"dangerous": [], "brick": ["d_brick"]})
+    assert profile.upsides["columns"][1]["key"] is True and "key" not in profile.upsides["columns"][0]
+    v = judge(OptionInput("player", ["u_quant"], ["d_brick"]), profile)
+    assert (v.verdict, v.up_tier) == (ADAPT, TOP)
+    assert judge(OptionInput("player", ["u_meh"], ["d_brick"]), profile).verdict == AVOID

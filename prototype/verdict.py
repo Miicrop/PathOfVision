@@ -11,7 +11,8 @@ from pathlib import Path
 
 DOWN_TIERS = ("brick", "dangerous")        # worst first
 # Upside columns, left to right: Unrated | user columns ... | top. Every column right of Unrated is
-# rated (TAKE / CONSIDER); only the top column can make a Brick workable (ADAPT - BRICK).
+# rated (TAKE / CONSIDER); only the top column and user columns marked as key ("key": true) can make
+# a Brick workable (ADAPT - BRICK).
 TOP, RATED = "top", "rated"                # tier kinds for display
 
 TAKE, CONSIDER, ADAPT, AVOID, NEUTRAL = "TAKE", "CONSIDER", "ADAPT - BRICK", "AVOID", "NEUTRAL"
@@ -21,7 +22,8 @@ UNREADABLE = "UNREADABLE"   # no mod of the option could be read
 def upgrade_upsides(upsides: dict) -> dict:
     """Upsides in the column format; old profiles ({"s", "a", "b"}) become top = S, columns = [B, A]."""
     if "top" in upsides or "columns" in upsides:
-        return {"columns": [{"name": c.get("name", ""), "ids": list(c.get("ids", []))} for c in upsides.get("columns", [])],
+        return {"columns": [{"name": c.get("name", ""), "ids": list(c.get("ids", []))} | ({"key": True} if c.get("key") else {})
+                            for c in upsides.get("columns", [])],
                 "top": {"name": upsides.get("top", {}).get("name", "S"), "ids": list(upsides.get("top", {}).get("ids", []))}}
     return {"columns": [{"name": "B", "ids": list(upsides.get("b", []))}, {"name": "A", "ids": list(upsides.get("a", []))}],
             "top": {"name": "S", "ids": list(upsides.get("s", []))}}
@@ -30,7 +32,7 @@ def upgrade_upsides(upsides: dict) -> dict:
 @dataclass
 class Profile:
     name: str
-    upsides: dict                         # {"columns": [{"name", "ids"}, ...], "top": {"name", "ids"}}
+    upsides: dict                         # {"columns": [{"name", "ids", "key"?}, ...], "top": {"name", "ids"}}
     downsides: dict[str, list[str]]
     read_only: bool = False
 
@@ -43,14 +45,15 @@ class Profile:
         return cls(data["name"], data.get("upsides", {}), data.get("downsides", {}), data.get("readOnly", False))
 
     def up_tier(self, mod_id: str) -> tuple[str | None, int, int]:
-        """(kind, rank, position in its column). Rank grows to the right: unrated 0, top highest."""
+        """(kind, rank, position in its column). Rank grows to the right: unrated 0, top highest.
+        A key column has the kind TOP (same treatment as the top column) but keeps its rank."""
         columns = self.upsides["columns"]
         top = self.upsides["top"]["ids"]
         if mod_id in top:
             return TOP, len(columns) + 1, top.index(mod_id)
         for i in range(len(columns) - 1, -1, -1):
             if mod_id in columns[i]["ids"]:
-                return RATED, i + 1, columns[i]["ids"].index(mod_id)
+                return TOP if columns[i].get("key") else RATED, i + 1, columns[i]["ids"].index(mod_id)
         return None, 0, 10**6
 
     def down_tier(self, mod_id: str) -> str | None:
@@ -127,6 +130,11 @@ def recommend(options: dict[str, OptionInput], verdicts: dict[str, OptionVerdict
     takes = [p for p, v in verdicts.items() if v.verdict == TAKE]
     if takes:
         best = max(takes, key=strength)
+        # A CONSIDER whose upside sits in a column further right beats the safe pick: a Dangerous
+        # downside only warns, so the better upside wins (the box still shows CONSIDER).
+        other = "bottom" if best == "top" else "top"
+        if verdicts[other].verdict == CONSIDER and verdicts[other].up_rank > verdicts[best].up_rank:
+            best = other
         return Recommendation(best, f"Take the {best} option.")
 
     risky = [p for p, v in verdicts.items() if v.verdict in (CONSIDER, ADAPT)]

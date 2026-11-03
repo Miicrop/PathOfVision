@@ -31,7 +31,7 @@ const ICON_DIR = "../../prototype/assets/mods/";   // reward icons named in data
 const DOWN_COLS = [
   { key: null, name: "Fine", tier: "var(--t-fine)", hint: "Unrated downsides count as fine" },
   { key: "dangerous", name: "Dangerous", tier: "var(--t-danger)", hint: "Gives a warning" },
-  { key: "brick", name: "Brick", tier: "var(--t-brick)", hint: "Never take, unless the upside is in the top column" },
+  { key: "brick", name: "Brick", tier: "var(--t-brick)", hint: "Never take, unless the upside is in the top column or a key column (★)" },
 ];
 
 let api, state, byId, profile, file;
@@ -84,7 +84,10 @@ function columnsFor(side) {
   const up = profile.upsides;
   return [
     { kind: "unrated", name: "Unrated", tier: "var(--t-un)", list: null },
-    ...up.columns.map((c, index) => ({ kind: "col", index, name: c.name, tier: "var(--t-a)", list: c.ids })),
+    // A key column ("key": true) is treated like the top column: it can outweigh a Brick, gold in the HUD.
+    ...up.columns.map((c, index) => ({ kind: "col", index, name: c.name, key: !!c.key, list: c.ids,
+                                       tier: c.key ? "var(--t-s)" : "var(--t-a)",
+                                       title: c.key ? "Key column: treated like the top column, can outweigh a Brick downside" : "" })),
     { kind: "top", name: up.top.name, tier: "var(--t-s)", list: up.top.ids,
       title: "Top column: the only one that can make a Brick downside worth it (ADAPT - BRICK)" },
   ];
@@ -211,6 +214,12 @@ function renameColumn(col) {
   if (!name || !name.trim()) return;
   editColumns(up => { (col.kind === "top" ? up.top : up.columns[col.index]).name = name.trim(); });
 }
+function toggleKey(col) {
+  editColumns(up => {
+    const c = up.columns[col.index];
+    if (c.key) delete c.key; else c.key = true;
+  });
+}
 function moveColumn(col, step) {
   editColumns(up => {
     const to = col.index + step;
@@ -278,6 +287,7 @@ function headerEl(col, count, colCount) {
   const header = document.createElement("header");
   const name = document.createElement("b");
   name.textContent = col.name;
+  if (col.key) name.insertAdjacentHTML("afterbegin", '<span class="star" aria-label="Key column">★ </span>');
   if (col.title) name.title = col.title;
   header.appendChild(name);
   const tools = document.createElement("span");
@@ -296,6 +306,9 @@ function headerEl(col, count, colCount) {
     const last = profile.upsides.columns.length - 1;
     tool("‹", "Move column left", () => moveColumn(col, -1), col.index === 0);
     tool("›", "Move column right", () => moveColumn(col, 1), col.index === last);
+  }
+  if (!profile.readOnly && col.kind === "col") {
+    tool(col.key ? "★" : "☆", col.key ? "Unmark as key column" : "Mark as key column (treated like the top column)", () => toggleKey(col));
   }
   if (!profile.readOnly && (col.kind === "col" || col.kind === "top")) tool("✎", "Rename column", () => renameColumn(col));
   if (!profile.readOnly && col.kind === "col") tool("×", "Delete column", () => deleteColumn(col));

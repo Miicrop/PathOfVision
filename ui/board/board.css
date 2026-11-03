@@ -72,6 +72,7 @@ button.btn:disabled { opacity: .4; cursor: default; }
 .col { background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--tier); border-radius: 6px; display: flex; flex-direction: column; min-width: 0; }
 .col header { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 10px 4px; }
 .col header b { font-family: var(--font-display); font-size: 17px; color: var(--tier); letter-spacing: .05em; }
+.col header b .star { font-size: 14px; }
 .col header { gap: 6px; }
 .col header .count { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .col header .tools { margin-left: auto; display: flex; gap: 2px; opacity: 0; transition: opacity .12s; }

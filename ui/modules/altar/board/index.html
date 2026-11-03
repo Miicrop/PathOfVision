@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Altar Tier Board</title>
+<link rel="stylesheet" href="../../../shell/shell.css">
 <link rel="stylesheet" href="board.css">
 </head>
 <body data-cards="short" data-target-tag="true">
@@ -18,7 +19,6 @@
       <select id="profile"></select>
       <button class="btn" id="dup" type="button">Duplicate</button>
       <button class="btn" id="del" type="button">Delete</button>
-      <button class="btn" id="hud-toggle" type="button" aria-expanded="false" aria-controls="hud">Settings</button>
       <span class="saved" id="saved" aria-live="polite"></span>
     </div>
   </header>
@@ -27,55 +27,6 @@
     <strong>This profile is read-only.</strong> Duplicate it to make your own version.
   </div>
   <div class="notice error" id="err" hidden></div>
-
-  <section class="filters hud" id="hud" aria-label="Settings" hidden>
-    <h3 class="grp">Board cards</h3>
-    <span class="lbl">Text</span>
-    <div class="seg" data-setting="board_cards">
-      <button type="button" data-v="short">Short + text</button>
-      <button type="button" data-v="full">Full text</button>
-      <button type="button" data-v="compact">Compact</button>
-    </div>
-    <span class="lbl">Target tag</span>
-    <div class="seg" data-setting="board_target_tag">
-      <button type="button" data-v="true">On</button>
-      <button type="button" data-v="false">Off</button>
-    </div>
-    <h3 class="grp">Overlay</h3>
-    <span class="lbl">Text size</span>
-    <div class="ctl">
-      <input type="range" id="s-font" min="10" max="24" step="1">
-      <output id="o-font" for="s-font"></output>
-      <small>icons scale with the text</small>
-    </div>
-    <span class="lbl">Tiers</span>
-    <div class="seg" data-setting="hud_tiers">
-      <button type="button" data-v="highlight">Highlight</button>
-      <button type="button" data-v="off">Off</button>
-    </div>
-    <span class="lbl">Values</span>
-    <div class="seg" data-setting="hud_values">
-      <button type="button" data-v="true">On</button>
-      <button type="button" data-v="false">Off</button>
-    </div>
-    <span class="lbl">Alpha</span>
-    <div class="ctl">
-      <input type="range" id="s-opacity" min="10" max="100" step="5">
-      <output id="o-opacity" for="s-opacity"></output>
-      <small>of the option that is not the pick (ADAPT - BRICK is never dimmed)</small>
-    </div>
-    <span class="lbl">Position</span>
-    <div class="ctl">
-      <label>X <input type="number" id="s-offset" min="-3000" max="3000" step="10"> px</label>
-      <label>Y <input type="number" id="s-bottom" min="0" max="2000" step="5"> px</label>
-      <small>Anchor: bottom center of the screen. X moves right (negative: left), Y moves up.</small>
-    </div>
-    <span></span>
-    <div class="ctl">
-      <button class="btn" id="s-reset" type="button">Reset overlay to defaults</button>
-      <span class="saved" id="s-saved" aria-live="polite"></span>
-    </div>
-  </section>
 
   <section class="filters sticky" aria-label="Filters">
     <span class="lbl">Altar</span>
@@ -100,12 +51,12 @@
     <span class="lbl">Reward</span>
     <div class="seg" data-filter="reward" title="Upsides only; picking a reward hides the downsides">
       <button type="button" data-v="all" aria-pressed="true">All</button>
-      <button type="button" data-v="currency" aria-pressed="false"><img class="ico" src="../modules/altar/img/mods/chaos-orb.png" alt="">Currency</button>
-      <button type="button" data-v="eldritch" aria-pressed="false"><img class="ico" src="../modules/altar/img/mods/grand-eldritch-ichor.png" alt="">Eldritch</button>
-      <button type="button" data-v="scarab" aria-pressed="false"><img class="ico" src="../modules/altar/img/mods/cartography-scarab.png" alt="">Scarabs</button>
-      <button type="button" data-v="divcard" aria-pressed="false"><img class="ico" src="../modules/altar/img/mods/div-card-div-cards.png" alt="">Div Cards</button>
-      <button type="button" data-v="dup" aria-pressed="false"><img class="ico" src="../modules/altar/img/mods/dup-scarabs.png" alt="">Duplicates</button>
-      <button type="button" data-v="stat" aria-pressed="false"><img class="ico" src="../modules/altar/img/mods/stat-quantity.png" alt="">Stats</button>
+      <button type="button" data-v="currency" aria-pressed="false"><img class="ico" src="../img/mods/chaos-orb.png" alt="">Currency</button>
+      <button type="button" data-v="eldritch" aria-pressed="false"><img class="ico" src="../img/mods/grand-eldritch-ichor.png" alt="">Eldritch</button>
+      <button type="button" data-v="scarab" aria-pressed="false"><img class="ico" src="../img/mods/cartography-scarab.png" alt="">Scarabs</button>
+      <button type="button" data-v="divcard" aria-pressed="false"><img class="ico" src="../img/mods/div-card-div-cards.png" alt="">Div Cards</button>
+      <button type="button" data-v="dup" aria-pressed="false"><img class="ico" src="../img/mods/dup-scarabs.png" alt="">Duplicates</button>
+      <button type="button" data-v="stat" aria-pressed="false"><img class="ico" src="../img/mods/stat-quantity.png" alt="">Stats</button>
     </div>
     <span class="lbl">Search</span>
     <div class="search-row">
@@ -131,7 +82,7 @@
   </section>
 </div>
 
-<script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+<script src="../../../shell/shell.js"></script>
 <script src="board.js"></script>
 </body>
 </html>

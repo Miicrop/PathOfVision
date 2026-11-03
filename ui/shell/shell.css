@@ -1,4 +1,4 @@
-/* App shell: sidebar and the pages next to it. Color tokens copied from ui/board/board.css :root. */
+/* App shell: sidebar and the pages next to it. Color tokens copied from ui/modules/altar/board/board.css :root. */
 :root {
   color-scheme: dark;
   --bg: #0f0e12;
@@ -45,7 +45,7 @@ body.has-sidebar { margin-left: var(--sidebar); }
 .pov-sidebar .gear:hover { color: var(--gold); border-color: var(--line); }
 .pov-sidebar :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
-/* Pages next to the sidebar (Home, Settings). */
+/* Pages next to the sidebar (Home, Settings). Page parts sit under .page: the board has its own .card. */
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html, body { background: var(--bg); color: var(--fg); margin: 0; }
@@ -55,13 +55,13 @@ body { font-family: var(--font-body); font-size: 14px; line-height: 1.4; }
   font-family: var(--font-display); font-weight: 700; font-size: 26px; margin: 0; color: var(--gold);
   letter-spacing: .02em; font-variant: small-caps;
 }
-.card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; }
-.card h2 {
+.page .card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; }
+.page .card h2 {
   font-family: var(--font-display); font-weight: 700; font-size: 19px; margin: 0 0 10px;
   font-variant: small-caps; letter-spacing: .04em;
 }
 .muted { color: var(--muted); }
-.card p { margin: 0; }
+.page .card p { margin: 0; }
 .facts { display: grid; grid-template-columns: max-content 1fr; gap: 6px 18px; margin: 0 0 10px; }
 .facts dt { color: var(--muted); }
 .facts dd { margin: 0; }
@@ -71,7 +71,7 @@ body { font-family: var(--font-body); font-size: 14px; line-height: 1.4; }
 .status-line { border-top: 1px solid var(--line); padding-top: 10px; }
 .notice { border: 1px solid var(--line); background: var(--panel); border-radius: 4px; padding: 8px 12px; color: var(--muted); font-size: 13px; }
 .notice.error { border-color: var(--t-brick); color: var(--fg); }
-.card .notice { margin-top: 10px; }
+.page .card .notice { margin-top: 10px; }
 .module-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
 .module-head h2 { margin-bottom: 6px; }
 

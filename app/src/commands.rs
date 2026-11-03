@@ -130,3 +130,54 @@ fn set_autostart(app: &AppHandle, on: bool) -> Result<(), String> {
     let launch = app.autolaunch();
     if on { launch.enable() } else { launch.disable() }.map_err(|e| e.to_string())
 }
+
+// Tier board: 1:1 wrappers of `altar::board::BoardApi`. Async so the file I/O runs off the
+// main thread.
+
+fn board_result(r: anyhow::Result<Value>) -> Result<Value, String> {
+    r.map_err(|e| format!("{e:#}"))
+}
+
+#[tauri::command]
+pub async fn altar_get_state(state: State<'_, AppState>) -> Result<Value, String> {
+    board_result(state.board.get_state())
+}
+
+#[tauri::command]
+pub async fn altar_load_profile(state: State<'_, AppState>, file: String) -> Result<Value, String> {
+    board_result(state.board.load_profile(&file))
+}
+
+#[tauri::command]
+pub async fn altar_save_profile(state: State<'_, AppState>, file: String, profile: Value) -> Result<Value, String> {
+    board_result(state.board.save_profile(&file, profile))
+}
+
+/// Duplicating makes the copy the active profile, so the other windows hear about it.
+#[tauri::command]
+pub async fn altar_duplicate_profile(app: AppHandle, state: State<'_, AppState>, file: String, name: String) -> Result<Value, String> {
+    let result = board_result(state.board.duplicate_profile(&file, &name))?;
+    emit_settings(&app, &state);
+    Ok(result)
+}
+
+/// Deleting the active profile falls back to the default one.
+#[tauri::command]
+pub async fn altar_delete_profile(app: AppHandle, state: State<'_, AppState>, file: String) -> Result<Value, String> {
+    let result = board_result(state.board.delete_profile(&file))?;
+    emit_settings(&app, &state);
+    Ok(result)
+}
+
+#[tauri::command]
+pub async fn altar_set_active(app: AppHandle, state: State<'_, AppState>, file: String) -> Result<(), String> {
+    state.board.set_active(&file).map_err(|e| format!("{e:#}"))?;
+    emit_settings(&app, &state);
+    Ok(())
+}
+
+/// Tells every window the current settings (the board changed `modules.altar.profile`).
+fn emit_settings(app: &AppHandle, state: &AppState) {
+    let json = serde_json::to_value(lock(&state.settings).get()).unwrap_or_default();
+    let _ = app.emit("settings:changed", json);
+}

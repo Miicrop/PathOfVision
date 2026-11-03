@@ -215,6 +215,12 @@ fn main() {
             commands::settings_get,
             commands::settings_set,
             commands::settings_reset,
+            commands::altar_get_state,
+            commands::altar_load_profile,
+            commands::altar_save_profile,
+            commands::altar_duplicate_profile,
+            commands::altar_delete_profile,
+            commands::altar_set_active,
         ])
         .setup(move |app| {
             let handle = app.handle().clone();

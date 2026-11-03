@@ -1,33 +1,26 @@
 "use strict";
 
-// Backend adapter. Qt WebChannel in the Python prototype; a WebView2 host only needs
-// another implementation of these calls.
+// Backend adapter: the app's IPC commands (window.pov from ui/shell/shell.js).
+// Commands fail with a message; saving and deleting report it as { ok: false, error } like before.
 function connectBackend() {
-  return new Promise((resolve, reject) => {
-    if (typeof qt === "undefined" || typeof QWebChannel === "undefined") {
-      reject(new Error("No backend. Open the board with: python -m prototype.board"));
-      return;
-    }
-    new QWebChannel(qt.webChannelTransport, channel => {
-      const b = channel.objects.backend;
-      const call = (fn, ...args) => new Promise(done => b[fn](...args, r => done(r === undefined ? null : JSON.parse(r))));
-      resolve({
-        getState: () => call("getState"),
-        loadProfile: file => call("loadProfile", file),
-        saveProfile: (file, profile) => call("saveProfile", file, JSON.stringify(profile)),
-        duplicateProfile: (file, name) => call("duplicateProfile", file, name),
-        deleteProfile: file => call("deleteProfile", file),
-        setActive: file => new Promise(done => b.setActive(file, done)),
-        getSettings: () => call("getSettings"),
-        saveSettings: changes => call("saveSettings", JSON.stringify(changes)),
-      });
-    });
+  if (!window.pov || !window.__TAURI__) {
+    return Promise.reject(new Error("No backend. Open the board in Path of Vision (sidebar: Altars)."));
+  }
+  const call = (cmd, args) => window.pov.invoke(cmd, args);
+  const failed = e => ({ ok: false, error: String(e) });
+  return Promise.resolve({
+    getState: () => call("altar_get_state"),
+    loadProfile: file => call("altar_load_profile", { file }),
+    saveProfile: (file, profile) => call("altar_save_profile", { file, profile }).catch(failed),
+    duplicateProfile: (file, name) => call("altar_duplicate_profile", { file, name }),
+    deleteProfile: file => call("altar_delete_profile", { file }).catch(failed),
+    setActive: file => call("altar_set_active", { file }),
   });
 }
 
 const ALTAR = { eater: ["Eater", "var(--eater)"], exarch: ["Exarch", "var(--exarch)"] };
 const TARGET = { player: "Player", minions: "Minions", boss: "Map Boss" };
-const ICON_DIR = "../modules/altar/img/mods/";   // reward icons named in data/labels.json
+const ICON_DIR = "../img/mods/";   // reward icons named in data/labels.json
 const DOWN_COLS = [
   { key: null, name: "Fine", tier: "var(--t-fine)", hint: "Unrated downsides count as fine" },
   { key: "dangerous", name: "Dangerous", tier: "var(--t-danger)", hint: "Gives a warning" },
@@ -454,7 +447,8 @@ $("profile").addEventListener("change", e => openProfile(e.target.value));
 $("dup").addEventListener("click", async () => {
   const name = prompt("Name of the new profile:", `${profile.name} (copy)`);
   if (!name || !name.trim()) return;
-  const result = await api.duplicateProfile(file, name.trim());
+  let result;
+  try { result = await api.duplicateProfile(file, name.trim()); } catch (e) { return showError(String(e)); }
   state.profiles = result.profiles;
   await openProfile(result.file);
 });
@@ -466,56 +460,12 @@ $("del").addEventListener("click", async () => {
   await openProfile(result.active);
 });
 
-// Settings (board cards and overlay): written to settings.json right away; the overlay reloads the file by itself.
-let hud = {}, hudDefaults = {}, pending = {};
-
-function renderSettings() {
-  $("s-font").value = hud.hud_font_size;
-  $("o-font").textContent = `${hud.hud_font_size} px`;
-  $("s-opacity").value = Math.round(hud.hud_other_opacity * 100);
-  $("o-opacity").textContent = `${Math.round(hud.hud_other_opacity * 100)} %`;
-  $("s-bottom").value = hud.hud_bottom;
-  $("s-offset").value = hud.hud_offset_x;
-  document.body.dataset.cards = hud.board_cards;
-  document.body.dataset.targetTag = hud.board_target_tag;
-  document.querySelectorAll(".seg[data-setting]").forEach(seg => seg.querySelectorAll("button").forEach(b =>
-    b.setAttribute("aria-pressed", String(b.dataset.v === String(hud[seg.dataset.setting])))));
+// Card style and target tag come from the settings window and follow its changes live.
+function showCardSettings(settings) {
+  const altar = (settings && settings.modules && settings.modules.altar) || {};
+  if (altar.board_cards !== undefined) document.body.dataset.cards = altar.board_cards;
+  if (altar.board_target_tag !== undefined) document.body.dataset.targetTag = String(altar.board_target_tag);
 }
-
-function changeSetting(key, value) {
-  hud[key] = value;
-  pending[key] = value;
-  renderSettings();
-  clearTimeout(changeSetting.timer);   // sliders fire many events; write once they settle
-  changeSetting.timer = setTimeout(async () => {
-    const result = await api.saveSettings(pending);
-    pending = {};
-    hud = result.current;
-    renderSettings();
-    $("s-saved").textContent = "Saved";
-    clearTimeout(changeSetting.done);
-    changeSetting.done = setTimeout(() => ($("s-saved").textContent = ""), 1500);
-  }, 150);
-}
-
-function showSettingsPanel(open) {
-  $("hud").hidden = !open;
-  $("hud-toggle").setAttribute("aria-expanded", String(open));
-  try { localStorage.setItem("overlaySettingsOpen", open ? "1" : ""); } catch { /* storage may be blocked */ }
-}
-$("hud-toggle").addEventListener("click", () => showSettingsPanel($("hud").hidden));
-try { showSettingsPanel(localStorage.getItem("overlaySettingsOpen") === "1"); } catch { showSettingsPanel(false); }
-$("s-font").addEventListener("input", e => changeSetting("hud_font_size", Number(e.target.value)));
-$("s-opacity").addEventListener("input", e => changeSetting("hud_other_opacity", Number(e.target.value) / 100));
-$("s-bottom").addEventListener("change", e => changeSetting("hud_bottom", Number(e.target.value)));
-$("s-offset").addEventListener("change", e => changeSetting("hud_offset_x", Number(e.target.value)));
-document.querySelectorAll(".seg[data-setting]").forEach(seg => seg.addEventListener("click", e => {
-  const b = e.target.closest("button");
-  if (!b) return;
-  const v = b.dataset.v;
-  changeSetting(seg.dataset.setting, v === "true" ? true : v === "false" ? false : v);
-}));
-$("s-reset").addEventListener("click", () => Object.entries(hudDefaults).forEach(([k, v]) => changeSetting(k, v)));
 
 (async () => {
   try {
@@ -523,11 +473,11 @@ $("s-reset").addEventListener("click", () => Object.entries(hudDefaults).forEach
     state = await api.getState();
     byId = Object.fromEntries(state.mods.map(m => [m.id, m]));
     $("subtitle").textContent = `${state.mods.length} mods · game ${state.gameVersion} · changes apply to the overlay instantly`;
+    window.pov.listen("settings:changed", e => showCardSettings(e.payload));
+    showCardSettings(await window.pov.invoke("settings_get"));
     await openProfile(state.active);
-    ({ current: hud, defaults: hudDefaults } = await api.getSettings());
-    renderSettings();
   } catch (e) {
     $("subtitle").textContent = "";
-    showError(e.message);
+    showError(e instanceof Error ? e.message : String(e));   // commands fail with a plain string
   }
 })();

@@ -1,6 +1,10 @@
-"""Settings board: hosts ui/board in a Qt WebEngine window and gives it file access.
+"""Settings board: hosts ui/modules/altar/board in a Qt WebEngine window and gives it file access.
 
 Usage: python -m prototype.board
+
+Note: the board page now talks to the Path of Vision app (Tauri IPC) and needs it; opened
+here it shows its "No backend" error. BoardApi stays as the reference for the app's board
+commands and for the tests.
 
 The board talks to Python only through BoardApi (a QWebChannel object). Every change
 is written to data/profiles/*.json or settings.json right away; the scanner picks it up
@@ -30,7 +34,7 @@ from .labels import load_keywords, load_labels
 from .settings import PROFILES_DIR, ROOT
 from .verdict import upgrade_upsides
 
-BOARD_HTML = ROOT / "ui" / "board" / "index.html"
+BOARD_HTML = ROOT / "ui" / "modules" / "altar" / "board" / "index.html"
 MODS_PATH = ROOT / "data" / "mods.json"
 
 

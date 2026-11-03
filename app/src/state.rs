@@ -14,7 +14,7 @@ pub struct AppState {
     pub status: Arc<Mutex<RunnerStatus>>,
     /// The PoE window of the last tick (for the HUD position).
     pub poe: Arc<Mutex<Option<PoeWindow>>>,
-    #[allow(dead_code)] // read by the board commands (Plan B2 Task 8)
+    /// Backend of the tier board page.
     pub board: BoardApi,
     /// Set on quit; the scanner thread ends on its next check.
     pub stop: Arc<AtomicBool>,

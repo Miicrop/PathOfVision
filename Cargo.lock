@@ -254,6 +254,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "pov-capture"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "image",
+ "pov-game",
+ "tempfile",
+ "vision",
+ "windows",
+]
+
+[[package]]
 name = "pov-core"
 version = "0.1.0"
 dependencies = [

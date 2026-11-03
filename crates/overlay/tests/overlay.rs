@@ -11,9 +11,9 @@ use windows::Win32::UI::WindowsAndMessaging::{
     CreateWindowExW, DefWindowProcW, DispatchMessageW, GUITHREADINFO, GWL_EXSTYLE,
     GetForegroundWindow, GetGUIThreadInfo, GetMessageW, GetWindowLongPtrW,
     GetWindowThreadProcessId, IsWindowVisible, MSG, PostMessageW, PostQuitMessage, RegisterClassW,
-    SW_SHOWNOACTIVATE, SetForegroundWindow, SetWindowPos, ShowWindow, TranslateMessage,
-    WINDOW_EX_STYLE, WM_CLOSE, WM_DESTROY, WNDCLASSW, WS_EX_LAYERED, WS_EX_NOACTIVATE,
-    WS_EX_TOOLWINDOW, WS_EX_TOPMOST, WS_EX_TRANSPARENT, WS_OVERLAPPEDWINDOW,
+    SW_SHOWNOACTIVATE, SetForegroundWindow, ShowWindow, TranslateMessage, WINDOW_EX_STYLE,
+    WM_CLOSE, WM_DESTROY, WNDCLASSW, WS_EX_LAYERED, WS_EX_NOACTIVATE, WS_EX_TOOLWINDOW,
+    WS_EX_TOPMOST, WS_EX_TRANSPARENT, WS_OVERLAPPEDWINDOW,
 };
 use windows::core::w;
 

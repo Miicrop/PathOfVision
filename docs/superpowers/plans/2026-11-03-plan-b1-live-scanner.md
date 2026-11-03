@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
-**Status:** Tasks 1–8 done and reviewed on branch `port/plan-b1`; final branch review done. Awaiting merge and the user's in-game test (Task 8 Step 6).
+**Status:** ✅ Done 2026-11-03. Tasks 1–8 done and reviewed, final branch review done, merged into `main`, user's in-game test passed (results in `plans/Plan.md`, Phase 4).
 
 **Goal:** A console program `pov-scan` that finds the running PoE window, knows from the game log whether the player is in a map, captures the window with Windows.Graphics.Capture only then, and prints the altar recommendations live, within the CPU budget.
 
@@ -236,4 +236,4 @@ Port `prototype/live.py` `Scanner.scan` with its constants `TRACK_DISTANCE = 250
 - [x] **Step 3: Implement** `module.rs` and `apps/scan`.
 - [x] **Step 4: Verify:** `cargo test --workspace --release` green; golden test unchanged; `cargo run -p pov-scan --release -- --replay tests/fixtures/screens --hold 1 --stats` prints altar lines and, after 10 s, a stats line with CPU ≤ 3 % of total (report the numbers); `cargo run -p pov-scan --release` without the game prints "PoE not found" and the process stays at ~0 % CPU (check with the stats line).
 - [x] **Step 5: Update `plans/Plan.md`** Phase 4 with a short "Plan B1 done" entry (what `pov-scan` does, measured CPU in replay, the `--import-prototype` step) and commit: `git add modules/altar apps/scan Cargo.toml Cargo.lock plans/Plan.md && git commit -m "Live: altar module and pov-scan console app"`
-- [ ] **Step 6 (user, after the branch review):** the controller asks the user to run `pov-scan --import-prototype` once and then `pov-scan --stats` during a real mapping session (borderless 3440×1440): verdicts correct, CPU ≤ 3 % total, FPS unchanged. Results go into `plans/Plan.md`.
+- [x] **Step 6 (user, after the branch review):** the controller asks the user to run `pov-scan --import-prototype` once and then `pov-scan --stats` during a real mapping session (borderless 3440×1440): verdicts correct, CPU ≤ 3 % total, FPS unchanged. Results go into `plans/Plan.md`.

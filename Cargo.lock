@@ -26,6 +26,7 @@ dependencies = [
  "rapidfuzz",
  "serde",
  "serde_json",
+ "vision",
 ]
 
 [[package]]

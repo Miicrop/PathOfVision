@@ -202,7 +202,7 @@ tests/                   # unit + recognition accuracy tests
 - `data/profiles/default.json`: first-guess starter tiers (S: Divine Orbs, duplicated Scarabs, Quantity; Brick: chaos damage during flask effect only). To be reviewed by the user.
 - Tests: `python -m pytest` (generator unit tests + data consistency: profile ids exist and sit on the right side).
 - Result of the cross-check against poedb: every normal mod matches (side, target, text, altar, weight). Differences are presentation only: poedb shows generic wording and drops the minus sign, and it lists HardMode variants as generic (no altar icon), which matches what the screenshots show.
-- The four values in `Altar.png` (2.2 % Alteration, 61 % ignore Phys DR, 34 % Sap, 21 % Rarity) all lie inside the generated ranges.
+- The four values in the first test screenshot (`Altar.png`, since removed; 2.2 % Alteration, 61 % ignore Phys DR, 34 % Sap, 21 % Rarity) all lie inside the generated ranges.
 
 ### Phase 2 – Recognition prototype (offline, Python) ✅ (done 2026-11-02)
 - **Result on 39 screenshots (44 altars, 85 readable options):** 44/44 altars found, 0 false detections, **84/85 options fully correct (98.8 %)**, 175 ms median per screenshot (max 297 ms with two altars). Run `python -m prototype.evaluate`.

@@ -13,15 +13,19 @@ PROFILES_DIR = ROOT / "data" / "profiles"
 # hud_font_size scales text and icons. hud_tiers: "off" or "highlight" (row tinted by its tier:
 # top upside column gold, other rated columns purple, Dangerous orange, Brick red). hud_other_opacity: 0.1-1, how visible the option that is not the pick stays
 # (1 = no dimming; an ADAPT - BRICK option is never dimmed). hud_values: column with the rolled values.
+# Board cards: board_cards = "full" (mod text only), "short" (HUD short label above the mod text) or
+# "compact" (short label only); board_target_tag shows the Player / Minions / Map Boss chip.
 DEFAULTS = {"profile": "default.json", "hud_bottom": 60, "hud_offset_x": 0,
             "hud_font_size": 15, "hud_tiers": "highlight", "hud_other_opacity": 0.6,
-            "hud_values": True}
+            "hud_values": True, "board_cards": "short", "board_target_tag": True}
 TIER_STYLES = ("off", "highlight")
+CARD_STYLES = ("full", "short", "compact")
 HUD_KEYS = ("hud_font_size", "hud_tiers", "hud_values", "hud_other_opacity", "hud_bottom", "hud_offset_x")
+BOARD_KEYS = ("board_cards", "board_target_tag")
 
 
 def clean(key: str, value):
-    """A HUD setting coerced into its valid range; the default if it cannot be read."""
+    """A HUD or board setting coerced into its valid range; the default if it cannot be read."""
     try:
         if key == "hud_font_size":
             return min(24, max(10, int(value)))
@@ -36,6 +40,10 @@ def clean(key: str, value):
             return min(2000, max(0, int(value)))
         if key == "hud_offset_x":
             return min(3000, max(-3000, int(value)))
+        if key == "board_cards":
+            return value if value in CARD_STYLES else DEFAULTS[key]
+        if key == "board_target_tag":
+            return bool(value)
     except (TypeError, ValueError):
         return DEFAULTS[key]
     raise KeyError(key)

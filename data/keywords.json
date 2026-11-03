@@ -1,5 +1,5 @@
 {
-  "about": "Words colored in the HUD text (whole words, any case). Value: CSS color. Longer keywords win over shorter ones. Colors taken from the in-game mod category text (Fire, Cold, Lightning, Chaos, Physical, Life, Defence, Attack, Caster, Speed, Critical, Minion).",
+  "about": "Words colored in downside text on the HUD and the board (whole words, any case; upsides stay plain so e.g. Chaos Orb is not colored as Chaos). Value: CSS color. Longer keywords win over shorter ones. Colors taken from the in-game mod category text (Fire, Cold, Lightning, Chaos, Physical, Life, Defence, Attack, Caster, Speed, Critical, Minion).",
   "keywords": {
     "Fire": "#fe9a76",
     "Ignite": "#fe9a76",

@@ -41,8 +41,29 @@ dropMark.className = "drop-mark";
 const filter = { altar: "both", side: "all", target: "all", reward: "all", q: "" };
 const $ = id => document.getElementById(id);
 
-const totalWeight = m => Object.values(m.weights).reduce((a, b) => a + b, 0);
 const text = m => m.lines.join(" / ");
+
+// HTML of a downside text with its keywords (data/keywords.json, whole words, any case) colored.
+let keywordRe = null;
+const escapeHtml = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+function colorKeywords(s) {
+  const kw = state.keywords || {};
+  if (!keywordRe && Object.keys(kw).length) {
+    const words = Object.keys(kw).sort((a, b) => b.length - a.length).map(k => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    keywordRe = new RegExp(`\\b(${words.join("|")})\\b`, "gi");
+  }
+  const colors = Object.fromEntries(Object.entries(kw).map(([k, c]) => [k.toLowerCase(), c]));
+  const out = escapeHtml(s);
+  return keywordRe ? out.replace(keywordRe, w => `<span style="color:${colors[w.toLowerCase()]}">${w}</span>`) : out;
+}
+
+// True when the short label says nearly the same as the mod text ("+50000 Armour" / "+50000 to Armour"),
+// so the "short" card style shows it once.
+function sameAsText(alias, full) {
+  const words = t => t.toLowerCase().replace(/[^a-z0-9+%.\s-]/g, " ").split(/\s+/).filter(w => w && !["to", "a", "an", "the", "of"].includes(w));
+  const a = new Set(words(alias));
+  return words(full).every(w => a.has(w));
+}
 
 // Reward group of an upside, from its icon name in labels.json.
 function rewardOf(m) {
@@ -223,8 +244,6 @@ function cardEl(m) {
   el.className = `card ${m.side}` + (profile.readOnly ? " locked" : "") + (selected.has(m.id) ? " selected" : "");
   el.dataset.id = m.id;
   el.draggable = !profile.readOnly;
-  const w = totalWeight(m);
-  const rare = m.side === "upside" && w <= 1000;
   // The frame color shows the altar (split diagonally when the mod rolls on both), the faded
   // scene behind the text shows the target, the icon on the right shows the reward.
   el.dataset.alt = m.altars.length > 1 ? "both" : m.altars[0];
@@ -232,16 +251,20 @@ function cardEl(m) {
     ${m.altars.map(a => `<span class="art art-${a}" style="background-image:url(img/art_${m.target}_${a}.png)"></span>`).join("")}
     ${m.altars.map(a => `<span class="fr fr-${a}"></span>`).join("")}
     <div class="body">
-      <div class="meta">
-        <span class="sr">${m.altars.map(a => ALTAR[a][0]).join(", ")}</span>
-        <span class="chip">${TARGET[m.target]}</span>
-        ${rare ? '<span class="chip rare">rare</span>' : ""}
-      </div>
+      <span class="sr">${m.altars.map(a => ALTAR[a][0]).join(", ")}</span>
+      <div class="meta"><span class="chip">${TARGET[m.target]}</span></div>
+      <div class="head"></div>
       <div class="txt"></div>
     </div>
     ${m.icon ? `<img class="reward" src="${ICON_DIR}${m.icon}.png" alt="">` : ""}`;
   el.classList.toggle("has-reward", !!m.icon);
-  el.querySelector(".txt").textContent = text(m);
+  // Both texts are always there; the card style (body[data-cards]) decides what shows.
+  const full = text(m), alias = m.alias || full;
+  const paint = (sel, s) => { const n = el.querySelector(sel); if (m.side === "downside") n.innerHTML = colorKeywords(s); else n.textContent = s; };
+  paint(".head", alias);
+  paint(".txt", full);
+  el.querySelector(".head").title = full;   // the compact style hides the mod text
+  el.classList.toggle("same", sameAsText(alias, full));
   if (!profile.readOnly) el.addEventListener("click", e => clickCard(e, el));
   el.addEventListener("dragstart", e => {
     // Dragging a selected card takes the whole selection along; any other card goes alone.
@@ -449,6 +472,8 @@ function renderSettings() {
   $("o-opacity").textContent = `${Math.round(hud.hud_other_opacity * 100)} %`;
   $("s-bottom").value = hud.hud_bottom;
   $("s-offset").value = hud.hud_offset_x;
+  document.body.dataset.cards = hud.board_cards;
+  document.body.dataset.targetTag = hud.board_target_tag;
   document.querySelectorAll(".seg[data-setting]").forEach(seg => seg.querySelectorAll("button").forEach(b =>
     b.setAttribute("aria-pressed", String(b.dataset.v === String(hud[seg.dataset.setting])))));
 }

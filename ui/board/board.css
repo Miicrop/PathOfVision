@@ -56,6 +56,8 @@ button.btn:disabled { opacity: .4; cursor: default; }
 .seg { display: flex; flex-wrap: wrap; gap: 6px; }
 .seg button { background: transparent; border: 1px solid var(--line); border-radius: 4px; padding: 5px 12px; cursor: pointer; color: var(--muted); }
 .seg button[aria-pressed="true"] { color: var(--fg); border-color: var(--gold); background: var(--panel-2); }
+.seg .ico { width: 20px; height: 20px; object-fit: contain; margin: -3px 6px -3px -3px; vertical-align: middle; }
+.view-row { display: flex; flex-wrap: wrap; gap: 6px 16px; }
 .seg .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
 .search-row input { width: 100%; max-width: 420px; }
 
@@ -141,12 +143,27 @@ button.btn:disabled { opacity: .4; cursor: default; }
   filter: drop-shadow(0 1px 3px rgb(0 0 0 / .8));
 }
 .card .meta { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; font-size: 11px; }
-.card .txt, .card .meta { text-shadow: 0 0 3px rgb(0 0 0 / .9), 0 1px 2px #000; }
+.card .txt, .card .meta, .card .head { text-shadow: 0 0 3px rgb(0 0 0 / .9), 0 1px 2px #000; }
 .chip { border: 1px solid var(--line); border-radius: 3px; padding: 1px 6px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; background: color-mix(in srgb, var(--panel-2) 70%, transparent); }
-.chip.rare { color: var(--t-s); border-color: color-mix(in srgb, var(--t-s) 45%, var(--line)); }
 .card .txt { font-size: 13.5px; line-height: 1.3; }
 .card.upside .txt { color: color-mix(in srgb, var(--up-text) 80%, #fff); }
 .card.downside .txt { color: color-mix(in srgb, var(--down-text) 80%, #fff); }
+/* Card styles (settings.json board_cards): full = mod text only, short = short label above the
+   mod text (shown once when both say the same), compact = short label only, one line. */
+.card .head { font-family: var(--font-display); font-size: 17px; font-weight: 700; line-height: 1.15; letter-spacing: .01em; }
+.card.upside .head { color: color-mix(in srgb, var(--up-text) 55%, #fff); }
+.card.downside .head { color: color-mix(in srgb, var(--down-text) 60%, #fff); }
+body[data-cards="full"] .card .head { display: none; }
+body[data-cards="short"] .card .body { gap: 4px; }
+body[data-cards="short"] .card:not(.same) .txt { font-size: 12px; line-height: 1.25; color: var(--muted); }
+body[data-cards="short"] .card.same .txt,
+body[data-cards="compact"] .card .txt { display: none; }
+body[data-cards="compact"] .card .body { flex-direction: row; align-items: center; gap: 8px; padding-block: 7px; min-height: 48px; }
+body[data-cards="compact"] .card .meta { width: 76px; flex: none; }
+body[data-cards="compact"] .card .head { font-size: 16px; flex: 1; min-width: 0; }
+body[data-cards="compact"] .card .reward { width: 38px; height: 38px; }
+body[data-cards="compact"] .card.has-reward .body { padding-right: 52px; }
+body[data-target-tag="false"] .card .meta { display: none; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 .legend { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; font-size: 12px; color: var(--muted); max-width: 640px; }

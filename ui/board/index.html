@@ -6,7 +6,7 @@
 <title>Altar Tier Board</title>
 <link rel="stylesheet" href="board.css">
 </head>
-<body>
+<body data-cards="short" data-target-tag="true">
 <div class="app">
   <header class="top">
     <div class="brand">
@@ -87,16 +87,28 @@
     <span class="lbl">Reward</span>
     <div class="seg" data-filter="reward" title="Upsides only; picking a reward hides the downsides">
       <button type="button" data-v="all" aria-pressed="true">All</button>
-      <button type="button" data-v="currency" aria-pressed="false">Currency</button>
-      <button type="button" data-v="eldritch" aria-pressed="false">Eldritch</button>
-      <button type="button" data-v="scarab" aria-pressed="false">Scarabs</button>
-      <button type="button" data-v="divcard" aria-pressed="false">Div Cards</button>
-      <button type="button" data-v="dup" aria-pressed="false">Duplicates</button>
-      <button type="button" data-v="stat" aria-pressed="false">Stats</button>
+      <button type="button" data-v="currency" aria-pressed="false"><img class="ico" src="../../prototype/assets/mods/chaos-orb.png" alt="">Currency</button>
+      <button type="button" data-v="eldritch" aria-pressed="false"><img class="ico" src="../../prototype/assets/mods/grand-eldritch-ichor.png" alt="">Eldritch</button>
+      <button type="button" data-v="scarab" aria-pressed="false"><img class="ico" src="../../prototype/assets/mods/cartography-scarab.png" alt="">Scarabs</button>
+      <button type="button" data-v="divcard" aria-pressed="false"><img class="ico" src="../../prototype/assets/mods/div-card-div-cards.png" alt="">Div Cards</button>
+      <button type="button" data-v="dup" aria-pressed="false"><img class="ico" src="../../prototype/assets/mods/dup-scarabs.png" alt="">Duplicates</button>
+      <button type="button" data-v="stat" aria-pressed="false"><img class="ico" src="../../prototype/assets/mods/stat-quantity.png" alt="">Stats</button>
     </div>
     <span class="lbl">Search</span>
     <div class="search-row">
       <input type="search" id="q" placeholder="e.g. divine, scarab, sap" autocomplete="off">
+    </div>
+    <span class="lbl">Cards</span>
+    <div class="view-row">
+      <div class="seg" data-setting="board_cards" aria-label="Card text">
+        <button type="button" data-v="full">Full text</button>
+        <button type="button" data-v="short">Short + text</button>
+        <button type="button" data-v="compact">Compact</button>
+      </div>
+      <div class="seg" data-setting="board_target_tag" aria-label="Target tag">
+        <button type="button" data-v="true">Target tag</button>
+        <button type="button" data-v="false">No tag</button>
+      </div>
     </div>
   </section>
 

@@ -19,7 +19,7 @@ from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWidgets import QApplication
 
 from . import settings
-from .labels import load_labels
+from .labels import load_keywords, load_labels
 from .settings import PROFILES_DIR, ROOT
 from .verdict import upgrade_upsides
 
@@ -51,7 +51,9 @@ class BoardApi(QObject):
         return json.dumps({
             "gameVersion": mods["gameVersion"],
             "mods": [{k: m[k] for k in ("id", "side", "target", "altars", "lines", "weights")}
-                     | {"icon": labels[m["id"]].icon if m["id"] in labels else ""} for m in mods["mods"]],
+                     | {"icon": labels[m["id"]].icon if m["id"] in labels else "",
+                        "alias": labels[m["id"]].alias if m["id"] in labels else ""} for m in mods["mods"]],
+            "keywords": load_keywords(),
             "profiles": self._profiles(),
             "active": settings.active_profile_path().name,
         })
@@ -96,18 +98,19 @@ class BoardApi(QObject):
     @Slot(result=str)
     def getSettings(self) -> str:
         current = settings.load()
-        return json.dumps({"current": {k: settings.clean(k, current[k]) for k in settings.HUD_KEYS},
-                           "defaults": {k: settings.DEFAULTS[k] for k in settings.HUD_KEYS}})
+        return json.dumps({"current": {k: settings.clean(k, current[k]) for k in settings.HUD_KEYS + settings.BOARD_KEYS},
+                           "defaults": {k: settings.DEFAULTS[k] for k in settings.HUD_KEYS}})   # reset covers the HUD only
 
     @Slot(str, result=str)
     def saveSettings(self, changes_json: str) -> str:
-        """Merge HUD settings into settings.json; the overlay reloads the file on its own."""
+        """Merge HUD and board settings into settings.json; the overlay reloads the file on its own."""
+        keys = settings.HUD_KEYS + settings.BOARD_KEYS
         current = settings.load()
         for key, value in json.loads(changes_json).items():
-            if key in settings.HUD_KEYS:
+            if key in keys:
                 current[key] = settings.clean(key, value)
         settings.save(current)
-        return json.dumps({"ok": True, "current": {k: current[k] for k in settings.HUD_KEYS}})
+        return json.dumps({"ok": True, "current": {k: settings.clean(k, current[k]) for k in keys}})
 
 
 class _Page(QWebEnginePage):

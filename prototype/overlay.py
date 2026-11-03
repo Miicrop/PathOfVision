@@ -4,7 +4,7 @@ Per altar it mirrors the in-game layout: top option box, recommendation box (whe
 altar icon sits in game), bottom option box. Box borders carry the verdict color, and each
 option shows its target as the matching half of the altar icon. Mods are listed in columns
 (sign, icon, alias or full text, tier); aliases and icons come from data/labels.json, keyword
-colors from data/keywords.json. Font size and tier style come from settings.json. All three files
+colors (downsides only) from data/keywords.json. Font size and tier style come from settings.json. All three files
 are reloaded when they change.
 """
 
@@ -177,7 +177,8 @@ def _option_box(view: AltarView, position: str, icons: _Icons, labels: dict[str,
             pic.setAlignment(Qt.AlignCenter)
             pic.setPixmap(mod_icon)
             grid.addWidget(pic, r, 1)
-        text = color_keywords(mod_text(m, option.lines, labels), style.keywords)
+        # Keyword colors only on downsides: upsides like "Chaos Orb" would light up as Chaos.
+        text = color_keywords(mod_text(m, option.lines, labels), style.keywords if m.card.side == "downside" else {})
         grid.addWidget(_label(f'<span style="color:#d8d8d8">{text}</span>', size=size), r, 2)
         if style.values:
             # Read values in the text color, unread ones as their range in grey.

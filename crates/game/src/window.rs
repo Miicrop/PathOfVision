@@ -8,8 +8,8 @@ use windows::Win32::System::Threading::{
 };
 use windows::Win32::UI::HiDpi::{DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2, SetProcessDpiAwarenessContext};
 use windows::Win32::UI::WindowsAndMessaging::{
-    EnumWindows, FindWindowW, GetClientRect, GetForegroundWindow, GetWindowThreadProcessId, IsIconic, IsWindow,
-    IsWindowVisible,
+    EnumWindows, FindWindowW, GW_OWNER, GWL_EXSTYLE, GetClientRect, GetForegroundWindow, GetWindow, GetWindowLongW,
+    GetWindowThreadProcessId, IsIconic, IsWindow, IsWindowVisible, WS_EX_TOOLWINDOW,
 };
 use windows::core::{BOOL, PWSTR, w};
 
@@ -98,36 +98,44 @@ fn info_for(hwnd: HWND) -> Option<PoeWindow> {
 }
 
 unsafe extern "system" fn enum_cb(hwnd: HWND, lparam: LPARAM) -> BOOL {
-    let out = unsafe { &mut *(lparam.0 as *mut Option<PoeWindow>) };
+    let out = unsafe { &mut *(lparam.0 as *mut Vec<PoeWindow>) };
     unsafe {
         if !IsWindowVisible(hwnd).as_bool() {
+            return BOOL(1);
+        }
+        // Skip tool windows and owned windows (overlays, dialogs).
+        let ex = GetWindowLongW(hwnd, GWL_EXSTYLE) as u32;
+        if ex & WS_EX_TOOLWINDOW.0 != 0 {
+            return BOOL(1);
+        }
+        if GetWindow(hwnd, GW_OWNER).is_ok_and(|o| !o.0.is_null()) {
             return BOOL(1);
         }
     }
     let mut pid = 0u32;
     unsafe { GetWindowThreadProcessId(hwnd, Some(&mut pid)) };
-    if pid != 0 {
-        if let Some(exe) = exe_of(pid) {
-            if is_poe_exe(&exe) {
-                *out = build(hwnd, pid, exe);
-                return BOOL(0);
-            }
-        }
+    if pid != 0
+        && let Some(exe) = exe_of(pid)
+        && is_poe_exe(&exe)
+        && let Some(w) = build(hwnd, pid, exe)
+    {
+        out.push(w);
     }
     BOOL(1)
 }
 
-/// Finds the game window by class name, falling back to an exe-name search.
+/// Finds the game window by class name, falling back to an exe-name search
+/// (largest client area among matching top-level windows).
 pub fn find_poe_window() -> Option<PoeWindow> {
     unsafe {
-        if let Ok(h) = FindWindowW(w!("POEWindowClass"), None) {
-            if let Some(win) = info_for(h) {
-                return Some(win);
-            }
+        if let Ok(h) = FindWindowW(w!("POEWindowClass"), None)
+            && let Some(win) = info_for(h)
+        {
+            return Some(win);
         }
-        let mut found: Option<PoeWindow> = None;
+        let mut found: Vec<PoeWindow> = Vec::new();
         let _ = EnumWindows(Some(enum_cb), LPARAM(&mut found as *mut _ as isize));
-        found
+        found.into_iter().max_by_key(|w| w.client.w as i64 * w.client.h as i64)
     }
 }
 

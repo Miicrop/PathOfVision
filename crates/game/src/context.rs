@@ -33,32 +33,67 @@ impl ContextSource for FixedContext {
 
 const LOOKUP_INTERVAL: Duration = Duration::from_secs(1);
 
+type Finder = Box<dyn FnMut() -> Option<PoeWindow> + Send>;
+type Refresher = Box<dyn Fn(&PoeWindow) -> Option<PoeWindow> + Send>;
+
 pub struct LiveContext {
     log_override: Option<PathBuf>,
+    find: Finder,
+    refresh: Refresher,
+    lookup_interval: Duration,
     window: Option<PoeWindow>,
     last_lookup: Option<Instant>,
     watcher: Option<LogWatcher>,
+    /// Install dir the watcher was built for (without override).
+    watch_dir: Option<PathBuf>,
     area: Option<Area>,
 }
 
 impl LiveContext {
     pub fn new(log_override: Option<PathBuf>) -> Self {
-        Self { log_override, window: None, last_lookup: None, watcher: None, area: None }
+        Self::with_window_source(
+            log_override,
+            Box::new(find_poe_window),
+            Box::new(refresh_window),
+            LOOKUP_INTERVAL,
+        )
+    }
+
+    /// Seam for tests: inject the window lookup/refresh.
+    fn with_window_source(
+        log_override: Option<PathBuf>,
+        find: Finder,
+        refresh: Refresher,
+        lookup_interval: Duration,
+    ) -> Self {
+        Self {
+            log_override,
+            find,
+            refresh,
+            lookup_interval,
+            window: None,
+            last_lookup: None,
+            watcher: None,
+            watch_dir: None,
+            area: None,
+        }
+    }
+
+    fn reset_log(&mut self) {
+        self.watcher = None;
+        self.watch_dir = None;
+        self.area = None;
     }
 
     fn ensure_watcher(&mut self) {
         if self.watcher.is_some() {
             return;
         }
-        let path = match (&self.log_override, &self.window) {
-            (Some(p), _) => Some(p.clone()),
-            (None, Some(w)) => w
-                .exe
-                .parent()
-                .and_then(|dir| log_files(dir).into_iter().find(|p| p.exists())),
-            _ => None,
-        };
-        if let Some(p) = path {
+        if let Some(p) = &self.log_override {
+            self.watcher = Some(LogWatcher::new(p.clone()));
+        } else if let Some(dir) = &self.watch_dir
+            && let Some(p) = log_files(dir).into_iter().next()
+        {
             self.watcher = Some(LogWatcher::new(p));
         }
     }
@@ -68,19 +103,27 @@ impl ContextSource for LiveContext {
     fn current(&mut self) -> GameContext {
         // Cheap refresh through the cached hwnd; drop the cache if the window is gone.
         if let Some(w) = &self.window {
-            self.window = refresh_window(w);
-        }
-        let due = self.last_lookup.is_none_or(|t| t.elapsed() >= LOOKUP_INTERVAL);
-        if self.window.is_none() && due {
-            self.last_lookup = Some(Instant::now());
-            self.window = find_poe_window();
-        }
-        self.ensure_watcher();
-        if let Some(wt) = self.watcher.as_mut() {
-            if let Some(a) = wt.poll() {
-                self.area = Some(a);
+            self.window = (self.refresh)(w);
+            if self.window.is_none() && self.log_override.is_none() {
+                self.reset_log();
             }
         }
+        let due = self.last_lookup.is_none_or(|t| t.elapsed() >= self.lookup_interval);
+        if self.window.is_none() && due {
+            self.last_lookup = Some(Instant::now());
+            self.window = (self.find)();
+        }
+        if self.log_override.is_none()
+            && let Some(w) = &self.window
+        {
+            let dir = w.exe.parent().map(|d| d.to_path_buf());
+            if dir != self.watch_dir {
+                self.reset_log();
+                self.watch_dir = dir;
+            }
+        }
+        self.ensure_watcher();
+        self.area = self.watcher.as_mut().and_then(|w| w.poll());
         GameContext { poe: self.window.clone(), area: self.area.clone() }
     }
 }
@@ -90,7 +133,9 @@ mod tests {
     use super::*;
     use crate::log::{Area, AreaKind};
     use crate::window::{PoeWindow, Rect, find_poe_window};
-    use std::path::PathBuf;
+    use std::io::Write;
+    use std::path::{Path, PathBuf};
+    use std::sync::{Arc, Mutex};
 
     fn win(foreground: bool, minimized: bool) -> PoeWindow {
         PoeWindow {
@@ -135,5 +180,82 @@ mod tests {
             assert!(w.minimized || w.client.w > 0);
             assert!(w.exe.to_string_lossy().to_lowercase().ends_with(".exe"));
         }
+    }
+
+    const MAP: &str = "2026/11/03 17:12:44 1 1 [DEBUG Client 1] Generating level 83 area \"MapWorldsDunes\" with seed 1\n";
+    const HIDEOUT: &str = "2026/11/03 17:13:44 1 1 [DEBUG Client 1] Generating level 1 area \"HideoutFelled\" with seed 1\n";
+
+    fn append(p: &Path, s: &str) {
+        let mut f = std::fs::OpenOptions::new().create(true).append(true).open(p).unwrap();
+        f.write_all(s.as_bytes()).unwrap();
+    }
+
+    fn fake_source(slot: Arc<Mutex<Option<PoeWindow>>>) -> LiveContext {
+        let s2 = slot.clone();
+        LiveContext::with_window_source(
+            None,
+            Box::new(move || slot.lock().unwrap().clone()),
+            Box::new(move |_| s2.lock().unwrap().clone()),
+            Duration::ZERO,
+        )
+    }
+
+    fn win_in(dir: &Path) -> PoeWindow {
+        PoeWindow { exe: dir.join("PathOfExile.exe"), ..win(true, false) }
+    }
+
+    fn install(dir: &Path, line: &str) {
+        std::fs::create_dir_all(dir.join("logs")).unwrap();
+        append(&dir.join("logs/LatestClient.txt"), line);
+    }
+
+    #[test]
+    fn live_override_tracks_log_without_window() {
+        let t = tempfile::tempdir().unwrap();
+        let log = t.path().join("c.txt");
+        append(&log, MAP);
+        let mut lc = LiveContext::with_window_source(
+            Some(log.clone()),
+            Box::new(|| None),
+            Box::new(|_| None),
+            Duration::ZERO,
+        );
+        let c = lc.current();
+        assert!(!c.poe_active());
+        assert!(c.in_map());
+        append(&log, HIDEOUT);
+        let c = lc.current();
+        assert_eq!(c.area.unwrap().kind, AreaKind::Hideout);
+    }
+
+    #[test]
+    fn live_window_lost_clears_area_and_new_dir_rebuilds_watcher() {
+        let t = tempfile::tempdir().unwrap();
+        let (a, b) = (t.path().join("a"), t.path().join("b"));
+        install(&a, MAP);
+        install(&b, HIDEOUT);
+        let slot = Arc::new(Mutex::new(Some(win_in(&a))));
+        let mut lc = fake_source(slot.clone());
+        assert!(lc.current().in_map());
+        *slot.lock().unwrap() = None;
+        let c = lc.current();
+        assert!(c.poe.is_none() && c.area.is_none());
+        *slot.lock().unwrap() = Some(win_in(&b));
+        let c = lc.current();
+        assert_eq!(c.area.unwrap().kind, AreaKind::Hideout);
+    }
+
+    #[test]
+    fn live_direct_swap_to_other_dir_rebuilds_and_unknown_area_not_stale() {
+        let t = tempfile::tempdir().unwrap();
+        let (a, b) = (t.path().join("a"), t.path().join("b"));
+        install(&a, MAP);
+        install(&b, "no area here\n");
+        let slot = Arc::new(Mutex::new(Some(win_in(&a))));
+        let mut lc = fake_source(slot.clone());
+        assert!(lc.current().in_map());
+        *slot.lock().unwrap() = Some(win_in(&b));
+        let c = lc.current();
+        assert!(c.area.is_none());
     }
 }

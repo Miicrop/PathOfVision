@@ -53,15 +53,16 @@ Filter bar, default selection always leftmost:
 Altar:  [ Both ] [ Eater of Worlds ] [ Searing Exarch ]
 Side:   [ All ]  [ Upsides ] [ Downsides ]
 Target: [ All ]  [ Player ] [ Eldritch Minions ] [ Map Boss ]
+Reward: [ All ]  [ Currency ] [ Eldritch ] [ Scarabs ] [ Div Cards ] [ Duplicates ] [ Stats ]
 Search: _______
 ```
 
-- Filters combine (AND). Choosing an altar also shows generic mods.
+- Filters combine (AND). Choosing an altar also shows generic mods. The reward group comes from the card's icon name in `labels.json` (`*-scarab`, `div-card-*`, `dup-*`, `stat-*`, `*eldritch-*`, everything else = Currency); downsides have no reward, so a reward filter hides the downside board.
 - **Upside board:** `Unrated | own columns … | top column`. Unrated (fixed, left) means NEUTRAL. The user adds, names, moves and deletes the columns in between; all of them count as rated, further right = higher priority. The top column (fixed, right, renamable; "S" by default) is the only one that can make a Brick workable. Order inside a column = priority (top = best). Old profiles (`s`/`a`/`b`) are upgraded to columns B, A and top S.
 - **Downside board:** `Fine | Dangerous | Brick`. Unrated downsides count as Fine.
 - New mods after a data update land in Unrated/Fine and are flagged as new.
 - Cards show the altar as the frame color (Eater teal, Exarch orange; generic mods get a frame split along a slanted gold seam), the target as its altar scene faded in behind the text (split along the same seam for generic mods), the reward icon from `labels.json` on the right, a target chip, a "rare" marker for low weights and the mod text with value range. The spawn weight is not shown (not relevant for sorting). Tile mockups (variant B4 chosen): https://claude.ai/artifact/WjrZ5yiFshReKwPzZxKsTd
-- Drag & drop between and within columns. Click selects a card, Ctrl+click adds or removes one, Shift+click selects a range within a column; dragging a selected card moves the whole selection in order. ← / → move the selection one column (the keyboard fallback that replaced the arrow buttons), Esc clears it.
+- Drag & drop between and within columns. Click selects a card, Ctrl+click adds or removes one, Shift+click selects a range within a column; dragging a selected card moves the whole selection in order. ← / → move the selection one column (the keyboard fallback that replaced the arrow buttons), Esc clears it. Ctrl+Z undoes moves and column edits, Ctrl+Y / Ctrl+Shift+Z redoes them (up to 100 steps, history cleared on profile switch; the undo is saved like any other change).
 - Profiles: read-only **Default** profile, **Duplicate** to create an editable copy, switch via dropdown. Every change is saved and applied to the overlay immediately.
 
 ## 6. Verdict model

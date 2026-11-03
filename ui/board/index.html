@@ -84,6 +84,16 @@
       <button type="button" data-v="minions" aria-pressed="false">Eldritch Minions</button>
       <button type="button" data-v="boss" aria-pressed="false">Map Boss</button>
     </div>
+    <span class="lbl">Reward</span>
+    <div class="seg" data-filter="reward" title="Upsides only; picking a reward hides the downsides">
+      <button type="button" data-v="all" aria-pressed="true">All</button>
+      <button type="button" data-v="currency" aria-pressed="false">Currency</button>
+      <button type="button" data-v="eldritch" aria-pressed="false">Eldritch</button>
+      <button type="button" data-v="scarab" aria-pressed="false">Scarabs</button>
+      <button type="button" data-v="divcard" aria-pressed="false">Div Cards</button>
+      <button type="button" data-v="dup" aria-pressed="false">Duplicates</button>
+      <button type="button" data-v="stat" aria-pressed="false">Stats</button>
+    </div>
     <span class="lbl">Search</span>
     <div class="search-row">
       <input type="search" id="q" placeholder="e.g. divine, scarab, sap" autocomplete="off">
@@ -91,7 +101,7 @@
   </section>
 
   <section class="board" id="board-upside">
-    <h2>Upsides <small>Drag to rank; Ctrl or Shift + click selects several cards, ← → moves them. Columns further right and cards higher in a column win. Only the top column can outweigh a Brick.</small></h2>
+    <h2>Upsides <small>Drag to rank; Ctrl or Shift + click selects several cards, ← → moves them, Ctrl+Z undoes. Columns further right and cards higher in a column win. Only the top column can outweigh a Brick.</small></h2>
     <div class="cols-wrap"><div class="cols up" id="cols-upside"></div></div>
   </section>
   <section class="board" id="board-downside">

@@ -38,16 +38,28 @@ let api, state, byId, profile, file;
 let dragging = null;                                   // ids of the cards being dragged
 const dropMark = document.createElement("div");         // line where the card will land
 dropMark.className = "drop-mark";
-const filter = { altar: "both", side: "all", target: "all", q: "" };
+const filter = { altar: "both", side: "all", target: "all", reward: "all", q: "" };
 const $ = id => document.getElementById(id);
 
 const totalWeight = m => Object.values(m.weights).reduce((a, b) => a + b, 0);
 const text = m => m.lines.join(" / ");
 
+// Reward group of an upside, from its icon name in labels.json.
+function rewardOf(m) {
+  const icon = m.icon || "";
+  if (icon.endsWith("-scarab")) return "scarab";
+  if (icon.startsWith("div-card-")) return "divcard";
+  if (icon.startsWith("dup-")) return "dup";
+  if (icon.startsWith("stat-")) return "stat";
+  if (icon.includes("eldritch-")) return "eldritch";
+  return icon ? "currency" : "";
+}
+
 function visible(m) {
   if (filter.altar !== "both" && !m.altars.includes(filter.altar)) return false;
   if (filter.side !== "all" && m.side !== filter.side) return false;
   if (filter.target !== "all" && m.target !== filter.target) return false;
+  if (filter.reward !== "all" && rewardOf(m) !== filter.reward) return false;
   if (filter.q && !text(m).toLowerCase().includes(filter.q)) return false;
   return true;
 }
@@ -74,9 +86,28 @@ function columnIds(side, col) {
   return state.mods.filter(m => m.side === side && !listed.has(m.id)).map(m => m.id);
 }
 
+// Undo / redo (Ctrl+Z, Ctrl+Y or Ctrl+Shift+Z): snapshots of the tiers before each change.
+const undoStack = [], redoStack = [];
+const snapshot = () => JSON.stringify({ upsides: profile.upsides, downsides: profile.downsides });
+function remember() {
+  undoStack.push(snapshot());
+  if (undoStack.length > 100) undoStack.shift();
+  redoStack.length = 0;
+}
+function restore(from, to, label) {
+  if (profile.readOnly || !from.length) return;
+  to.push(snapshot());
+  Object.assign(profile, JSON.parse(from.pop()));
+  render();
+  save(label);
+}
+const undo = () => restore(undoStack, redoStack, "Undone");
+const redo = () => restore(redoStack, undoStack, "Redone");
+
 // Moves the cards (kept in the given order) into a column, in front of beforeId or at the end.
 function moveCards(ids, side, colIndex, beforeId) {
   if (profile.readOnly || !ids.length) return;
+  remember();
   for (const list of allLists(side)) {
     for (const id of ids) {
       const at = list.indexOf(id);
@@ -137,16 +168,15 @@ function stepSelection(step) {
   const order = selectedInOrder(side);
   // Move the column nearest the edge first, so cards from neighboring columns keep their order.
   const groups = [...new Set(order.map(colOf))].sort((a, b) => step > 0 ? b - a : a - b);
-  let moved = false;
+  if (!groups.some(from => from + step >= 0 && from + step < cols.length)) return;
+  remember();
   for (const from of groups) {
     const to = from + step;
     if (to < 0 || to >= cols.length) continue;
     const ids = order.filter(id => colOf(id) === from);
     for (const list of allLists(side)) for (const id of ids) { const at = list.indexOf(id); if (at >= 0) list.splice(at, 1); }
     if (cols[to].list) cols[to].list.push(...ids);
-    moved = true;
   }
-  if (!moved) return;
   render();
   save();
 }
@@ -154,6 +184,7 @@ function stepSelection(step) {
 // Column management (upsides only): add, rename, move, delete.
 function editColumns(change) {
   if (profile.readOnly) return;
+  remember();
   change(profile.upsides);
   render();
   save();
@@ -180,9 +211,9 @@ function deleteColumn(col) {
   editColumns(up => up.columns.splice(col.index, 1));
 }
 
-async function save() {
+async function save(label = "Saved") {
   const result = await api.saveProfile(file, { ...profile, modsVersion: state.gameVersion });
-  $("saved").textContent = result.ok ? "Saved" : `Not saved: ${result.error}`;
+  $("saved").textContent = result.ok ? label : `Not saved: ${result.error}`;
   clearTimeout(save.timer);
   save.timer = setTimeout(() => ($("saved").textContent = ""), 1500);
 }
@@ -343,7 +374,7 @@ function renderProfiles() {
 
 function render() {
   $("board-upside").hidden = filter.side === "downside";
-  $("board-downside").hidden = filter.side === "upside";
+  $("board-downside").hidden = filter.side === "upside" || filter.reward !== "all";   // downsides have no reward
   $("ro").hidden = !profile.readOnly;
   $("del").disabled = profile.readOnly;
   for (const id of selected) if (!visible(byId[id])) selected.delete(id);   // filtered-out cards never move unseen
@@ -356,6 +387,7 @@ async function openProfile(name) {
   file = name;
   profile = await api.loadProfile(file);
   selected.clear();
+  undoStack.length = redoStack.length = 0;          // history belongs to one profile
   profile.upsides ||= { columns: [], top: { name: "S", ids: [] } };
   profile.downsides ||= {};
   await api.setActive(file);   // the selected profile is the one the overlay uses
@@ -376,7 +408,14 @@ document.querySelectorAll(".seg[data-filter]").forEach(seg => seg.addEventListen
   render();
 }));
 document.addEventListener("keydown", e => {
-  if (!selected.size || e.target.closest("input, select, textarea")) return;
+  if (e.target.closest("input, select, textarea")) return;   // the search box keeps its own undo
+  const key = e.key.toLowerCase();
+  if (e.ctrlKey && !e.altKey && (key === "z" || key === "y")) {
+    e.preventDefault();
+    key === "y" || e.shiftKey ? redo() : undo();
+    return;
+  }
+  if (!selected.size) return;
   if (e.key === "Escape") { selected.clear(); showSelection(); }
   else if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); stepSelection(e.key === "ArrowLeft" ? -1 : 1); }
 });

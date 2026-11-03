@@ -176,11 +176,11 @@ pub struct Reader {
 
 impl Reader {
     pub fn new() -> anyhow::Result<Reader> {
-        Ok(Reader {
-            detector: Detector::new(&assets_dir())?,
-            ocr: Ocr::new("en-US")?,
-            cards: load_cards(&repo_data_dir().join("mods.json"))?,
-        })
+        Self::with_paths(&assets_dir(), &repo_data_dir().join("mods.json"), "en-US")
+    }
+
+    pub fn with_paths(assets: &std::path::Path, mods_json: &std::path::Path, language: &str) -> anyhow::Result<Reader> {
+        Ok(Reader { detector: Detector::new(assets)?, ocr: Ocr::new(language)?, cards: load_cards(mods_json)? })
     }
 
     /// OCRs the region `[x0, x1) x [y0, y1)` (clamped); returns lines in full-res coords.

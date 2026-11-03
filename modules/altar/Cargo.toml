@@ -11,3 +11,8 @@ rapidfuzz = "0.5"
 fancy-regex = "0.14"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+pov-core = { path = "../../crates/core" }
+pov-game = { path = "../../crates/game" }
+
+[dev-dependencies]
+tempfile = "3"

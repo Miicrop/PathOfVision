@@ -1,0 +1,17 @@
+[package]
+name = "pov-scan"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "pov-scan"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1"
+vision = { path = "../../crates/vision" }
+pov-core = { path = "../../crates/core" }
+pov-game = { path = "../../crates/game" }
+pov-capture = { path = "../../crates/capture" }
+altar = { path = "../../modules/altar" }
+windows = { version = "0.61", features = ["Win32_Foundation", "Win32_System_Console", "Win32_System_Threading"] }

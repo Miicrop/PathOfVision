@@ -24,9 +24,12 @@ dependencies = [
  "anyhow",
  "fancy-regex",
  "ocr",
+ "pov-core",
+ "pov-game",
  "rapidfuzz",
  "serde",
  "serde_json",
+ "tempfile",
  "vision",
 ]
 
@@ -284,6 +287,19 @@ version = "0.1.0"
 dependencies = [
  "regex",
  "tempfile",
+ "windows",
+]
+
+[[package]]
+name = "pov-scan"
+version = "0.1.0"
+dependencies = [
+ "altar",
+ "anyhow",
+ "pov-capture",
+ "pov-core",
+ "pov-game",
+ "vision",
  "windows",
 ]
 

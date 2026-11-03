@@ -4,6 +4,7 @@ pub mod evaluate;
 pub mod fill;
 pub mod live;
 pub mod matching;
+pub mod module;
 pub mod read;
 pub mod text;
 pub mod verdict;

@@ -13,6 +13,7 @@ use pov_game::{Area, AreaKind, ContextSource, FixedContext, GameContext, LiveCon
 use serde_json::{Value, json};
 use tauri::{AppHandle, Emitter};
 
+use crate::commands;
 use crate::state::{AppState, lock};
 
 const ALTAR: &str = "altar";
@@ -73,9 +74,14 @@ pub fn tick_events(tick: &Tick, last: &mut Option<RunnerStatus>, altar_was_activ
     events
 }
 
+/// A HUD view without altars: nothing to show.
+fn is_empty_view(view: &Value) -> bool {
+    view["altars"].as_array().is_none_or(Vec::is_empty)
+}
+
 /// Window each event goes to.
 fn target(event: &str) -> &'static str {
-    if event == "altar:hud" { "hud" } else { "main" }
+    if event == "altar:hud" { commands::HUD_WINDOW } else { "main" }
 }
 
 /// Starts the scanner thread. It runs until `state.stop` is set.
@@ -123,6 +129,13 @@ pub fn spawn(app: AppHandle, state: &AppState, mode: Mode, stats: bool) -> JoinH
                 *lock(&status) = tick.status.clone();
                 *lock(&poe) = tick.poe.clone();
                 for (event, payload) in tick_events(tick, &mut last, &mut altar_was_active) {
+                    if event == "altar:hud" && is_empty_view(&payload) {
+                        // The page hides it too (`hud_fit(0, 0)`); this also covers a page that
+                        // is not loaded. On the main thread, which owns the window: a call from
+                        // here would block on it, and the main thread waits for us on quit.
+                        let handle = app.clone();
+                        let _ = app.run_on_main_thread(move || commands::hide_hud(&handle));
+                    }
                     // A window that does not exist (yet) simply gets nothing.
                     let _ = app.emit_to(target(event), event, payload);
                 }
@@ -147,6 +160,15 @@ mod tests {
 
     fn screens() -> PathBuf {
         PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../tests/fixtures/screens")
+    }
+
+    #[test]
+    fn empty_view_hides_the_hud() {
+        assert!(is_empty_view(&json!({"altars": []})));
+        assert!(is_empty_view(&json!({})));
+        assert!(!is_empty_view(&json!({"style": {}, "altars": [{"altar": "eater"}]})));
+        assert_eq!(target("altar:hud"), "hud");
+        assert_eq!(target("app:status"), "main");
     }
 
     #[test]

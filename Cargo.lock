@@ -2685,6 +2685,7 @@ dependencies = [
  "pov-capture",
  "pov-core",
  "pov-game",
+ "pov-overlay",
  "serde_json",
  "tauri",
  "tauri-build",

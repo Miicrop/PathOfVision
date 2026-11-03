@@ -10,7 +10,7 @@ MODS = json.loads((DATA / "mods.json").read_text(encoding="utf-8"))
 CARDS = {c["id"]: c for c in MODS["mods"]}
 PROFILES = sorted((DATA / "profiles").glob("*.json"))
 LABELS = json.loads((DATA / "labels.json").read_text(encoding="utf-8"))["labels"]
-MOD_ICONS = DATA.parent / "prototype" / "assets" / "mods"
+MOD_ICONS = DATA.parent / "ui" / "modules" / "altar" / "img" / "mods"
 
 
 def test_mods_have_unique_ids_and_variants():

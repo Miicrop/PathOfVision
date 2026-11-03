@@ -176,7 +176,7 @@ def diff_mods(old: dict | None, new: dict) -> list[str]:
 
 LABELS_ABOUT = ("Short labels for the HUD, edited by hand. alias: shown instead of the full text "
                 "(empty = full text); '#' is replaced by the next read value, '#2' by the second one. "
-                "icon: file name in prototype/assets/mods/ without .png. "
+                "icon: file name in ui/modules/altar/img/mods/ without .png. "
                 "text is a reference copy refreshed by tools/gen_mods; edits to it are overwritten.")
 TARGET_ORDER = {"player": 0, "minions": 1, "boss": 2}
 SIDE_SIGNS = {"upside": "+", "downside": "-"}

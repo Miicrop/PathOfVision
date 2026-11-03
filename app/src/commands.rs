@@ -8,6 +8,43 @@ use tauri_plugin_autostart::ManagerExt;
 use crate::state::{AppState, lock};
 
 pub const SETTINGS_WINDOW: &str = "settings";
+pub const HUD_WINDOW: &str = "hud";
+
+/// The HUD window's handle, if it exists.
+pub fn hud_hwnd(app: &AppHandle) -> Option<isize> {
+    let w = app.get_webview_window(HUD_WINDOW)?;
+    w.hwnd().ok().map(|h| h.0 as isize)
+}
+
+/// Hides the HUD. Never use Tauri's `show()`/`hide()` for it: `show()` activates the window.
+pub fn hide_hud(app: &AppHandle) {
+    if let Some(hwnd) = hud_hwnd(app) {
+        let _ = pov_overlay::hide(hwnd);
+    }
+}
+
+/// The HUD page measured itself (physical pixels): show it bottom-center of the PoE client
+/// area with the user's offsets, without activating it. Size 0 or no PoE window hides it.
+/// Synchronous on purpose: it runs on the main thread, which owns the window.
+#[tauri::command]
+pub fn hud_fit(app: AppHandle, state: State<'_, AppState>, width: u32, height: u32) -> Result<(), String> {
+    let Some(hwnd) = hud_hwnd(&app) else { return Ok(()) };
+    let client = lock(&state.poe).as_ref().map(|p| p.client);
+    let (w, h) = (width.min(i32::MAX as u32) as i32, height.min(i32::MAX as u32) as i32);
+    match client {
+        Some(client) if w > 0 && h > 0 => {
+            let (offset_x, bottom) = {
+                let mut store = lock(&state.settings);
+                store.reload_if_changed();
+                let altar = &store.get().altar;
+                (altar.hud_offset_x, altar.hud_bottom)
+            };
+            pov_overlay::show_at(hwnd, pov_overlay::hud_rect(client, (w, h), offset_x, bottom))
+        }
+        _ => pov_overlay::hide(hwnd),
+    }
+    .map_err(|e| format!("{e:#}"))
+}
 
 #[tauri::command]
 pub fn app_status(state: State<'_, AppState>) -> RunnerStatus {

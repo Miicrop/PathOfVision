@@ -29,7 +29,8 @@ from .live import AltarView
 from .match import Match
 from .verdict import ADAPT, AVOID, CONSIDER, NEUTRAL, RATED, TAKE, TOP, UNREADABLE
 
-ASSETS = Path(__file__).resolve().parent / "assets"
+# Target and mod icons live next to the app's altar UI.
+ASSETS = Path(__file__).resolve().parents[1] / "ui" / "modules" / "altar" / "img"
 VERDICT_COLORS = {TAKE: "#4fbf6a", CONSIDER: "#e0a33a", ADAPT: "#d65db1", AVOID: "#e05a4f",
                   NEUTRAL: "#9aa0a6", UNREADABLE: "#5d6168"}
 # Row tint per tier kind: top upside column, the user columns in between, risky downsides.
@@ -103,7 +104,7 @@ class _Icons:
         return self._cache[key]
 
     def mod(self, name: str, size: int) -> QPixmap | None:
-        """Mod icon from assets/mods/<name>.png; None if the file does not exist."""
+        """Mod icon from ui/modules/altar/img/mods/<name>.png; None if the file does not exist."""
         key = (f"mods/{name}", size)
         if key not in self._cache:
             pixmap = QPixmap(str(ASSETS / "mods" / f"{name}.png"))

@@ -20,6 +20,7 @@ vision = { path = "../crates/vision" }
 pov-core = { path = "../crates/core" }
 pov-game = { path = "../crates/game" }
 pov-capture = { path = "../crates/capture" }
+pov-overlay = { path = "../crates/overlay" }
 altar = { path = "../modules/altar" }
 
 [dev-dependencies]

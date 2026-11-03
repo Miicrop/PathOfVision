@@ -2,7 +2,7 @@
 
 Usage: python -m tools.gen_board_art
 
-Reads prototype/assets/target_<target>_top_<altar>.png, drops the bronze rim with a soft
+Reads ui/modules/altar/img/target_<target>_top_<altar>.png, drops the bronze rim with a soft
 half-disc mask and writes ui/board/img/art_<target>_<altar>.png. Top and bottom halves show
 the same scene, the top one frames the player's head better.
 
@@ -19,7 +19,7 @@ import cv2
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
-ASSETS = ROOT / "prototype" / "assets"
+ASSETS = ROOT / "ui" / "modules" / "altar" / "img"
 OUT = ROOT / "ui" / "board" / "img"
 TARGETS = ("player", "minions", "boss")
 ALTARS = ("eater", "exarch")

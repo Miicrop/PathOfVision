@@ -1,5 +1,5 @@
 {
-  "about": "Short labels for the HUD, edited by hand. alias: shown instead of the full text (empty = full text); '#' is replaced by the next read value, '#2' by the second one. icon: file name in prototype/assets/mods/ without .png. text is a reference copy refreshed by tools/gen_mods; edits to it are overwritten.",
+  "about": "Short labels for the HUD, edited by hand. alias: shown instead of the full text (empty = full text); '#' is replaced by the next read value, '#2' by the second one. icon: file name in ui/modules/altar/img/mods/ without .png. text is a reference copy refreshed by tools/gen_mods; edits to it are overwritten.",
   "labels": {
     "TangledAltarUpsidePlayerIncreasedQuantity": {
       "text": "player + (10-20)% increased Quantity of Items found in this Area",

@@ -27,7 +27,7 @@ function connectBackend() {
 
 const ALTAR = { eater: ["Eater", "var(--eater)"], exarch: ["Exarch", "var(--exarch)"] };
 const TARGET = { player: "Player", minions: "Minions", boss: "Map Boss" };
-const ICON_DIR = "../../prototype/assets/mods/";   // reward icons named in data/labels.json
+const ICON_DIR = "../modules/altar/img/mods/";   // reward icons named in data/labels.json
 const DOWN_COLS = [
   { key: null, name: "Fine", tier: "var(--t-fine)", hint: "Unrated downsides count as fine" },
   { key: "dangerous", name: "Dangerous", tier: "var(--t-danger)", hint: "Gives a warning" },

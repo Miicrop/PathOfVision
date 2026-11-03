@@ -17,6 +17,7 @@ use tauri::menu::{Menu, MenuEvent, MenuItem};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
 use tauri::{AppHandle, Manager, RunEvent, WebviewUrl, WebviewWindowBuilder, WindowEvent};
 
+use crate::commands::HUD_WINDOW;
 use crate::scanner::Mode;
 use crate::state::{AppState, ScannerThread, lock};
 
@@ -110,6 +111,29 @@ fn create_main_window(app: &AppHandle) -> tauri::Result<()> {
     Ok(())
 }
 
+/// The in-game HUD: transparent, click-through, topmost, never focused, hidden until the page
+/// has something to show (`hud_fit`).
+fn create_hud_window(app: &AppHandle) -> anyhow::Result<()> {
+    let window = WebviewWindowBuilder::new(app, HUD_WINDOW, WebviewUrl::App("modules/altar/hud/index.html".into()))
+        .title(TITLE)
+        .transparent(true)
+        .decorations(false)
+        .shadow(false)
+        .always_on_top(true)
+        .skip_taskbar(true)
+        .focused(false)
+        .focusable(false)
+        .visible(false)
+        .resizable(false)
+        .build()?;
+    // First: tao rewrites the whole extended style when its flags change, which would drop
+    // the styles `make_overlay` adds.
+    window.set_ignore_cursor_events(true)?;
+    let hwnd = window.hwnd()?.0 as isize;
+    pov_overlay::make_overlay(hwnd)?;
+    Ok(())
+}
+
 /// Stops the scanner thread, waits for it, then ends the app.
 fn quit(app: &AppHandle) {
     app.state::<AppState>().stop.store(true, Ordering::SeqCst);
@@ -185,6 +209,7 @@ fn main() {
         .manage(ScannerThread::default())
         .invoke_handler(tauri::generate_handler![
             commands::app_status,
+            commands::hud_fit,
             commands::open_settings,
             commands::settings_schema,
             commands::settings_get,
@@ -194,6 +219,10 @@ fn main() {
         .setup(move |app| {
             let handle = app.handle().clone();
             create_main_window(&handle)?;
+            if let Err(e) = create_hud_window(&handle) {
+                // The app (Home, board) still works without the HUD.
+                eprintln!("HUD window: {e:#}");
+            }
             create_tray(&handle)?;
             let thread = scanner::spawn(handle.clone(), &app.state::<AppState>(), mode, stats);
             *lock(&app.state::<ScannerThread>().0) = Some(thread);

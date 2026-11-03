@@ -1,0 +1,163 @@
+/* In-game altar HUD. The look follows the prototype's Qt HUD (prototype/overlay.py).
+   Sizes that follow the font size come from hud.js as custom properties on <body>. */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+/* One column per altar, side by side, aligned to the bottom. The body shrink-wraps the
+   columns: hud.js measures it and sizes the window to it. */
+body {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  width: max-content;
+  font-family: "Segoe UI", sans-serif;
+  font-size: var(--fs, 15px);
+  color: #d8d8d8;
+  white-space: nowrap;
+  cursor: default;
+  user-select: none;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Option: the box inside a 12 px margin (room for the glow), the legend on its top border. */
+.option {
+  position: relative;
+  padding: var(--legend-top, 12px) 12px 12px;
+}
+
+.option.dimmed {
+  opacity: var(--other-opacity, 0.6);
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px 8px 10px;
+  background: rgba(12, 14, 20, 0.894);
+  border: 2px solid var(--c);
+  border-radius: 6px;
+}
+
+/* Opaque when chosen, so the glow behind it does not tint the background. */
+.box.chosen {
+  background: rgb(12, 14, 20);
+  border-width: 3px;
+  box-shadow: 0 0 24px var(--c);
+}
+
+.legend {
+  position: absolute;
+  left: 24px;
+  top: var(--legend-top, 12px);
+  transform: translateY(-50%);
+  margin-top: 1px;
+  padding: 0 5px;
+  border-radius: 3px;
+  background: rgb(12, 14, 20);
+  color: var(--c);
+  font-size: calc(var(--fs, 15px) - 3px);
+  font-weight: 600;
+}
+
+.target {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--target-col);
+  min-height: 1em;   /* an option without target or mods keeps the prototype's box height */
+}
+
+.target img {
+  height: var(--target-icon);
+}
+
+/* One row per mod: sign | icon | alias or text | values. */
+.mods {
+  flex: 1;
+  display: grid;
+  grid-template-columns: auto minmax(var(--mod-icon), auto) 1fr auto;
+  grid-auto-rows: minmax(var(--mod-icon), auto);
+  column-gap: 6px;
+  row-gap: 1px;
+  align-items: center;
+}
+
+.mods.no-values {
+  grid-template-columns: auto minmax(var(--mod-icon), auto) 1fr;
+}
+
+.tint {
+  grid-column: 1 / -1;
+  align-self: stretch;
+  border-radius: 3px;
+}
+
+.sign {
+  font-weight: 600;
+}
+
+.sign.up {
+  color: #4fbf6a;
+}
+
+.sign.down {
+  color: #e05a4f;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--mod-icon);
+  height: var(--mod-icon);
+}
+
+.icon img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.values {
+  text-align: right;
+}
+
+.unread {
+  color: #6f757d;
+}
+
+/* Recommendation: where the altar icon sits in game, between the two options. */
+.rec {
+  align-self: center;
+  padding: 6px 12px;
+  background: rgba(12, 14, 20, 0.894);
+  border: 2px solid #3a3f4b;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.rec .line {
+  color: var(--c);
+  font-weight: 600;
+}
+
+/* Segoe UI Symbol draws the signs in one color; the default font picks the color emoji for ⚠. */
+.rec .arrow {
+  font-family: "Segoe UI Symbol", sans-serif;
+}
+
+.rec .note {
+  color: #9aa0a6;
+}

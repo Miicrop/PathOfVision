@@ -1,6 +1,8 @@
 # Plan A – Altar pipeline in Rust (offline) Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
+
+**Status:** ✅ Done and merged into `main` (2026-11-03). Result: 44/44 altars, 84/85 options, median 179 ms per screen (Python 202 ms). Carry-over notes in `plans/Plan.md`, Phase 4.
 
 **Goal:** A Rust workspace that finds, reads, matches and rates Eldritch Altars on the existing screenshots at least as well as the Python prototype, with no UI.
 
@@ -46,12 +48,12 @@
   - `Gray::resize_area(&self, scale: f64) -> Gray`, `Gray::resize_nearest(&self, w: usize, h: usize) -> Gray`.
   - `pub fn hsv(p: [u8; 3]) -> (u8, u8, u8)` in OpenCV's 8-bit convention (H 0–179, S and V 0–255), input in RGB order.
 
-- [ ] **Step 1: Install the toolchain and create the workspace**
+- [x] **Step 1: Install the toolchain and create the workspace**
 
 Run: `winget install --id Rustlang.Rustup -e` then, in a new shell, `rustup default stable` and `cargo --version`.
 Expected: a cargo version ≥ 1.85 (edition 2024). Create the workspace and an empty `vision` crate; `cargo build` succeeds. Generate the two test PNGs once with Python/Pillow (2×2 pixels, the same colors, one saved as RGBA and one as RGB) into `crates/vision/tests/fixtures/`.
 
-- [ ] **Step 2: Write the failing tests** in `crates/vision/src/image.rs` (`#[cfg(test)]`):
+- [x] **Step 2: Write the failing tests** in `crates/vision/src/image.rs` (`#[cfg(test)]`):
 
 ```rust
 #[test] fn loads_rgba_and_rgb_png() { /* both fixtures load; same px; w == h == 2 */ }
@@ -70,13 +72,13 @@ Expected: a cargo version ≥ 1.85 (edition 2024). Create the workspace and an e
 }
 ```
 
-- [ ] **Step 3: Run `cargo test -p vision` and see the tests fail** (functions missing).
+- [x] **Step 3: Run `cargo test -p vision` and see the tests fail** (functions missing).
 
-- [ ] **Step 4: Implement** the types in `image.rs`. `resize_area` is a fractional box filter (each destination pixel is the area-weighted mean of the source pixels it covers, result rounded); `from_bgra` drops alpha.
+- [x] **Step 4: Implement** the types in `image.rs`. `resize_area` is a fractional box filter (each destination pixel is the area-weighted mean of the source pixels it covers, result rounded); `from_bgra` drops alpha.
 
-- [ ] **Step 5: Run `cargo test -p vision`**, expected PASS.
+- [x] **Step 5: Run `cargo test -p vision`**, expected PASS.
 
-- [ ] **Step 6: Commit** `git add Cargo.toml .gitignore crates/vision && git commit -m "Port: Rust workspace, vision image types"`
+- [x] **Step 6: Commit** `git add Cargo.toml .gitignore crates/vision && git commit -m "Port: Rust workspace, vision image types"`
 
 ### Task 2: Masked template matching
 
@@ -92,7 +94,7 @@ Expected: a cargo version ≥ 1.85 (edition 2024). Create the workspace and an e
 
 The score equals OpenCV `TM_CCOEFF_NORMED` with a binary mask: the Pearson correlation between template and window over the mask pixels. Zero variance or NaN gives 0. Implementation: precompute each template's zero-mean values on the mask (so the numerator is `Σ t'_k · I_k`), compute `Σ I` and `Σ I²` over the mask once per position (shared by all templates), iterate a list of mask offsets (sparse), rows in parallel with `rayon`.
 
-- [ ] **Step 1: Write the failing tests:**
+- [x] **Step 1: Write the failing tests:**
 
 ```rust
 #[test] fn exact_copy_scores_one_at_its_position() { /* random 60x40 image, template = crop at (17, 9) size 11x11, full mask -> max_loc == (17, 9, ~1.0) */ }
@@ -103,10 +105,10 @@ The score equals OpenCV `TM_CCOEFF_NORMED` with a binary mask: the Pearson corre
 #[test] fn clear_disk_zeroes_a_circle() { /* r = 2 around (5,5) zeroes (5,3) and (7,5) but not (8,5) */ }
 ```
 
-- [ ] **Step 2: Run `cargo test -p vision template`**, expected FAIL.
-- [ ] **Step 3: Implement** `template.rs` as described.
-- [ ] **Step 4: Run `cargo test -p vision`**, expected PASS.
-- [ ] **Step 5: Commit** `git commit -am "Port: masked template matching"` (add the new file first).
+- [x] **Step 2: Run `cargo test -p vision template`**, expected FAIL.
+- [x] **Step 3: Implement** `template.rs` as described.
+- [x] **Step 4: Run `cargo test -p vision`**, expected PASS.
+- [x] **Step 5: Commit** `git commit -am "Port: masked template matching"` (add the new file first).
 
 ### Task 3: Mod data and text normalization
 
@@ -128,7 +130,7 @@ Exact rules (from `tools/gen_mods/gen_mods.py` and `prototype/match.py`):
 - `partial_ratio` = rapidfuzz `fuzz.partial_ratio` for a needle ≤ 64 chars: best `ratio` of the needle against every window of the needle's length in the haystack **and** against the shorter windows at both ends (prefixes and suffixes of the haystack shorter than the needle).
 - `parse_header`: `up = text.to_uppercase().trim()`; `None` if `up` is longer than 28 chars or `partial_ratio("GAIN", up) < 75`; best key of `PLAYER`, `MINION`, `BOSS` by `partial_ratio` (first max wins); `Some(target)` if that score ≥ 80.
 
-- [ ] **Step 1: Write the failing tests** (`modules/altar/src/text.rs`, `data.rs`):
+- [x] **Step 1: Write the failing tests** (`modules/altar/src/text.rs`, `data.rs`):
 
 ```rust
 #[test] fn normalize_fixes_ocr_slips() {
@@ -160,10 +162,10 @@ Exact rules (from `tools/gen_mods/gen_mods.py` and `prototype/match.py`):
 #[test] fn loads_all_cards() { /* load_cards(repo_data_dir()/"mods.json") has 201 cards; first id "CleansingAltarUpsideBossChaosOrb", ranges[0] == [[2.0, 4.0]] */ }
 ```
 
-- [ ] **Step 2: Run `cargo test -p altar`**, expected FAIL.
-- [ ] **Step 3: Implement** `data.rs` and `text.rs` (regexes compiled once with `std::sync::LazyLock`).
-- [ ] **Step 4: Run `cargo test -p altar`**, expected PASS.
-- [ ] **Step 5: Commit** `git add modules/altar Cargo.toml && git commit -m "Port: altar mod data and text normalization"`
+- [x] **Step 2: Run `cargo test -p altar`**, expected FAIL.
+- [x] **Step 3: Implement** `data.rs` and `text.rs` (regexes compiled once with `std::sync::LazyLock`).
+- [x] **Step 4: Run `cargo test -p altar`**, expected PASS.
+- [x] **Step 5: Commit** `git add modules/altar Cargo.toml && git commit -m "Port: altar mod data and text normalization"`
 
 ### Task 4: Box matching and value filling
 
@@ -187,7 +189,7 @@ Port `prototype/match.py` `_candidates`, `match_box` and `_fill_values` behavior
 - `matching_blocks` is a port of Python `difflib.SequenceMatcher(None, a, b, autojunk=False).get_matching_blocks()` (recursive longest-match, no junk heuristics, trailing `(len_a, len_b, 0)` sentinel, adjacent blocks merged).
 - `fill_values`: convert `4,3` → `4.3` in the OCR line first; tokenize both lines to words of `[A-Z#]+` after replacing value slots with ` # ` and uppercasing; map slots via `matching_blocks`; unmatched slots keep the data text.
 
-- [ ] **Step 1: Write the failing tests** (`modules/altar/tests/matching.rs`), ported from `tests/test_match.py` with the same lines and expected card ids:
+- [x] **Step 1: Write the failing tests** (`modules/altar/tests/matching.rs`), ported from `tests/test_match.py` with the same lines and expected card ids:
   - `interleaved_multi_line_mods` (boss; 6 lines; no rest; ids `TangledAltarDownsideBossPhysToAddAsLightning`, `TangledAltarDownsideBossPhysToAddAsCold`, `TangledAltarUpsideBossDivinationCardsCurrencyBasic`)
   - `shared_line_goes_to_the_right_mods` (boss; ids `CleansingAltarDownsideBossPhysToAddAsFire`, `CleansingAltarDownsideBossCoveredInAshOnHit`)
   - `same_mod_twice` (player; `TangledAltarUpsidePlayerIncreasedRarity` × 2)
@@ -196,10 +198,10 @@ Port `prototype/match.py` `_candidates`, `match_box` and `_fill_values` behavior
   - `display_fills_read_values_into_clean_text` (`["33% chance to be Sapped when Hit", "All Damage taken from Hits can Sap you"]`)
   - `fill_values_aligns_by_words`, the three cases from the Python test, e.g. `fill_values("-(60-40)% to Cold Resistance", "-52% TO COLD RESISTANCE") == "-52% to Cold Resistance"`
   - `matching_blocks_like_difflib`: `a = ["A","B","C","D"]`, `b = ["B","C","X","D"]` → `[(1,0,2), (3,3,1), (4,4,0)]`
-- [ ] **Step 2: Run `cargo test -p altar --test matching`**, expected FAIL.
-- [ ] **Step 3: Implement** `fill.rs` and `matching.rs`.
-- [ ] **Step 4: Run `cargo test -p altar`**, expected PASS.
-- [ ] **Step 5: Commit** `git commit -m "Port: exact-cover box matching and value filling"` (after `git add`).
+- [x] **Step 2: Run `cargo test -p altar --test matching`**, expected FAIL.
+- [x] **Step 3: Implement** `fill.rs` and `matching.rs`.
+- [x] **Step 4: Run `cargo test -p altar`**, expected PASS.
+- [x] **Step 5: Commit** `git commit -m "Port: exact-cover box matching and value filling"` (after `git add`).
 
 ### Task 5: Profiles and verdict engine
 
@@ -221,7 +223,7 @@ Port `prototype/match.py` `_candidates`, `match_box` and `_fill_values` behavior
 
 Port `prototype/verdict.py` exactly (rules, texts, "unrated" position `10^6`, key columns get `UpKind::Top` but keep their rank, CONSIDER-beats-TAKE when its rank is strictly higher, ties prefer the top option, minions as neutral default).
 
-- [ ] **Step 1: Write the failing tests** (`modules/altar/tests/verdict.rs`): port every test of `tests/test_verdict.py` 1:1 (same profiles, ids and expected verdicts/texts), including `test_verdict_table` as a table over the 8 rows, `test_default_profile_loads` (reads `data/profiles/default.json`, read-only, top ids not empty) and `test_old_profiles_are_upgraded_to_columns`. Add:
+- [x] **Step 1: Write the failing tests** (`modules/altar/tests/verdict.rs`): port every test of `tests/test_verdict.py` 1:1 (same profiles, ids and expected verdicts/texts), including `test_verdict_table` as a table over the 8 rows, `test_default_profile_loads` (reads `data/profiles/default.json`, read-only, top ids not empty) and `test_old_profiles_are_upgraded_to_columns`. Add:
 
 ```rust
 #[test] fn profile_with_missing_parts_loads() {
@@ -231,10 +233,10 @@ Port `prototype/verdict.py` exactly (rules, texts, "unrated" position `10^6`, ke
 }
 ```
 
-- [ ] **Step 2: Run `cargo test -p altar --test verdict`**, expected FAIL.
-- [ ] **Step 3: Implement** `verdict.rs`.
-- [ ] **Step 4: Run `cargo test -p altar`**, expected PASS.
-- [ ] **Step 5: Commit** `git commit -m "Port: profiles and verdict engine"` (after `git add`).
+- [x] **Step 2: Run `cargo test -p altar --test verdict`**, expected FAIL.
+- [x] **Step 3: Implement** `verdict.rs`.
+- [x] **Step 4: Run `cargo test -p altar`**, expected PASS.
+- [x] **Step 5: Commit** `git commit -m "Port: profiles and verdict engine"` (after `git add`).
 
 ### Task 6: OCR crate (Windows.Media.Ocr)
 
@@ -247,8 +249,8 @@ Port `prototype/verdict.py` exactly (rules, texts, "unrated" position `10^6`, ke
 
 Use the `windows` crate (features for `Media_Ocr`, `Globalization`, `Graphics_Imaging`, `Storage_Streams`, `Foundation`, `Foundation_Collections`): `OcrEngine::TryCreateFromLanguage`, `SoftwareBitmap::CreateCopyFromBuffer` with `BitmapPixelFormat::Bgra8` (gray → B=G=R, A=255, buffer via `DataWriter`), `RecognizeAsync(...)` awaited by blocking `.get()`. A failed `TryCreateFromLanguage` becomes `Err("Windows OCR language <lang> is not installed")`.
 
-- [ ] **Step 1: Create the fixture**: render `PLAYER GAINS:` in black on white, Arial 36 px, ~400×60, with Pillow; save as `crates/ocr/tests/fixtures/header.png`.
-- [ ] **Step 2: Write the failing tests:**
+- [x] **Step 1: Create the fixture**: render `PLAYER GAINS:` in black on white, Arial 36 px, ~400×60, with Pillow; save as `crates/ocr/tests/fixtures/header.png`.
+- [x] **Step 2: Write the failing tests:**
 
 ```rust
 #[test] fn reads_a_rendered_line() { /* Ocr::new("en-US"), read fixture (to gray) -> exactly one line, text == "PLAYER GAINS:", box inside the image */ }
@@ -256,10 +258,10 @@ Use the `windows` crate (features for `Media_Ocr`, `Globalization`, `Graphics_Im
 #[test] fn blank_image_reads_nothing() { /* 200x50 white -> empty vec */ }
 ```
 
-- [ ] **Step 3: Run `cargo test -p ocr`**, expected FAIL.
-- [ ] **Step 4: Implement** `lib.rs`.
-- [ ] **Step 5: Run `cargo test -p ocr`**, expected PASS.
-- [ ] **Step 6: Commit** `git add crates/ocr Cargo.toml && git commit -m "Port: Windows OCR crate"`
+- [x] **Step 3: Run `cargo test -p ocr`**, expected FAIL.
+- [x] **Step 4: Implement** `lib.rs`.
+- [x] **Step 5: Run `cargo test -p ocr`**, expected PASS.
+- [x] **Step 6: Commit** `git add crates/ocr Cargo.toml && git commit -m "Port: Windows OCR crate"`
 
 ### Task 7: Stage 1 detection
 
@@ -272,7 +274,7 @@ Use the `windows` crate (features for `Media_Ocr`, `Globalization`, `Graphics_Im
 
 Port `prototype/detect.py` with its constants: `COARSE_SCALE = 0.25`, `FINE_SCALE = 0.5`, `COARSE_THRESHOLD = 0.35`, `THRESHOLD = 0.55`, `RING = (52, 63)`, `FINE_WINDOW = 12`, `max_icons = 6`, candidate loop up to `2 × max_icons`, suppression radius `int(63 × 0.25 × 1.5) = 23` at the coarse scale, skip a window smaller than the fine template, accept a new icon only if it is more than `RING.1` away in x or y from every accepted one. Ring mask: radius = template size / 2 (70); pixels with distance in `[52, 63]` plus the divider bar `|dy| ≤ 4 && r < 52`; mask resized with `resize_nearest` to each scaled template size. `altar_type`: patch of half-size `RING.0 - 4` around the center; vivid = `S > 90 && V > 70`; red = `H < 20 || H > 165`, blue = `80 < H < 125`; `Exarch` if red > blue, else `Eater`.
 
-- [ ] **Step 1: Write the failing tests** (`modules/altar/tests/detect.rs`). Build synthetic frames: a 1200×700 frame of dark noise (seeded, values 10–60) with an icon PNG pasted at a known top-left.
+- [x] **Step 1: Write the failing tests** (`modules/altar/tests/detect.rs`). Build synthetic frames: a 1200×700 frame of dark noise (seeded, values 10–60) with an icon PNG pasted at a known top-left.
 
 ```rust
 #[test] fn finds_a_pasted_icon() { /* eater icon at top-left (400, 250) -> one Icon with |x - 470| <= 2, |y - 320| <= 2, score >= 0.66; altar_type == Eater */ }
@@ -282,10 +284,10 @@ Port `prototype/detect.py` with its constants: `COARSE_SCALE = 0.25`, `FINE_SCAL
 #[test] fn icon_cut_off_at_edge_is_skipped() { /* icon pasted at top-left (-60, 300), i.e. partly outside -> no panic, empty result */ }
 ```
 
-- [ ] **Step 2: Run `cargo test -p altar --test detect`**, expected FAIL.
-- [ ] **Step 3: Implement** `detect.rs`; copy the assets.
-- [ ] **Step 4: Run `cargo test -p altar`**, expected PASS.
-- [ ] **Step 5: Commit** `git add modules/altar && git commit -m "Port: altar icon detection"`
+- [x] **Step 2: Run `cargo test -p altar --test detect`**, expected FAIL.
+- [x] **Step 3: Implement** `detect.rs`; copy the assets.
+- [x] **Step 4: Run `cargo test -p altar`**, expected PASS.
+- [x] **Step 5: Commit** `git add modules/altar && git commit -m "Port: altar icon detection"`
 
 ### Task 8: Stage 2 reading
 
@@ -304,7 +306,7 @@ Port `prototype/detect.py` with its constants: `COARSE_SCALE = 0.25`, `FINE_SCAL
 
 Port `prototype/read.py` with `SEARCH_HALF_WIDTH = 650`, `SEARCH_HEIGHT = 320`, `UPSCALE = 2`, `TEXT_BRIGHTNESS = 110`, `CENTER_TOLERANCE = 20`, `MAX_FRAGMENT_GAP = 220`, `LINE_GAP = 22` (first gap may be `3 × LINE_GAP`), OCR coordinates mapped back by `/ UPSCALE` plus the region offset, header cut (lines before the first header line dropped), target fallback to the first match's card target, altar dropped when no option has a match. An empty crop returns no lines (not an error).
 
-- [ ] **Step 1: Write the failing tests** (pure functions, no OCR; `modules/altar/tests/read.rs`):
+- [x] **Step 1: Write the failing tests** (pure functions, no OCR; `modules/altar/tests/read.rs`):
 
 ```rust
 #[test] fn merge_rows_joins_fragments_of_one_row() { /* "HITS ALWAYS" (x 100–300, y 10–30) + "SHOCK" (x 420–500, y 12–31) -> one line "HITS ALWAYS SHOCK", x1 500 */ }
@@ -316,10 +318,10 @@ Port `prototype/read.py` with `SEARCH_HALF_WIDTH = 650`, `SEARCH_HEIGHT = 320`, 
 
 The last test needs OCR and runs on Windows only (it is the only one using `Reader`).
 
-- [ ] **Step 2: Run `cargo test -p altar --test read`**, expected FAIL.
-- [ ] **Step 3: Implement** `read.rs`.
-- [ ] **Step 4: Run `cargo test -p altar`**, expected PASS.
-- [ ] **Step 5: Commit** `git commit -m "Port: altar box reading"` (after `git add`).
+- [x] **Step 2: Run `cargo test -p altar --test read`**, expected FAIL.
+- [x] **Step 3: Implement** `read.rs`.
+- [x] **Step 4: Run `cargo test -p altar`**, expected PASS.
+- [x] **Step 5: Commit** `git commit -m "Port: altar box reading"` (after `git add`).
 
 ### Task 9: Evaluate binary and golden test (parity gate)
 
@@ -333,7 +335,7 @@ The last test needs OCR and runs on Windows only (it is the only one using `Read
 
 Same rules as `prototype/evaluate.py`: screens `screen_*.png` sorted by name, `ICON_TOLERANCE = 40`, `"mods": null` skipped, option correct when target and multiset of card ids match, timing per screen covers the whole `read_altars` call. The binary runs `evaluate` on the default fixtures and prints the report.
 
-- [ ] **Step 1: Write the failing golden test:**
+- [x] **Step 1: Write the failing golden test:**
 
 ```rust
 #[test] fn recognition_matches_the_prototype() {
@@ -345,11 +347,11 @@ Same rules as `prototype/evaluate.py`: screens `screen_*.png` sorted by name, `I
 }
 ```
 
-- [ ] **Step 2: Run `cargo test -p altar --release --test golden -- --nocapture`**, expected FAIL (missing `evaluate`).
-- [ ] **Step 3: Implement** `evaluate.rs` and the binary.
-- [ ] **Step 4: Run `cargo test -p altar --release --test golden -- --nocapture`**, expected PASS. Then `cargo run -p altar --release --bin evaluate` and compare with `.venv\Scripts\python -m prototype.evaluate`: same detections, ≥ 84/85 options, median time per screen ≤ 244 ms. If slower, profile `match_masked` first (Task 2) before touching anything else.
-- [ ] **Step 5: Run the whole suite** `cargo test --workspace --release` and `.venv\Scripts\python -m pytest -q`; both green.
-- [ ] **Step 6: Update `plans/Plan.md`** Phase 4 with a short "Plan A done" entry (Rust result line, timing, crates) and commit: `git add modules/altar plans/Plan.md && git commit -m "Port: evaluate binary, Rust pipeline matches the prototype"`
+- [x] **Step 2: Run `cargo test -p altar --release --test golden -- --nocapture`**, expected FAIL (missing `evaluate`).
+- [x] **Step 3: Implement** `evaluate.rs` and the binary.
+- [x] **Step 4: Run `cargo test -p altar --release --test golden -- --nocapture`**, expected PASS. Then `cargo run -p altar --release --bin evaluate` and compare with `.venv\Scripts\python -m prototype.evaluate`: same detections, ≥ 84/85 options, median time per screen ≤ 244 ms. If slower, profile `match_masked` first (Task 2) before touching anything else.
+- [x] **Step 5: Run the whole suite** `cargo test --workspace --release` and `.venv\Scripts\python -m pytest -q`; both green.
+- [x] **Step 6: Update `plans/Plan.md`** Phase 4 with a short "Plan A done" entry (Rust result line, timing, crates) and commit: `git add modules/altar plans/Plan.md && git commit -m "Port: evaluate binary, Rust pipeline matches the prototype"`
 
 ---
 

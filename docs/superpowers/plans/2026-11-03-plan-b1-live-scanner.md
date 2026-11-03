@@ -1,6 +1,8 @@
 # Plan B1 – Live scanner (headless) Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
+
+**Status:** ⏸ Paused 2026-11-03 on branch `port/plan-b1`. Tasks 1–7 done and reviewed. Task 8 not done: partial work in `git stash` "b1-task8-partial"; resume by re-dispatching Task 8 (ledger: `.superpowers/sdd/2026-11-03-plan-b1-live-scanner/progress.md`), then final branch review, merge, user's in-game test.
 
 **Goal:** A console program `pov-scan` that finds the running PoE window, knows from the game log whether the player is in a map, captures the window with Windows.Graphics.Capture only then, and prints the altar recommendations live, within the CPU budget.
 
@@ -47,14 +49,14 @@ Measured in Plan A: `to_gray` + `find_icons` on a 3440×1440 frame = 141 ms CPU 
 - `resize_area`: when `1/scale` is an integer `k` and both dimensions are divisible by `k`, average exact `k×k` blocks with integer sums (result identical to the general path, which stays for other cases; rounding as today).
 - `match_masked`: restructure so the inner loop runs along x and auto-vectorizes: for each mask offset `(dx, dy, t'_k)`, for each output row `y`, `acc[x] += t'_k * I[y+dy][x+dx]` over a row slice (same for `Σ I` and `Σ I²` with the unweighted mask). Run single-threaded; remove the rayon parallelism from this function so a scan never fans out over all cores while the game runs. Scores must stay within 1e-4 of the current implementation.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
   - `image.rs`: `resize_area_fast_path_matches_general_path` — a seeded random 64×48 image at scale 0.25 and 0.5 gives exactly the same pixels as a private `resize_area_general` (keep the old code under that name, `#[cfg(test)]`-visible).
   - `template.rs`: `vectorized_matches_reference` — a seeded random 120×80 image, two 11×11 templates sharing a sparse ring mask: every score within 1e-4 of a brute-force f64 Pearson reference written in the test.
   - `template.rs`: `#[ignore]` bench `bench_detection_cpu` stays/updates to report single-threaded time for an 860×360 image with two 35×35 ring templates.
-- [ ] **Step 2: Run `cargo test -p vision`**, expected: the reference test passes already (current code is correct), the fast-path test fails to compile (missing `resize_area_general`). That is the RED state.
-- [ ] **Step 3: Implement** the fast path and the restructured `match_masked`.
-- [ ] **Step 4: Run** `cargo test -p vision --release`, then `cargo test -p altar --release --test golden -- --ignored` (unchanged result), then measure: a small `#[ignore]` test in `modules/altar/tests/detect.rs` named `bench_find_icons_screen_02` that loads `tests/fixtures/screens/screen_02.png` (skip if absent), runs `to_gray` + `find_icons` 20× and prints the median. Expected ≤ 40 ms.
-- [ ] **Step 5: Commit** `git commit -am "Live: single-threaded vectorized detection, exact integer downscale"` (add new files first).
+- [x] **Step 2: Run `cargo test -p vision`**, expected: the reference test passes already (current code is correct), the fast-path test fails to compile (missing `resize_area_general`). That is the RED state.
+- [x] **Step 3: Implement** the fast path and the restructured `match_masked`.
+- [x] **Step 4: Run** `cargo test -p vision --release`, then `cargo test -p altar --release --test golden -- --ignored` (unchanged result), then measure: a small `#[ignore]` test in `modules/altar/tests/detect.rs` named `bench_find_icons_screen_02` that loads `tests/fixtures/screens/screen_02.png` (skip if absent), runs `to_gray` + `find_icons` 20× and prints the median. Expected ≤ 40 ms.
+- [x] **Step 5: Commit** `git commit -am "Live: single-threaded vectorized detection, exact integer downscale"` (add new files first).
 
 ### Task 2: Core crate: app paths, settings and profiles
 
@@ -72,16 +74,16 @@ Measured in Plan A: `to_gray` + `find_icons` on a 3440×1440 frame = 141 ms CPU 
   - `pub fn active_profile_path(paths: &AppPaths, s: &Settings) -> PathBuf`: `user/profiles/altar/<profile>` if it exists, else `data/profiles/<profile>` if it exists, else `data/profiles/default.json`.
   - `pub fn import_prototype(paths: &AppPaths, repo: &Path) -> anyhow::Result<ImportReport>`: copies `repo/data/profiles/*.json` except `default.json` and `empty.json` into `user/profiles/altar/` (never overwriting existing files), and if `user/settings.json` does not exist, creates it from `repo/settings.json` (prototype keys become `modules.altar.*`). `ImportReport { profiles: Vec<String>, settings: bool }`.
 
-- [ ] **Step 1: Write the failing tests** (`crates/core/src/*.rs`, all on `tempfile::tempdir()` paths via `AppPaths::with`):
+- [x] **Step 1: Write the failing tests** (`crates/core/src/*.rs`, all on `tempfile::tempdir()` paths via `AppPaths::with`):
   - `missing_settings_file_gives_defaults`, `invalid_settings_file_gives_defaults` (file contains `{not json`), `partial_settings_keep_other_defaults` (`{"modules": {"altar": {"hud_font_size": 20}}}` → font 20, rest default).
   - `clean_altar_clamps_like_the_prototype`: font 99 → 24, font "x" → 15 (via JSON with a string), tiers "both" → "highlight", opacity 0.04 → 0.1, opacity 0.678 → 0.68, cards "weird" → "short".
   - `save_then_reload_round_trips` and `reload_if_changed_sees_external_edits` (write the file directly after `open`, bump mtime, `reload_if_changed()` returns true and `get()` shows the new value).
   - `active_profile_prefers_user_dir`, `active_profile_falls_back_to_shipped`, `missing_profile_name_falls_back_to_default` (path resolution only; a profile file with broken JSON is handled by `ProfileCache` in Task 6).
   - `import_prototype_copies_user_profiles_and_settings`: fake repo dir with `data/profiles/{default,empty,maps-eater}.json` and `settings.json` `{"profile": "maps-eater.json", "hud_font_size": 15}` → only `maps-eater.json` copied, settings created with `modules.altar.profile == "maps-eater.json"`; second run copies nothing and leaves settings untouched.
-- [ ] **Step 2: Run `cargo test -p pov-core`**, expected FAIL (compile).
-- [ ] **Step 3: Implement** the three modules.
-- [ ] **Step 4: Run `cargo test -p pov-core`**, expected PASS.
-- [ ] **Step 5: Commit** `git add crates/core Cargo.toml Cargo.lock && git commit -m "Live: core crate with app paths, settings and profiles"`
+- [x] **Step 2: Run `cargo test -p pov-core`**, expected FAIL (compile).
+- [x] **Step 3: Implement** the three modules.
+- [x] **Step 4: Run `cargo test -p pov-core`**, expected PASS.
+- [x] **Step 5: Commit** `git add crates/core Cargo.toml Cargo.lock && git commit -m "Live: core crate with app paths, settings and profiles"`
 
 ### Task 3: Game log watcher
 
@@ -97,16 +99,16 @@ Measured in Plan A: `to_gray` + `find_icons` on a 3440×1440 frame = 141 ms CPU 
   - `pub fn log_files(poe_dir: &Path) -> Vec<PathBuf>`: existing `logs/LatestClient.txt` first, then `logs/Client.txt`.
   - `pub struct LogWatcher` with `LogWatcher::new(path: PathBuf) -> LogWatcher`, `poll(&mut self) -> Option<Area>` (returns the current area: on the first poll reads only the last 256 KiB to find the newest area line, then only new bytes since the last poll; handles truncation/rotation by restarting from the end; a missing file returns `None` without error).
 
-- [ ] **Step 1: Write the failing tests** (`log.rs`):
+- [x] **Step 1: Write the failing tests** (`log.rs`):
   - `parses_the_real_line_format`: the verified line from Global Constraints → `Area { id: "MapWorldsDunes", level: 83, kind: Map }`; a hideout line `HideoutWorldTurtle` → `Hideout`; `2_11_endgame_town` → `Town`; a chat line containing the word "area" → `None`.
   - `watcher_follows_appended_lines` (temp file: write a hideout line, poll → Hideout; append a map line, poll → Map; poll again without changes → still Map).
   - `reads_only_the_tail_of_a_large_log`: temp file with 50 MiB of filler lines, then one map line → first poll returns Map, and the watcher read at most 256 KiB + appended bytes (expose `bytes_read()` for the test).
   - `missing_log_gives_unknown_area`: path that does not exist → `None`, no panic; creating the file later and appending a line → next poll returns that area.
   - `truncated_log_restarts`: file shrinks (rewrite with one town line) → poll returns Town.
-- [ ] **Step 2: Run `cargo test -p pov-game`**, expected FAIL (compile).
-- [ ] **Step 3: Implement** `log.rs` (`regex` crate is enough here; no look-around needed).
-- [ ] **Step 4: Run `cargo test -p pov-game`**, expected PASS.
-- [ ] **Step 5: Commit** `git add crates/game Cargo.toml Cargo.lock && git commit -m "Live: game log watcher"`
+- [x] **Step 2: Run `cargo test -p pov-game`**, expected FAIL (compile).
+- [x] **Step 3: Implement** `log.rs` (`regex` crate is enough here; no look-around needed).
+- [x] **Step 4: Run `cargo test -p pov-game`**, expected PASS.
+- [x] **Step 5: Commit** `git add crates/game Cargo.toml Cargo.lock && git commit -m "Live: game log watcher"`
 
 ### Task 4: PoE window tracker and game context
 
@@ -125,11 +127,11 @@ Measured in Plan A: `to_gray` + `find_icons` on a 3440×1440 frame = 141 ms CPU 
   - `pub struct LiveContext` (implements `ContextSource`): `LiveContext::new(log_override: Option<PathBuf>)`; looks up the window at most every 1 s (cached in between, refreshed every call for `foreground`/`client` cheaply), creates its `LogWatcher` from `log_override` or the PoE exe folder (`log_files(exe.parent())`, first existing) when the window is first found, and polls it every call.
   - `pub struct FixedContext(pub GameContext)` (implements `ContextSource`, for replay and tests).
 
-- [ ] **Step 1: Write the failing tests** (`context.rs`): `in_map_and_poe_active_rules` (table over: no window; window minimized; window not foreground; foreground + area Map; foreground + area None (unknown); foreground + Hideout) checking `poe_active()` and `in_map()`; `fixed_context_returns_its_value`. Window functions are Win32 calls without a deterministic test target: add one test `find_poe_window_is_none_or_consistent` that only asserts consistency if a window is found (`client.w > 0`, `exe` ends with `.exe`), so it passes with or without the game running.
-- [ ] **Step 2: Run `cargo test -p pov-game`**, expected FAIL (compile).
-- [ ] **Step 3: Implement** `window.rs` and `context.rs` (`windows` features: `Win32_Foundation`, `Win32_UI_WindowsAndMessaging`, `Win32_System_Threading`, `Win32_UI_HiDpi`, `Win32_Graphics_Gdi`).
-- [ ] **Step 4: Run `cargo test -p pov-game`**, expected PASS.
-- [ ] **Step 5: Commit** `git commit -m "Live: PoE window tracker and game context"` (after `git add`).
+- [x] **Step 1: Write the failing tests** (`context.rs`): `in_map_and_poe_active_rules` (table over: no window; window minimized; window not foreground; foreground + area Map; foreground + area None (unknown); foreground + Hideout) checking `poe_active()` and `in_map()`; `fixed_context_returns_its_value`. Window functions are Win32 calls without a deterministic test target: add one test `find_poe_window_is_none_or_consistent` that only asserts consistency if a window is found (`client.w > 0`, `exe` ends with `.exe`), so it passes with or without the game running.
+- [x] **Step 2: Run `cargo test -p pov-game`**, expected FAIL (compile).
+- [x] **Step 3: Implement** `window.rs` and `context.rs` (`windows` features: `Win32_Foundation`, `Win32_UI_WindowsAndMessaging`, `Win32_System_Threading`, `Win32_UI_HiDpi`, `Win32_Graphics_Gdi`).
+- [x] **Step 4: Run `cargo test -p pov-game`**, expected PASS.
+- [x] **Step 5: Commit** `git commit -m "Live: PoE window tracker and game context"` (after `git add`).
 
 ### Task 5: Window capture (Windows.Graphics.Capture)
 
@@ -150,14 +152,14 @@ Behavior of `WindowCapture`:
 - `pause` closes the session and frame pool (no capture while no module is active).
 - Window capture never contains our own overlay windows, which is why the window is captured instead of the monitor.
 
-- [ ] **Step 1: Write the failing tests** (`crates/capture/tests/capture.rs`):
+- [x] **Step 1: Write the failing tests** (`crates/capture/tests/capture.rs`):
   - `captures_a_solid_window`: create a top-level Win32 test window (300×200 client, class background brush of solid RGB(200, 30, 60)), show it, pump messages ~300 ms, build a `PoeWindow` for it with `find`-like helpers (`client` from `GetClientRect`+`ClientToScreen`), call `grab` up to 20× with 50 ms pauses until `Some`, then assert the size is 300×200 and the center pixel is `[200, 30, 60]` ±3. Skip (print and return) if `GraphicsCaptureSession::IsSupported()` is false.
   - `pause_then_grab_restarts`: after `pause`, `grab` returns a frame again.
   - `replay_cycles_images`: two 4×4 PNGs written to a temp dir, `hold` 50 ms: first grab returns image A, after 60 ms image B.
-- [ ] **Step 2: Run `cargo test -p pov-capture`**, expected FAIL (compile).
-- [ ] **Step 3: Implement** `lib.rs` (`windows` features for `Graphics_Capture`, `Graphics_DirectX_Direct3D11`, `Win32_Graphics_Direct3D11`, `Win32_Graphics_Dxgi`, `Win32_System_WinRT_Direct3D11`, `Win32_System_WinRT_Graphics_Capture`, `Win32_Graphics_Dwm`, plus those needed by the test window).
-- [ ] **Step 4: Run `cargo test -p pov-capture`**, expected PASS; report the time of one `grab` on a 3440×1440 window if the game or another large window is available (informational).
-- [ ] **Step 5: Commit** `git add crates/capture Cargo.toml Cargo.lock && git commit -m "Live: window capture with Windows.Graphics.Capture"`
+- [x] **Step 2: Run `cargo test -p pov-capture`**, expected FAIL (compile).
+- [x] **Step 3: Implement** `lib.rs` (`windows` features for `Graphics_Capture`, `Graphics_DirectX_Direct3D11`, `Win32_Graphics_Direct3D11`, `Win32_Graphics_Dxgi`, `Win32_System_WinRT_Direct3D11`, `Win32_System_WinRT_Graphics_Capture`, `Win32_Graphics_Dwm`, plus those needed by the test window).
+- [x] **Step 4: Run `cargo test -p pov-capture`**, expected PASS; report the time of one `grab` on a 3440×1440 window if the game or another large window is available (informational).
+- [x] **Step 5: Commit** `git add crates/capture Cargo.toml Cargo.lock && git commit -m "Live: window capture with Windows.Graphics.Capture"`
 
 ### Task 6: Altar live tracker
 
@@ -175,7 +177,7 @@ Behavior of `WindowCapture`:
 
 Port `prototype/live.py` `Scanner.scan` with its constants `TRACK_DISTANCE = 250`, `TRACK_TIMEOUT = 1.5`, `REREAD_INTERVAL = 0.5`, `SAME_ALTAR_OVERLAP = 0.6`, Manhattan icon distance, `_quality` ordering `(complete, match count, -partials, score sum)`, `_same_altar` multiset overlap over `(position, card id)`. Difference from the prototype (spec anti-goal: one bad read must not stop the scanner): an `Err` from `read` for one icon is logged once per altar (to stderr) and that icon is skipped for this scan.
 
-- [ ] **Step 1: Write the failing tests** (`modules/altar/tests/live.rs`, with hand-made `AltarRead` values built from real card ids in `data/mods.json`):
+- [x] **Step 1: Write the failing tests** (`modules/altar/tests/live.rs`, with hand-made `AltarRead` values built from real card ids in `data/mods.json`):
   - `new_altar_is_read_once_when_complete` (the read closure counts calls; three scans 0.25 s apart at the same icon → 1 read).
   - `incomplete_altar_is_reread_every_half_second` (calls at t = 0, 0.25 (no read), 0.5 (read)).
   - `moving_icon_keeps_its_track` (icon moves 200 px → same track, no new read).
@@ -185,10 +187,10 @@ Port `prototype/live.py` `Scanner.scan` with its constants `TRACK_DISTANCE = 250
   - `read_error_skips_only_that_altar` (two icons; read returns `Err` for the first → the second is tracked, the next scan reads the first again).
   - `views_apply_the_profile` (one altar with an upside in the profile's top column → `Verdict::Take` and "Take the top option.").
   - `profile_cache_reloads_on_change_and_survives_broken_files` (temp profile file; edit → new content; overwrite with `{broken` → still the last good profile; cache built on a broken file from the start → the fallback default).
-- [ ] **Step 2: Run `cargo test -p altar --test live`**, expected FAIL (compile).
-- [ ] **Step 3: Implement** `live.rs` and `Reader::with_paths`.
-- [ ] **Step 4: Run `cargo test -p altar`** (normal suite) and the golden test command, expected PASS / unchanged.
-- [ ] **Step 5: Commit** `git commit -m "Live: altar tracker and profile cache"` (after `git add`).
+- [x] **Step 2: Run `cargo test -p altar --test live`**, expected FAIL (compile).
+- [x] **Step 3: Implement** `live.rs` and `Reader::with_paths`.
+- [x] **Step 4: Run `cargo test -p altar`** (normal suite) and the golden test command, expected PASS / unchanged.
+- [x] **Step 5: Commit** `git commit -m "Live: altar tracker and profile cache"` (after `git add`).
 
 ### Task 7: Module contract and runner
 
@@ -205,15 +207,15 @@ Port `prototype/live.py` `Scanner.scan` with its constants `TRACK_DISTANCE = 250
 
 `tick` rules: read the context; a module is active when `wants_frames(ctx)`; modules that became inactive get `on_inactive()` once; if none is active, call `frames.pause()` (once per transition) and return an empty list; otherwise grab one frame (`ctx.poe` must be `Some`, else treat as inactive) and give it to every active module whose interval has elapsed. A grab error or `Ok(None)` returns an empty list and is logged once until the next success. A module `Err` is logged once until its next success and yields no output for that module.
 
-- [ ] **Step 1: Write the failing tests** (`runner.rs`, with a fake module counting calls, a scripted `FixedContext`-like source and a fake `FrameSource` counting `grab`/`pause` calls):
+- [x] **Step 1: Write the failing tests** (`runner.rs`, with a fake module counting calls, a scripted `FixedContext`-like source and a fake `FrameSource` counting `grab`/`pause` calls):
   - `runner_pauses_capture_when_no_module_wants_frames` (context without PoE → no grab, one pause; then PoE active → grab; then PoE gone again → `on_inactive` once, pause once, no grab).
   - `runner_survives_frame_errors` (fake source returns `Err` twice, then a frame → no panic, output on the third tick).
   - `module_error_yields_no_output_but_keeps_running`.
   - `interval_is_respected` (module interval 1 h → `on_frame` once over several ticks).
-- [ ] **Step 2: Run `cargo test -p pov-core`**, expected FAIL (compile).
-- [ ] **Step 3: Implement** `module.rs` and `runner.rs`.
-- [ ] **Step 4: Run `cargo test -p pov-core`**, expected PASS.
-- [ ] **Step 5: Commit** `git commit -m "Live: module contract and runner"` (after `git add`).
+- [x] **Step 2: Run `cargo test -p pov-core`**, expected FAIL (compile).
+- [x] **Step 3: Implement** `module.rs` and `runner.rs`.
+- [x] **Step 4: Run `cargo test -p pov-core`**, expected PASS.
+- [x] **Step 5: Commit** `git commit -m "Live: module contract and runner"` (after `git add`).
 
 ### Task 8: Altar module and the `pov-scan` console app
 

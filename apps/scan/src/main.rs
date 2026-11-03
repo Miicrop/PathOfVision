@@ -3,8 +3,6 @@
 //! Live mode reads the PoE window and game log; `--replay <dir>` cycles through screenshots.
 //! Passive only: it never sends input to the game.
 
-mod stats;
-
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -14,6 +12,7 @@ use std::time::{Duration, Instant};
 use anyhow::{Context, bail};
 use altar::module::AltarModule;
 use pov_capture::{FrameSource, ReplaySource, WindowCapture};
+use pov_core::stats::{Reporter, SharedScans, Timed};
 use pov_core::{AppPaths, Module, ModuleOutput, Runner, SettingsStore, import_prototype};
 use pov_game::{
     Area, AreaKind, ContextSource, FixedContext, GameContext, LiveContext, PoeWindow, Rect, enable_dpi_awareness,
@@ -21,8 +20,6 @@ use pov_game::{
 use windows::Win32::Foundation::{FALSE, TRUE};
 use windows::Win32::System::Console::SetConsoleCtrlHandler;
 use windows::core::BOOL;
-
-use crate::stats::{Reporter, SharedScans, Timed};
 
 const STATS_EVERY: Duration = Duration::from_secs(10);
 const USAGE: &str = "usage: pov-scan [--replay <dir>] [--hold <secs>] [--stats] [--dev] [--import-prototype]";
@@ -111,43 +108,6 @@ fn replay_context(first: &Path) -> anyhow::Result<GameContext> {
     Ok(GameContext { poe: Some(window), area: Some(Area { id: "replay".into(), level: 0, kind: AreaKind::Map }) })
 }
 
-fn status(ctx: &GameContext, altar_enabled: bool) -> &'static str {
-    let Some(w) = &ctx.poe else { return "PoE not found" };
-    if w.minimized || !w.foreground {
-        return "PoE in background – idle";
-    }
-    if !altar_enabled {
-        return "altar module disabled – idle";
-    }
-    match ctx.area.as_ref().map(|a| &a.kind) {
-        None => "area unknown – scanning",
-        Some(AreaKind::Map) => "in map – scanning",
-        Some(AreaKind::Hideout) => "in hideout – idle",
-        Some(AreaKind::Town) => "in town – idle",
-        Some(AreaKind::Other) => "outside maps – idle",
-    }
-}
-
-/// Prints a status line whenever the context changes its meaning.
-struct Announce {
-    inner: Box<dyn ContextSource>,
-    settings: Arc<Mutex<SettingsStore>>,
-    last: Option<&'static str>,
-}
-
-impl ContextSource for Announce {
-    fn current(&mut self) -> GameContext {
-        let ctx = self.inner.current();
-        let enabled = self.settings.lock().unwrap_or_else(|e| e.into_inner()).get().altar.enabled;
-        let s = status(&ctx, enabled);
-        if self.last != Some(s) {
-            println!("[{}] {s}", clock());
-            self.last = Some(s);
-        }
-        ctx
-    }
-}
-
 /// Seconds since start, for log lines.
 fn clock() -> String {
     static START: std::sync::OnceLock<Instant> = std::sync::OnceLock::new();
@@ -204,7 +164,6 @@ fn main() -> anyhow::Result<()> {
             (Box::new(LiveContext::new(log)), Box::new(WindowCapture::new()?))
         }
     };
-    let context = Box::new(Announce { inner: context, settings: settings.clone(), last: None });
 
     // SAFETY: the handler only touches an atomic.
     unsafe { SetConsoleCtrlHandler(Some(on_ctrl), true) }.context("installing the Ctrl+C handler")?;
@@ -226,7 +185,14 @@ fn main() -> anyhow::Result<()> {
     println!("pov-scan running (data {}), Ctrl+C to stop", paths.data.display());
     let mut runner = Runner::new(vec![module], context, frames);
     let mut last = HashMap::new();
-    runner.run(&STOP, &mut |outputs| print_changes(&mut last, outputs));
+    let mut last_status = String::new();
+    runner.run(&STOP, &mut |tick| {
+        if tick.status.text != last_status {
+            println!("[{}] {}", clock(), tick.status.text);
+            last_status = tick.status.text.clone();
+        }
+        print_changes(&mut last, &tick.outputs);
+    });
     if let Some(h) = reporter {
         let _ = h.join();
     }

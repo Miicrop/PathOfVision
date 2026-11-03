@@ -3,7 +3,7 @@
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
-use pov_core::{Module, ModuleOutput};
+use crate::module::{Module, ModuleOutput};
 use pov_game::GameContext;
 use vision::Rgb;
 use windows::Win32::Foundation::FILETIME;

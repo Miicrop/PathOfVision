@@ -279,6 +279,7 @@ dependencies = [
  "serde_json",
  "tempfile",
  "vision",
+ "windows",
 ]
 
 [[package]]

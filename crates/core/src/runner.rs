@@ -4,9 +4,10 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 
 use pov_capture::FrameSource;
-use pov_game::ContextSource;
+use pov_game::{ContextSource, GameContext, PoeWindow};
 
 use crate::module::{Module, ModuleOutput};
+use crate::status::RunnerStatus;
 
 const IDLE_POLL: Duration = Duration::from_millis(500);
 /// Longest single sleep, so `stop` is noticed promptly.
@@ -23,6 +24,16 @@ impl Slot {
     fn due(&self, now: Instant) -> bool {
         self.active && self.last_run.is_none_or(|t| now.saturating_duration_since(t) >= self.module.interval())
     }
+}
+
+/// Result of one runner step.
+#[derive(Clone, Debug)]
+pub struct Tick {
+    pub status: RunnerStatus,
+    /// The PoE window of this step (for the overlay position).
+    pub poe: Option<PoeWindow>,
+    /// Outputs of the modules that ran.
+    pub outputs: Vec<ModuleOutput>,
 }
 
 pub struct Runner {
@@ -49,13 +60,19 @@ impl Runner {
         self
     }
 
-    /// One step: returns the outputs of the modules that ran.
-    pub fn tick(&mut self) -> Vec<ModuleOutput> {
+    /// One step: the current status plus the outputs of the modules that ran.
+    pub fn tick(&mut self) -> Tick {
         let ctx = self.context.current();
+        let outputs = self.step(&ctx);
+        let active = self.slots.iter().filter(|s| s.active).map(|s| s.module.id().to_string()).collect();
+        Tick { status: RunnerStatus::from_context(&ctx, active), poe: ctx.poe, outputs }
+    }
+
+    fn step(&mut self, ctx: &GameContext) -> Vec<ModuleOutput> {
         let now = (self.now)();
         let mut any_active = false;
         for slot in &mut self.slots {
-            let active = ctx.poe.is_some() && slot.module.wants_frames(&ctx);
+            let active = ctx.poe.is_some() && slot.module.wants_frames(ctx);
             if slot.active && !active {
                 slot.module.on_inactive();
                 slot.last_run = None;
@@ -80,13 +97,8 @@ impl Runner {
                 self.grab_error_logged = false;
                 frame
             }
-            Ok(None) => {
-                if !self.grab_error_logged {
-                    eprintln!("capture: no frame available yet");
-                    self.grab_error_logged = true;
-                }
-                return Vec::new();
-            }
+            // No new frame yet: not an error, nothing to report.
+            Ok(None) => return Vec::new(),
             Err(e) => {
                 if !self.grab_error_logged {
                     eprintln!("capture: grab failed: {e:#}");
@@ -102,7 +114,7 @@ impl Runner {
                 continue;
             }
             slot.last_run = Some(now);
-            match slot.module.on_frame(&frame, &ctx) {
+            match slot.module.on_frame(&frame, ctx) {
                 Ok(out) => {
                     slot.error_logged = false;
                     outputs.push(out);
@@ -118,13 +130,10 @@ impl Runner {
         outputs
     }
 
-    /// Loops `tick` until `stop` is set, delivering non-empty results to `sink`.
-    pub fn run(&mut self, stop: &AtomicBool, sink: &mut dyn FnMut(&[ModuleOutput])) {
+    /// Loops `tick` until `stop` is set, delivering every tick to `sink`.
+    pub fn run(&mut self, stop: &AtomicBool, sink: &mut dyn FnMut(&Tick)) {
         while !stop.load(Ordering::Relaxed) {
-            let outputs = self.tick();
-            if !outputs.is_empty() {
-                sink(&outputs);
-            }
+            sink(&self.tick());
             let wait = self.slots.iter().filter(|s| s.active).map(|s| s.module.interval()).min().unwrap_or(IDLE_POLL);
             let end = Instant::now() + wait;
             while !stop.load(Ordering::Relaxed) {
@@ -150,6 +159,7 @@ mod tests {
 
     use super::*;
     use crate::module::{Module, ModuleOutput};
+    use crate::status::PoeState;
 
     #[derive(Default)]
     struct Counts {
@@ -253,32 +263,53 @@ mod tests {
     fn runner_pauses_capture_when_no_module_wants_frames() {
         let ctxs = vec![GameContext::default(), GameContext::default(), active_ctx(), GameContext::default()];
         let (mut r, c) = runner(ctxs, vec![], Duration::ZERO, false);
-        assert!(r.tick().is_empty());
-        assert!(r.tick().is_empty());
+        assert!(r.tick().outputs.is_empty());
+        assert!(r.tick().outputs.is_empty());
         {
             let c = c.lock().unwrap();
             assert_eq!((c.grabs, c.pauses, c.inactive), (0, 1, 0));
         }
-        assert_eq!(r.tick().len(), 1);
+        assert_eq!(r.tick().outputs.len(), 1);
         assert_eq!(c.lock().unwrap().grabs, 1);
-        assert!(r.tick().is_empty());
+        assert!(r.tick().outputs.is_empty());
         let c = c.lock().unwrap();
         assert_eq!((c.grabs, c.pauses, c.inactive), (1, 2, 1));
     }
 
     #[test]
+    fn tick_reports_status_even_when_idle() {
+        let (mut r, _) = runner(vec![GameContext::default()], vec![], Duration::ZERO, false);
+        let t = r.tick();
+        assert_eq!(t.status.poe, PoeState::NotFound);
+        assert!(t.status.active.is_empty() && t.poe.is_none() && t.outputs.is_empty());
+        let (mut r, _) = runner(vec![active_ctx()], vec![], Duration::ZERO, false);
+        let t = r.tick();
+        assert_eq!((t.status.poe, t.status.active), (PoeState::Foreground, vec!["fake".to_string()]));
+        assert_eq!(t.status.text, "in map \u{2013} scanning");
+        assert!(t.poe.is_some());
+    }
+
+    #[test]
+    fn missing_frame_is_silent_and_retried() {
+        let (mut r, c) = runner(vec![active_ctx()], vec![Ok(None)], Duration::ZERO, false);
+        assert!(r.tick().outputs.is_empty());
+        assert_eq!(r.tick().outputs.len(), 1);
+        assert_eq!(c.lock().unwrap().grabs, 2);
+    }
+
+    #[test]
     fn runner_survives_frame_errors() {
         let (mut r, _) = runner(vec![active_ctx()], vec![Err("a".into()), Err("b".into())], Duration::ZERO, false);
-        assert!(r.tick().is_empty());
-        assert!(r.tick().is_empty());
-        assert_eq!(r.tick().len(), 1);
+        assert!(r.tick().outputs.is_empty());
+        assert!(r.tick().outputs.is_empty());
+        assert_eq!(r.tick().outputs.len(), 1);
     }
 
     #[test]
     fn module_error_yields_no_output_but_keeps_running() {
         let (mut r, c) = runner(vec![active_ctx()], vec![], Duration::ZERO, true);
-        assert!(r.tick().is_empty());
-        assert!(r.tick().is_empty());
+        assert!(r.tick().outputs.is_empty());
+        assert!(r.tick().outputs.is_empty());
         assert_eq!(c.lock().unwrap().frames, 2);
     }
 
@@ -291,7 +322,7 @@ mod tests {
             step += 1;
             t0 + Duration::from_secs(step)
         });
-        let total: usize = (0..5).map(|_| r.tick().len()).sum();
+        let total: usize = (0..5).map(|_| r.tick().outputs.len()).sum();
         assert_eq!(total, 1);
         let c = c.lock().unwrap();
         assert_eq!((c.frames, c.grabs), (1, 1));

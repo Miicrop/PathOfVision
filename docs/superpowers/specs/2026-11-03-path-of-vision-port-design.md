@@ -122,7 +122,7 @@ Everything in Plan.md Phases 2–3 and the board round, ported behavior-for-beha
 - Tracking: by position and by content, better read wins, complete altars not re-read, incomplete ones re-read every 0.5 s.
 - Verdict engine with all rules (incl. ADAPT - BRICK, CONSIDER beats TAKE when its upside is further right, key columns, `UNREADABLE`). Port the Python unit tests 1:1.
 - HUD: layout mirroring the game (top box, recommendation, bottom box), verdict colors, target icon halves, up to two altars, aliases and icons from `labels.json`, keyword colors, all HUD settings (font size, tiers style, values, other-option opacity, position). Mod text always from `mods.json`, never raw OCR.
-- Board: all current features unchanged; only the backend adapter `connectBackend()` in `board.js` is replaced by Tauri IPC. **The board's "Settings" panel moves out (user decision):** all HUD options (font size, tier style, values column, other-option opacity, HUD position) go to the settings window, entry "Altars". Card style and target tag stay in the board as quick view toggles, since they only affect the board *(Claude's reading of the user's answer)*. Reward icons move from `prototype/assets/mods/` next to the module's UI. Smooth scrolling must hold at high refresh rates (WebView2 has no 60 fps cap like Qt WebEngine, but verify).
+- Board: all current features unchanged; only the backend adapter `connectBackend()` in `board.js` is replaced by Tauri IPC. **The board's "Settings" panel moves out (user decision):** everything under today's "Settings" button (HUD options: font size, tier style, values column, other-option opacity, HUD position; board options: card style, target tag) goes to the settings window, entry "Altars", and the button disappears from the board. The filter bar stays in the board as it is: Altar, Side, Target, Reward, Search. The board applies card style and target tag changes from the settings window live (settings change event), so this is the one board change beyond the adapter. Reward icons move from `prototype/assets/mods/` next to the module's UI. Smooth scrolling must hold at high refresh rates (WebView2 has no 60 fps cap like Qt WebEngine, but verify).
 - Dev tools: replay mode (run on a folder of screenshots instead of the live screen) and a stats mode (scan timings, CPU) stay available in dev builds.
 
 Python dev tools (`tools/gen_mods`, `tools/gen_board_art`) may stay in Python; they are not shipped *(Claude's call)*. The Python prototype stays in the repo as the reference until parity is shown, then is removed.
@@ -173,7 +173,7 @@ Measured with the same method as Phase 3 (`--stats`, CPU total, in-game FPS with
 - First version is for other players (friends, likely Reddit): multiple resolutions required; the user takes the screenshots.
 - Free, no account, no telemetry, screenshots stay local, open source on GitHub, a good README.
 - GitHub repo is created by the user when the app becomes testable.
-- All HUD options live in the settings window under "Altars".
+- Everything under the board's current "Settings" button moves to the settings window under "Altars"; the board keeps its filter bar (Altar, Side, Target, Reward, Search).
 - Friends provide screenshots for monitors the user does not have.
 
 ## 13. Left to the builder

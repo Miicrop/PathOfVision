@@ -9,3 +9,5 @@ settings.json
 data/profiles/*
 !data/profiles/default.json
 !data/profiles/empty.json
+
+/target/

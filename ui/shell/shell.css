@@ -1,0 +1,93 @@
+/* App shell: sidebar and the pages next to it. Color tokens copied from ui/board/board.css :root. */
+:root {
+  color-scheme: dark;
+  --bg: #0f0e12;
+  --panel: #17161c;
+  --panel-2: #201e27;
+  --line: #2e2b36;
+  --fg: #e7e1d4;
+  --muted: #9b94a7;
+  --gold: #c9aa6b;
+  --eater: #48b8cc;
+  --exarch: #e2683f;
+  --v-take: #5cc46a;
+  --v-avoid: #e04848;
+  --t-brick: #e04a4a;
+  --font-display: "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --font-body: "Segoe UI", system-ui, sans-serif;
+  --sidebar: 200px;
+}
+
+body.has-sidebar { margin-left: var(--sidebar); }
+
+.pov-sidebar {
+  position: fixed; top: 0; bottom: 0; left: 0; width: var(--sidebar); z-index: 100;
+  display: flex; flex-direction: column; gap: 4px; padding: 18px 10px 12px;
+  background: var(--panel); border-right: 1px solid var(--line);
+  font-family: var(--font-body); font-size: 14px;
+}
+.pov-sidebar .brand {
+  font-family: var(--font-display); font-weight: 700; font-size: 19px; color: var(--gold);
+  font-variant: small-caps; letter-spacing: .03em; padding: 0 10px 14px; margin: 0;
+}
+.pov-sidebar a {
+  display: block; padding: 7px 10px; border-radius: 4px; border: 1px solid transparent;
+  color: var(--muted); text-decoration: none;
+}
+.pov-sidebar a:hover { color: var(--fg); border-color: var(--line); }
+.pov-sidebar a[aria-current="page"] { color: var(--fg); background: var(--panel-2); border-color: var(--gold); }
+.pov-sidebar .spacer { flex: 1; }
+.pov-sidebar .gear {
+  align-self: flex-start; background: transparent; border: 1px solid transparent; border-radius: 4px;
+  color: var(--muted); cursor: pointer; padding: 4px 8px;
+  font: 20px/1 "Segoe UI Symbol", var(--font-body);
+}
+.pov-sidebar .gear:hover { color: var(--gold); border-color: var(--line); }
+.pov-sidebar :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+/* Pages next to the sidebar (Home, Settings). */
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { background: var(--bg); color: var(--fg); margin: 0; }
+body { font-family: var(--font-body); font-size: 14px; line-height: 1.4; }
+.page { max-width: 760px; padding: 24px 28px 40px; display: flex; flex-direction: column; gap: 16px; }
+.page h1 {
+  font-family: var(--font-display); font-weight: 700; font-size: 26px; margin: 0; color: var(--gold);
+  letter-spacing: .02em; font-variant: small-caps;
+}
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; }
+.card h2 {
+  font-family: var(--font-display); font-weight: 700; font-size: 19px; margin: 0 0 10px;
+  font-variant: small-caps; letter-spacing: .04em;
+}
+.muted { color: var(--muted); }
+.card p { margin: 0; }
+.facts { display: grid; grid-template-columns: max-content 1fr; gap: 6px 18px; margin: 0 0 10px; }
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; vertical-align: 1px; background: var(--muted); }
+.dot.on { background: var(--v-take); }
+.dot.off { background: var(--v-avoid); }
+.status-line { border-top: 1px solid var(--line); padding-top: 10px; }
+.notice { border: 1px solid var(--line); background: var(--panel); border-radius: 4px; padding: 8px 12px; color: var(--muted); font-size: 13px; }
+.notice.error { border-color: var(--t-brick); color: var(--fg); }
+.card .notice { margin-top: 10px; }
+.module-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.module-head h2 { margin-bottom: 6px; }
+
+/* On/off switch: a checkbox with a track. */
+.switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--muted); user-select: none; }
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switch .track {
+  position: relative; width: 38px; height: 20px; border-radius: 10px; background: var(--panel-2);
+  border: 1px solid var(--line); transition: background .12s, border-color .12s;
+}
+.switch .track::after {
+  content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--muted); transition: transform .12s, background .12s;
+}
+.switch input:checked + .track { border-color: var(--gold); }
+.switch input:checked + .track::after { transform: translateX(18px); background: var(--gold); }
+.switch input:checked ~ .state { color: var(--fg); }
+.switch input:focus-visible + .track { outline: 2px solid var(--gold); outline-offset: 2px; }
+.switch input:disabled ~ * { opacity: .5; cursor: default; }

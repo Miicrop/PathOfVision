@@ -1,0 +1,6 @@
+{
+  "identifier": "default",
+  "description": "Pages of the app: core IPC (commands, events) only.",
+  "windows": ["main", "hud", "settings"],
+  "permissions": ["core:default"]
+}

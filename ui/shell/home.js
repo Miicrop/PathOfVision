@@ -1,0 +1,55 @@
+// Home: runner status and the module switches.
+(function () {
+  "use strict";
+
+  const $ = (id) => document.getElementById(id);
+  const POE = {
+    not_found: ["not running", "off"],
+    background: ["in background", ""],
+    foreground: ["in front", "on"],
+  };
+
+  function showStatus(s) {
+    const [text, dot] = POE[s.poe] || [s.poe, ""];
+    $("poe").textContent = text;
+    $("poe-dot").className = "dot " + dot;
+    $("area").textContent = s.area || "unknown";
+    $("status-text").textContent = s.text;
+  }
+
+  function showError(e) {
+    const box = $("error");
+    box.textContent = e ? "Could not save the setting: " + e : "";
+    box.hidden = !e;
+  }
+
+  const toggle = $("altar-enabled");
+  function showSettings(settings) {
+    const on = !!(settings.modules && settings.modules.altar && settings.modules.altar.enabled);
+    toggle.checked = on;
+    toggle.disabled = false;
+    $("altar-state").textContent = on ? "On" : "Off";
+  }
+
+  toggle.addEventListener("change", () => {
+    const wanted = toggle.checked;
+    toggle.disabled = true;
+    window.pov
+      .invoke("settings_set", { section: "altar", key: "enabled", value: wanted })
+      .then((s) => {
+        showError(null);
+        showSettings(s);
+      })
+      .catch((e) => {
+        showError(String(e));
+        toggle.checked = !wanted;
+        toggle.disabled = false;
+        $("altar-state").textContent = toggle.checked ? "On" : "Off";
+      });
+  });
+
+  window.pov.listen("app:status", (e) => showStatus(e.payload));
+  window.pov.listen("settings:changed", (e) => showSettings(e.payload));
+  window.pov.invoke("app_status").then(showStatus, (e) => ($("status-text").textContent = String(e)));
+  window.pov.invoke("settings_get").then(showSettings, (e) => showError(String(e)));
+})();

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Path of Vision</title>
+  <link rel="stylesheet" href="shell.css">
+  <script src="shell.js" defer></script>
+  <script src="home.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <h1>Home</h1>
+
+    <section class="card" aria-labelledby="status-h">
+      <h2 id="status-h">Status</h2>
+      <dl class="facts">
+        <dt>Path of Exile</dt>
+        <dd><span class="dot" id="poe-dot"></span><span id="poe">&hellip;</span></dd>
+        <dt>Area</dt>
+        <dd id="area">&hellip;</dd>
+      </dl>
+      <p class="status-line" id="status-text">&hellip;</p>
+    </section>
+
+    <section class="card" aria-labelledby="altar-h">
+      <div class="module-head">
+        <h2 id="altar-h">Altars</h2>
+        <label class="switch">
+          <input type="checkbox" id="altar-enabled" disabled>
+          <span class="track"></span>
+          <span class="state" id="altar-state">Off</span>
+        </label>
+      </div>
+      <p class="muted">Reads the Eater and Exarch altars in maps and shows the verdicts on the in-game HUD.</p>
+      <p class="notice error" id="error" role="alert" hidden></p>
+    </section>
+  </main>
+</body>
+</html>

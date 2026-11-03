@@ -11,3 +11,4 @@ data/profiles/*
 !data/profiles/empty.json
 
 /target/
+app/gen/

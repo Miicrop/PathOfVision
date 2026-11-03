@@ -1,20 +1,21 @@
 //! The altar module for the runner: detect icons, track and read altars, judge them with the
 //! active profile.
 
+use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex, MutexGuard};
 use std::time::{Duration, Instant};
 
 use pov_core::{AppPaths, Module, ModuleOutput, SettingsStore, active_profile_path};
 use pov_game::GameContext;
-use serde_json::{Value, json};
 use vision::Rgb;
 
-use crate::data::{AltarKind, Target};
+use crate::data::AltarKind;
 use crate::detect::assets_dir;
+use crate::hud::{HudStyle, hud_view};
+use crate::labels::{Label, Watched, load_keywords, load_labels};
 use crate::live::{AltarView, ProfileCache, Tracker};
 use crate::read::Reader;
-use crate::verdict::Pos;
 
 const ID: &str = "altar";
 const INTERVAL: Duration = Duration::from_millis(250);
@@ -25,6 +26,8 @@ pub struct AltarModule {
     reader: Reader,
     tracker: Tracker,
     profiles: ProfileCache,
+    labels: Watched<HashMap<String, Label>>,
+    keywords: Watched<Vec<(String, String)>>,
     start: Instant,
 }
 
@@ -38,6 +41,8 @@ impl AltarModule {
             reader,
             tracker: Tracker::new(),
             profiles: ProfileCache::new(fallback),
+            labels: Watched::new(paths.data.join("labels.json"), load_labels),
+            keywords: Watched::new(paths.data.join("keywords.json"), load_keywords),
             start: Instant::now(),
         })
     }
@@ -53,21 +58,6 @@ fn kind_name(k: AltarKind) -> &'static str {
         AltarKind::Eater => "Eater",
         AltarKind::Exarch => "Exarch",
     }
-}
-
-fn pos_name(p: Pos) -> &'static str {
-    match p {
-        Pos::Top => "top",
-        Pos::Bottom => "bottom",
-    }
-}
-
-fn target_name(t: Option<Target>) -> Option<&'static str> {
-    t.map(|t| match t {
-        Target::Player => "player",
-        Target::Minions => "minions",
-        Target::Boss => "boss",
-    })
 }
 
 fn option_ids(v: &AltarView, i: usize) -> Vec<String> {
@@ -91,38 +81,6 @@ pub fn view_line(v: &AltarView) -> String {
 /// Marks an altar whose text was only partly readable.
 pub fn completeness_suffix(complete: bool) -> &'static str {
     if complete { "" } else { " (partly hidden)" }
-}
-
-pub fn view_json(views: &[AltarView]) -> Value {
-    let altars: Vec<Value> = views
-        .iter()
-        .map(|v| {
-            let options: Vec<Value> = (0..2)
-                .map(|i| {
-                    let o = &v.options[i];
-                    json!({
-                        "position": pos_name(v.altar.options[i].position),
-                        "target": target_name(o.target),
-                        "upsides": o.upsides,
-                        "downsides": o.downsides,
-                        "verdict": v.verdicts[i].verdict.label(),
-                    })
-                })
-                .collect();
-            json!({
-                "altar": kind_name(v.altar.altar),
-                "x": v.altar.icon.x,
-                "y": v.altar.icon.y,
-                "complete": v.complete,
-                "options": options,
-                "recommendation": {
-                    "text": v.recommendation.text,
-                    "choice": v.recommendation.choice.map(pos_name),
-                },
-            })
-        })
-        .collect();
-    json!({ "altars": altars })
 }
 
 impl Module for AltarModule {
@@ -149,18 +107,26 @@ impl Module for AltarModule {
     }
 
     fn on_frame(&mut self, frame: &Rgb, _ctx: &GameContext) -> anyhow::Result<ModuleOutput> {
-        let profile_path = {
+        let (profile_path, style) = {
             let mut store = self.store();
             store.reload_if_changed();
-            active_profile_path(&self.paths, store.get())
+            (active_profile_path(&self.paths, store.get()), HudStyle::from_settings(&store.get().altar))
         };
+        self.labels.refresh();
+        self.keywords.refresh();
         let now = self.start.elapsed().as_secs_f64();
         let icons = self.reader.detector.find_icons(&frame.to_gray());
         let reader = &self.reader;
         self.tracker.scan(now, &icons, &reader.cards, &mut |icon| reader.read_altar(frame, icon));
         let profile = self.profiles.get(&profile_path);
         let views = self.tracker.views(&self.reader.cards, profile);
-        Ok(ModuleOutput { module: ID, lines: views.iter().map(view_line).collect(), view: view_json(&views) })
+        let center = ((frame.w / 2) as i32, (frame.h / 2) as i32);
+        let hud = hud_view(&views, &self.reader.cards, self.labels.get(), self.keywords.get(), style, center);
+        Ok(ModuleOutput {
+            module: ID,
+            lines: views.iter().map(view_line).collect(),
+            view: serde_json::to_value(hud)?,
+        })
     }
 
     fn on_inactive(&mut self) {

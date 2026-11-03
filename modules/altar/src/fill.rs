@@ -8,7 +8,7 @@ use fancy_regex::Regex;
 pub(crate) static NUMBER_RE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"\d+(?:\.\d+)?").unwrap());
 /// "(15-30)" or "100".
-static VALUE_SLOT_RE: LazyLock<Regex> =
+pub(crate) static VALUE_SLOT_RE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"\(-?[\d.]+--?[\d.]+\)|\d+(?:\.\d+)?").unwrap());
 static COMMA_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?<=\d),(?=\d)").unwrap());
 static NON_WORD_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"[^A-Z#]+").unwrap());

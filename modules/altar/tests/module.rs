@@ -55,6 +55,7 @@ fn module_reads_altars_on_a_screenshot() {
         assert!(line.contains("top:") && line.contains("->"), "{line}");
     }
     assert_eq!(out.view["altars"].as_array().map(Vec::len), Some(2));
+    assert_eq!(out.view["style"]["font_size"], 15);
     for (line, a) in out.lines.iter().zip(out.view["altars"].as_array().unwrap()) {
         let complete = a["complete"].as_bool().unwrap();
         assert_eq!(line.ends_with(" (partly hidden)"), !complete, "{line}");

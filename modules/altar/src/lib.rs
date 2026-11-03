@@ -2,6 +2,8 @@ pub mod data;
 pub mod detect;
 pub mod evaluate;
 pub mod fill;
+pub mod hud;
+pub mod labels;
 pub mod live;
 pub mod matching;
 pub mod module;

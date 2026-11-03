@@ -51,27 +51,41 @@ struct Prepared {
 }
 
 /// Masked normalized cross-correlation (TM_CCOEFF_NORMED with a binary mask).
+///
+/// Single-threaded on purpose (it runs next to the game). Each output row is accumulated
+/// in row-sized buffers whose inner loops run along x so they auto-vectorize: the window
+/// sums of I and I^2 come from per-row prefix sums over the mask's horizontal runs, the
+/// numerators from one `acc[x] += t_k * I[y+dy][x+dx]` pass per mask pixel.
 pub fn match_masked(img: &Gray, templates: &[Template]) -> ScoreMap {
-    use rayon::prelude::*;
     let first = &templates[0];
     let (tw, th) = (first.px.w, first.px.h);
     assert!(img.w >= tw && img.h >= th, "image smaller than template");
     let (ow, oh) = (img.w - tw + 1, img.h - th + 1);
 
-    let offsets: Vec<usize> = (0..th)
-        .flat_map(|y| (0..tw).map(move |x| (y, x)))
-        .filter(|&(y, x)| first.mask.px[y * tw + x] > 0)
-        .map(|(y, x)| y * img.w + x)
-        .collect();
-    let toffs: Vec<usize> = (0..th)
-        .flat_map(|y| (0..tw).map(move |x| y * tw + x))
-        .filter(|&i| first.mask.px[i] > 0)
-        .collect();
+    // Mask pixels (dy, dx) in row-major order, and horizontal runs (dy, x0, x1).
+    let on = |y: usize, x: usize| first.mask.px[y * tw + x] > 0;
+    let offsets: Vec<(usize, usize)> =
+        (0..th).flat_map(|y| (0..tw).map(move |x| (y, x))).filter(|&(y, x)| on(y, x)).collect();
+    let mut runs: Vec<(usize, usize, usize)> = Vec::new();
+    for y in 0..th {
+        let mut x = 0;
+        while x < tw {
+            if on(y, x) {
+                let x0 = x;
+                while x < tw && on(y, x) {
+                    x += 1;
+                }
+                runs.push((y, x0, x));
+            } else {
+                x += 1;
+            }
+        }
+    }
     let n = offsets.len();
     let prepared: Vec<Prepared> = templates
         .iter()
         .map(|t| {
-            let vals: Vec<f32> = toffs.iter().map(|&i| t.px.px[i] as f32).collect();
+            let vals: Vec<f32> = offsets.iter().map(|&(y, x)| t.px.px[y * tw + x] as f32).collect();
             let mean = vals.iter().sum::<f32>() / n.max(1) as f32;
             let t: Vec<f32> = vals.iter().map(|v| v - mean).collect();
             let norm = t.iter().map(|v| v * v).sum::<f32>().sqrt();
@@ -83,39 +97,76 @@ pub fn match_masked(img: &Gray, templates: &[Template]) -> ScoreMap {
     if n == 0 {
         return ScoreMap { w: ow, h: oh, v };
     }
-    let px = &img.px;
+
+    let iw = img.w;
+    let fimg: Vec<f32> = img.px.iter().map(|&p| p as f32).collect();
+    // Per-row prefix sums of I and I^2 (row pitch iw + 1); 255^2 * iw fits u32 for any screen.
+    let pw = iw + 1;
+    let mut p1 = vec![0u32; pw * img.h];
+    let mut p2 = vec![0u32; pw * img.h];
+    for (y, row) in img.px.chunks_exact(iw).enumerate() {
+        let (mut a, mut b) = (0u32, 0u32);
+        for (x, &p) in row.iter().enumerate() {
+            let p = p as u32;
+            a += p;
+            b += p * p;
+            p1[y * pw + x + 1] = a;
+            p2[y * pw + x + 1] = b;
+        }
+    }
+
     let nf = n as f64;
-    v.par_chunks_mut(ow).enumerate().for_each(|(y, row)| {
-        for (x, out) in row.iter_mut().enumerate() {
-            let base = y * img.w + x;
-            let (mut s, mut s2) = (0i64, 0i64);
-            for &o in &offsets {
-                let p = px[base + o] as i64;
-                s += p;
-                s2 += p * p;
+    let mut s1 = vec![0u32; ow];
+    let mut s2 = vec![0u32; ow];
+    let mut nums = vec![vec![0f32; ow]; prepared.len()];
+    for (y, out) in v.chunks_exact_mut(ow).enumerate() {
+        s1.fill(0);
+        s2.fill(0);
+        for &(dy, x0, x1) in &runs {
+            let r = (y + dy) * pw;
+            add_run(&mut s1, &p1[r + x0..r + x0 + ow], &p1[r + x1..r + x1 + ow]);
+            add_run(&mut s2, &p2[r + x0..r + x0 + ow], &p2[r + x1..r + x1 + ow]);
+        }
+        for num in &mut nums {
+            num.fill(0.0);
+        }
+        for (k, &(dy, dx)) in offsets.iter().enumerate() {
+            let start = (y + dy) * iw + dx;
+            let row = &fimg[start..start + ow];
+            for (num, p) in nums.iter_mut().zip(&prepared) {
+                let tv = p.t[k];
+                for (acc, &i) in num.iter_mut().zip(row) {
+                    *acc += tv * i;
+                }
             }
-            let var_n = n as i64 * s2 - s * s;
+        }
+        for (x, o) in out.iter_mut().enumerate() {
+            let (s, sq) = (s1[x] as i64, s2[x] as i64);
+            let var_n = n as i64 * sq - s * s;
             if var_n <= 0 {
                 continue;
             }
             let win_norm = (var_n as f64 / nf).sqrt();
             let mut best = f32::NEG_INFINITY;
-            for p in &prepared {
+            for (num, p) in nums.iter().zip(&prepared) {
                 if p.norm == 0.0 {
                     best = best.max(0.0);
                     continue;
                 }
-                let mut num = 0f32;
-                for (&o, &tv) in offsets.iter().zip(&p.t) {
-                    num += tv * px[base + o] as f32;
-                }
-                let sc = (num as f64 / (p.norm as f64 * win_norm)) as f32;
+                let sc = (num[x] as f64 / (p.norm as f64 * win_norm)) as f32;
                 best = best.max(if sc.is_finite() { sc } else { 0.0 });
             }
-            *out = best;
+            *o = best;
         }
-    });
+    }
     ScoreMap { w: ow, h: oh, v }
+}
+
+/// `acc[x] += hi[x] - lo[x]`: one mask run's sum from row prefix sums.
+fn add_run(acc: &mut [u32], lo: &[u32], hi: &[u32]) {
+    for ((a, &l), &h) in acc.iter_mut().zip(lo).zip(hi) {
+        *a += h - l;
+    }
 }
 
 #[cfg(test)]
@@ -237,19 +288,75 @@ mod tests {
         assert_eq!(a.max_loc(), (1, 0, 0.9));
     }
 
-    #[test]
-    #[ignore]
-    fn bench_ring() {
-        let img = rand_gray(860, 360, 9);
-        let mut mask = Gray { w: 35, h: 35, px: vec![0; 35 * 35] };
-        for y in 0..35 {
-            for x in 0..35 {
-                let d = (((x as f64 - 17.0).powi(2) + (y as f64 - 17.0).powi(2)).sqrt()) as i32;
-                if (14..=17).contains(&d) {
-                    mask.px[y * 35 + x] = 255;
+    /// Binary ring of radius band `[r0, r1]` in an `n x n` mask.
+    fn ring(n: usize, r0: i32, r1: i32) -> Gray {
+        let c = (n / 2) as f64;
+        let mut mask = Gray { w: n, h: n, px: vec![0; n * n] };
+        for y in 0..n {
+            for x in 0..n {
+                let d = (((x as f64 - c).powi(2) + (y as f64 - c).powi(2)).sqrt()) as i32;
+                if (r0..=r1).contains(&d) {
+                    mask.px[y * n + x] = 255;
                 }
             }
         }
+        mask
+    }
+
+    /// Brute-force f64 masked Pearson correlation, best over templates.
+    fn reference(img: &Gray, ts: &[Template]) -> Vec<f64> {
+        let (tw, th) = (ts[0].px.w, ts[0].px.h);
+        let (ow, oh) = (img.w - tw + 1, img.h - th + 1);
+        let idx: Vec<(usize, usize)> = (0..th)
+            .flat_map(|y| (0..tw).map(move |x| (x, y)))
+            .filter(|&(x, y)| ts[0].mask.px[y * tw + x] > 0)
+            .collect();
+        let n = idx.len() as f64;
+        let mut out = vec![0f64; ow * oh];
+        for oy in 0..oh {
+            for ox in 0..ow {
+                let iv: Vec<f64> = idx.iter().map(|&(x, y)| img.px[(oy + y) * img.w + ox + x] as f64).collect();
+                let im = iv.iter().sum::<f64>() / n;
+                let ivar: f64 = iv.iter().map(|v| (v - im).powi(2)).sum();
+                if ivar <= 0.0 {
+                    continue;
+                }
+                let mut best = f64::NEG_INFINITY;
+                for t in ts {
+                    let tv: Vec<f64> = idx.iter().map(|&(x, y)| t.px.px[y * tw + x] as f64).collect();
+                    let tm = tv.iter().sum::<f64>() / n;
+                    let tvar: f64 = tv.iter().map(|v| (v - tm).powi(2)).sum();
+                    let cov: f64 = iv.iter().zip(&tv).map(|(a, b)| (a - im) * (b - tm)).sum();
+                    best = best.max(if tvar > 0.0 { cov / (ivar * tvar).sqrt() } else { 0.0 });
+                }
+                out[oy * ow + ox] = best;
+            }
+        }
+        out
+    }
+
+    #[test]
+    fn vectorized_matches_reference() {
+        let img = rand_gray(120, 80, 12);
+        let mask = ring(11, 3, 5);
+        let ts = [
+            Template { px: rand_gray(11, 11, 13), mask: mask.clone() },
+            Template { px: img.crop(40, 30, 51, 41), mask },
+        ];
+        let m = match_masked(&img, &ts);
+        let r = reference(&img, &ts);
+        assert_eq!((m.w, m.h), (110, 70));
+        for (i, (&a, &b)) in m.v.iter().zip(&r).enumerate() {
+            assert!((a as f64 - b).abs() < 1e-4, "at {i}: {a} vs {b}");
+        }
+        assert!((m.v[30 * 110 + 40] - 1.0).abs() < 1e-4);
+    }
+
+    #[test]
+    #[ignore = "bench: cargo test -p vision --release -- --ignored --nocapture"]
+    fn bench_detection_cpu() {
+        let img = rand_gray(860, 360, 9);
+        let mask = ring(35, 14, 17);
         let ts = [
             Template { px: rand_gray(35, 35, 10), mask: mask.clone() },
             Template { px: rand_gray(35, 35, 11), mask },
@@ -259,6 +366,6 @@ mod tests {
         for _ in 0..10 {
             match_masked(&img, &ts);
         }
-        println!("BENCH per call: {:?}", t0.elapsed() / 10);
+        println!("BENCH match_masked 860x360, two 35x35 rings, single-threaded: {:?} per call", t0.elapsed() / 10);
     }
 }

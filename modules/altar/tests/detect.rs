@@ -81,3 +81,34 @@ fn tiny_frame_does_not_panic() {
     let f = Rgb { w: 20, h: 20, px: vec![[0; 3]; 400] };
     assert!(detector().find_icons(&f.to_gray()).is_empty());
 }
+
+#[test]
+#[ignore = "bench: cargo test -p altar --release --test detect -- --ignored --nocapture"]
+fn bench_find_icons_screen_02() {
+    let path = altar::evaluate::fixtures_dir().join("screens/screen_02.png");
+    if !path.exists() {
+        eprintln!("skipped: no local screenshots");
+        return;
+    }
+    let img = Rgb::load(&path).unwrap();
+    let det = detector();
+    let mut times = Vec::new();
+    let mut icons = Vec::new();
+    for _ in 0..20 {
+        let t0 = std::time::Instant::now();
+        icons = det.find_icons(&img.to_gray());
+        times.push(t0.elapsed());
+    }
+    times.sort();
+    let mut gray_times: Vec<_> = (0..20)
+        .map(|_| {
+            let t0 = std::time::Instant::now();
+            std::hint::black_box(img.to_gray());
+            t0.elapsed()
+        })
+        .collect();
+    gray_times.sort();
+    println!("BENCH to_gray alone median: {:?}", gray_times[10]);
+    println!("BENCH screen_02 {}x{} to_gray+find_icons median: {:?} (min {:?})", img.w, img.h, times[10], times[0]);
+    println!("icons: {icons:?}");
+}

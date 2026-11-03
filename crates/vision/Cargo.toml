@@ -6,4 +6,3 @@ edition = "2024"
 [dependencies]
 anyhow = "1"
 image = { version = "0.25", default-features = false, features = ["png"] }
-rayon = "1.12.0"

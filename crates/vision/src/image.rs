@@ -41,7 +41,40 @@ impl Gray {
 
     /// Fractional box filter (like OpenCV INTER_AREA): each destination pixel is the
     /// area-weighted mean of the source pixels it covers, rounded.
+    ///
+    /// When `1/scale` is an integer `k` dividing both dimensions, exact `k x k` blocks are
+    /// averaged with integer sums (same result as the general path, much faster).
     pub fn resize_area(&self, scale: f64) -> Gray {
+        let k = (1.0 / scale).round();
+        if k >= 1.0 && k * scale == 1.0 {
+            let k = k as usize;
+            if self.w.is_multiple_of(k) && self.h.is_multiple_of(k) && self.w > 0 && self.h > 0 {
+                return self.resize_blocks(k);
+            }
+        }
+        self.resize_area_general(scale)
+    }
+
+    /// Mean of exact `k x k` blocks, rounded half up: `floor(sum / k^2 + 0.5)`.
+    fn resize_blocks(&self, k: usize) -> Gray {
+        let (dw, dh) = (self.w / k, self.h / k);
+        let area = (k * k) as u32;
+        let mut sums = vec![0u32; dw];
+        let mut px = Vec::with_capacity(dw * dh);
+        for by in 0..dh {
+            sums.fill(0);
+            for row in self.px[by * k * self.w..(by + 1) * k * self.w].chunks_exact(self.w) {
+                for (sum, block) in sums.iter_mut().zip(row.chunks_exact(k)) {
+                    *sum += block.iter().map(|&p| p as u32).sum::<u32>();
+                }
+            }
+            px.extend(sums.iter().map(|&s| ((2 * s + area) / (2 * area)) as u8));
+        }
+        Gray { w: dw, h: dh, px }
+    }
+
+    /// General fractional path of [`Gray::resize_area`].
+    fn resize_area_general(&self, scale: f64) -> Gray {
         let dw = ((self.w as f64 * scale).round_ties_even() as usize).max(1);
         let dh = ((self.h as f64 * scale).round_ties_even() as usize).max(1);
         let sx = self.w as f64 / dw as f64;
@@ -186,6 +219,24 @@ mod tests {
         assert_eq!((q.w, q.h), (35, 35));
         let h = g.resize_area(0.5);
         assert_eq!((h.w, h.h), (70, 70));
+    }
+
+    #[test]
+    fn resize_area_fast_path_matches_general_path() {
+        let mut s = 42u64;
+        let px = (0..64 * 48)
+            .map(|_| {
+                s = s.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+                (s >> 56) as u8
+            })
+            .collect();
+        let g = Gray { w: 64, h: 48, px };
+        for scale in [0.25, 0.5] {
+            assert_eq!(g.resize_area(scale), g.resize_area_general(scale), "scale {scale}");
+        }
+        // Non-divisible sizes fall back to the general path.
+        let odd = g.crop(0, 0, 63, 47);
+        assert_eq!(odd.resize_area(0.5), odd.resize_area_general(0.5));
     }
 
     #[test]

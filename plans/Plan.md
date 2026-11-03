@@ -233,7 +233,7 @@ tests/                   # unit + recognition accuracy tests
 - In-game result (2026-11-02, `--stats`, 3440×1440, 4 Hz): CPU **1.1–2.2 % total** without an altar, 1.1–1.9 % with an altar on screen; scans take ~85 ms (one 305 ms spike when a new altar is read). FPS without / with tool: hideout 126 / 126, map 166–175 / 166–172 with the HUD shown. One run without an altar in view dipped to ~160 (low 139) right after entering the map; since the heavier run with HUD matched the baseline, this is taken as scene noise. Verdicts were correct in all of the user's sessions.
 - Possible lever if ever needed: lower the scan rate (e.g. 2 Hz) while no altar is on screen; nearly all idle load is the full-frame icon search.
 
-**Next (planned 2026-11-03):** more board changes (user's list; card look and multi-select done), then the Phase 4 decision. The board loads reward icons from `prototype/assets/mods/`; the port has to move them next to `ui/board/`.
+**Board round done (2026-11-03):** card look, multi-select, undo, reward filter, card styles, key columns, the CONSIDER-beats-TAKE rule and smooth scrolling are in; the user is happy with the board for now. **Next:** the Phase 4 decision (new chat). The board loads reward icons from `prototype/assets/mods/`; the port has to move them next to `ui/board/`.
 
 ### Phase 4 – Distributable app
 - Decision gate after Phase 3: port to **C#/.NET** (WPF overlay, WebView2 hosting `ui/board`, Windows.Graphics.Capture, Windows.Media.Ocr, OpenCvSharp; single-file `.exe`) or ship Python via Nuitka if it is good enough. Current preference: C#.

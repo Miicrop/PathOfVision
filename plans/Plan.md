@@ -34,7 +34,7 @@ The altar scanner is meant as the first module of a bigger "PoE helper". Other m
 | Altar type | Detected automatically from the icon color, no user setting. Only informational: mods of the other altar type do appear (see Phase 2) |
 | Mod data | Auto-generated `mods.json` with stable IDs; weight 0 mods excluded |
 | Settings UI | Tier board modeled on poedb's altar table, profiles, instant apply |
-| Tech path | Python prototype first, then port to a distributable app |
+| Tech path | Python prototype first, then port to a distributable app: **Rust + Tauri 2** (decided 2026-11-03, see Phase 4) |
 | Shared logic | All knowledge lives in data files (mods, profiles), so it survives the port |
 
 ## 4. Domain model
@@ -236,10 +236,13 @@ tests/                   # unit + recognition accuracy tests
 **Board round done (2026-11-03):** card look, multi-select, undo, reward filter, card styles, key columns, the CONSIDER-beats-TAKE rule and smooth scrolling are in; the user is happy with the board for now. **Next:** the Phase 4 decision (new chat). The board loads reward icons from `prototype/assets/mods/`; the port has to move them next to `ui/board/`.
 
 ### Phase 4 – Distributable app
-- Decision gate after Phase 3: port to **C#/.NET** (WPF overlay, WebView2 hosting `ui/board`, Windows.Graphics.Capture, Windows.Media.Ocr, OpenCvSharp; single-file `.exe`) or ship Python via Nuitka if it is good enough. Current preference: C#.
-- Port detection, matching and verdict engine. Reuse `data/` and `ui/board/` unchanged.
+- **Decision (2026-11-03): Rust + Tauri 2.** The user does not write code, so learning curve and port effort no longer count; only the result for the player does. Compared with C#/.NET (the earlier preference) and Python/Nuitka: smallest download (~10–20 MB estimated, no runtime), lowest idle RAM, built-in installer and signed auto-updater via GitHub Releases, WebView2 is already part of Windows 10/11. The strict compiler keeps a growing, AI-written code base safe to refactor.
+- Native APIs through Microsoft's `windows` crate: Windows.Graphics.Capture (GPU capture, replaces `mss`) and Windows.Media.Ocr. No OpenCV: the few vision steps we need (color mask, template matching) are written in Rust.
+- All UI is web UI (board, settings, module pages, HUD as a transparent click-through always-on-top window). If the HUD window costs noticeable RAM or FPS, it moves to a native Direct2D window without touching the rest.
+- Port detection, matching and verdict engine. Reuse `data/`; `ui/board/` only swaps its backend adapter (`connectBackend()`). The Python tests and screenshots are the reference: the port is done when the Rust version gives the same results on the same images.
 - Settings: HUD position/scale, profile switching, start with Windows (optional).
 - Releases via GitHub with a changelog.
+- The app becomes a generic PoE helper with modules (see Phase 6). It needs a new name; architecture spec and port plan come next.
 
 ### Phase 5 – Future changes (backlog, not committed)
 - **Resolutions & UI scale:** support 1080p, 1440p, 4K, ultrawide and different in-game UI scales (scale-invariant detection, test fixtures per resolution).
@@ -256,8 +259,21 @@ tests/                   # unit + recognition accuracy tests
 - **Accessibility:** colorblind-safe verdict colors (HUD text size is done, see Overlay settings).
 - **Additional game languages** (needs per-language mod data and OCR models).
 
+### Phase 6 – More modules (ideas, not committed)
+Collected 2026-11-03. Only the altar module is ported in Phase 4; the architecture must let these fit in later without rework.
+- **Atlas tree overlay:** import a planned atlas tree (poeplanner and similar sites, which ones is open) and show in-game where to go next and what is still missing.
+- **Passive tree overlay:** the same for the character tree, imported from Path of Building.
+- **Travel wheel:** radial menu at the mouse (like the WoW addon OPie); pick a direction to travel to the hideout or other places reachable with a `/` command. The wheel may serve other uses later. **Conflicts with ground rule "never send input to the game"**, see open questions.
+- **Stash prices:** overlay on special stash tabs with poe.ninja prices.
+- **Crafting help:** no concrete idea yet.
+- **Faustus trade helper:** fetch prices and compute good ratios instead of using a calculator.
+- **Nameless Ritual alert:** overlay when a Ritual is Nameless.
+- **Betrayal helper:** recommend the right choice for the 5-5-2-2 strategy.
+
 ## 11. Open questions
 
+- **App name:** "AltarScanner" is too narrow for a multi-module helper. Working name: **Path of Vision** (final name later).
+- **Chat-command hotkeys and pasting (travel wheel, regex strings):** typing `/hideout` or pasting a stash regex sends input to the game, which section 2 rules out today. The user expects this to be tolerated (nearly every popular tool, e.g. Awakened PoE Trade, does it) or solvable another way. Future topic: the architecture leaves room for an input-output service, but nothing is built and the ground rule stays until it is checked.
 - ~~Which game data export contains the altar mods with stable IDs?~~ RePoE, domain `primordial_altar` (see Phase 1).
 - ~~How are multi-line mods represented?~~ As one mod with several lines; `lines`/`templates` keep them per line.
 - When do HardMode variants spawn? They are not Ruthless-only (seen in normal maps); maybe tied to an atlas passive or map tier.

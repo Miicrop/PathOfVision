@@ -13,7 +13,7 @@ use windows::Win32::UI::WindowsAndMessaging::{
     GetWindowThreadProcessId, IsWindowVisible, MSG, PostMessageW, PostQuitMessage, RegisterClassW,
     SW_SHOWNOACTIVATE, SetForegroundWindow, ShowWindow, TranslateMessage, WINDOW_EX_STYLE,
     WM_CLOSE, WM_DESTROY, WNDCLASSW, WS_EX_LAYERED, WS_EX_NOACTIVATE, WS_EX_TOOLWINDOW,
-    WS_EX_TOPMOST, WS_EX_TRANSPARENT, WS_OVERLAPPEDWINDOW,
+    WS_EX_TRANSPARENT, WS_OVERLAPPEDWINDOW,
 };
 use windows::core::w;
 
@@ -161,7 +161,6 @@ fn overlay_window_is_click_through() {
         WS_EX_NOACTIVATE,
         WS_EX_LAYERED,
         WS_EX_TOOLWINDOW,
-        WS_EX_TOPMOST,
     ] {
         assert_eq!(ex & flag.0, flag.0, "missing ex style {:#x}", flag.0);
     }

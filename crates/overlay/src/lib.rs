@@ -6,10 +6,13 @@ use std::ffi::c_void;
 
 use windows::Win32::Foundation::HWND;
 use windows::Win32::UI::WindowsAndMessaging::{
-    GWL_EXSTYLE, GetWindowLongPtrW, HWND_TOPMOST, SW_HIDE, SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE,
-    SWP_SHOWWINDOW, SetWindowLongPtrW, SetWindowPos, ShowWindow, WS_EX_LAYERED, WS_EX_NOACTIVATE,
-    WS_EX_TOOLWINDOW, WS_EX_TRANSPARENT,
+    GWL_EXSTYLE, GetWindowLongPtrW, HWND_TOPMOST, SET_WINDOW_POS_FLAGS, SW_HIDE, SWP_NOACTIVATE,
+    SWP_NOMOVE, SWP_NOSIZE, SWP_SHOWWINDOW, SetWindowLongPtrW, SetWindowPos, ShowWindow,
+    WS_EX_LAYERED, WS_EX_NOACTIVATE, WS_EX_TOOLWINDOW, WS_EX_TRANSPARENT,
 };
+
+/// Flags for showing the HUD: visible, never activated.
+const SHOW_FLAGS: SET_WINDOW_POS_FLAGS = SET_WINDOW_POS_FLAGS(SWP_NOACTIVATE.0 | SWP_SHOWWINDOW.0);
 
 fn handle(hwnd: isize) -> HWND {
     HWND(hwnd as *mut c_void)
@@ -66,7 +69,7 @@ pub fn show_at(hwnd: isize, rect: Rect) -> anyhow::Result<()> {
             rect.y,
             rect.w,
             rect.h,
-            SWP_NOACTIVATE | SWP_SHOWWINDOW,
+            SHOW_FLAGS,
         )?;
     }
     Ok(())
@@ -82,6 +85,12 @@ pub fn hide(hwnd: isize) -> anyhow::Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn show_flags_never_activate() {
+        assert_eq!(SHOW_FLAGS.0 & SWP_NOACTIVATE.0, SWP_NOACTIVATE.0);
+        assert_eq!(SHOW_FLAGS.0 & SWP_SHOWWINDOW.0, SWP_SHOWWINDOW.0);
+    }
 
     #[test]
     fn hud_rect_follows_the_client_rect() {

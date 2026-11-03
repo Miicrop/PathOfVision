@@ -1,6 +1,7 @@
 use std::sync::LazyLock;
 
 use fancy_regex::Regex;
+use rapidfuzz::distance::indel;
 
 use crate::data::Target;
 
@@ -31,32 +32,31 @@ pub fn normalize(text: &str) -> String {
     WS_RE.replace_all(&t, " ").trim().to_string()
 }
 
-fn indel_ratio(a: &[char], b: &[char]) -> f64 {
-    let total = a.len() + b.len();
-    if total == 0 {
-        return 100.0;
-    }
-    // LCS length by dynamic programming.
-    let mut prev = vec![0usize; b.len() + 1];
-    let mut cur = vec![0usize; b.len() + 1];
-    for &ca in a {
-        for (j, &cb) in b.iter().enumerate() {
-            cur[j + 1] = if ca == cb { prev[j] + 1 } else { cur[j].max(prev[j + 1]) };
-        }
-        std::mem::swap(&mut prev, &mut cur);
-    }
-    100.0 * (2 * prev[b.len()]) as f64 / total as f64
-}
-
 /// Normalized Indel similarity, 0-100 (rapidfuzz `fuzz.ratio`).
 pub fn ratio(a: &str, b: &str) -> f64 {
     let a: Vec<char> = a.chars().collect();
     let b: Vec<char> = b.chars().collect();
-    indel_ratio(&a, &b)
+    indel::normalized_similarity(a.iter().copied(), b.iter().copied()) * 100.0
+}
+
+/// One directional pass of `partial_ratio`: `s` is the needle, `l` the haystack (`s.len() <= l.len()`).
+fn partial_pass(s: &[char], l: &[char]) -> f64 {
+    let n = s.len();
+    let cmp = indel::BatchComparator::new(s.iter().copied());
+    let score = |w: &[char]| cmp.normalized_similarity(w.iter().copied()) * 100.0;
+    let mut best = 0.0f64;
+    for k in 1..n {
+        best = best.max(score(&l[..k])).max(score(&l[l.len() - k..]));
+    }
+    for i in 0..=(l.len() - n) {
+        best = best.max(score(&l[i..i + n]));
+    }
+    best
 }
 
 /// Best ratio of the shorter string against same-length windows of the longer one,
 /// plus the shorter prefixes and suffixes at both ends (rapidfuzz `fuzz.partial_ratio`).
+/// For equal lengths both directions are tried and the maximum is taken, like rapidfuzz.
 pub fn partial_ratio(short: &str, long: &str) -> f64 {
     let mut s: Vec<char> = short.chars().collect();
     let mut l: Vec<char> = long.chars().collect();
@@ -66,14 +66,9 @@ pub fn partial_ratio(short: &str, long: &str) -> f64 {
     if s.is_empty() {
         return if l.is_empty() { 100.0 } else { 0.0 };
     }
-    let n = s.len();
-    let mut best = 0.0f64;
-    for k in 1..n {
-        best = best.max(indel_ratio(&s, &l[..k]));
-        best = best.max(indel_ratio(&s, &l[l.len() - k..]));
-    }
-    for i in 0..=(l.len() - n) {
-        best = best.max(indel_ratio(&s, &l[i..i + n]));
+    let mut best = partial_pass(&s, &l);
+    if s.len() == l.len() {
+        best = best.max(partial_pass(&l, &s));
     }
     best
 }
@@ -130,6 +125,29 @@ mod tests {
     }
 
     #[test]
+    fn ratio_edge_cases() {
+        for (a, b, want) in [("", "", 100.0), ("", "ABC", 0.0), ("ABC", "", 0.0), ("%B##", "%%BC", 50.0), ("ÄÖÜ GAIN", "ÖÜ GAN", 85.7143), ("ÄÖ", "ÄÖÜ", 80.0)] {
+            assert!((ratio(a, b) - want).abs() < 1e-3, "{a:?} / {b:?}");
+        }
+    }
+
+    #[test]
+    fn partial_ratio_edge_cases() {
+        for (a, b, want) in [
+            ("", "", 100.0),
+            ("", "ABC", 0.0),
+            ("ABC", "", 0.0),
+            ("GAINSX", "GAIN", 100.0),
+            ("%B##", "%%BC", 66.6667),
+            ("AC##A%", "#AC%AC", 66.6667),
+            ("ÄÖÜ GAIN", "ÖÜ GAN", 83.3333),
+            ("ÄÖ", "ÄÖÜ", 100.0),
+        ] {
+            assert!((partial_ratio(a, b) - want).abs() < 1e-3, "{a:?} / {b:?}");
+        }
+    }
+
+    #[test]
     fn parse_header_cases() {
         assert_eq!(parse_header("PLAYER GAINS:"), Some(Target::Player));
         assert_eq!(parse_header("ELDRITCH MINIONS GAIN:"), Some(Target::Minions));
@@ -137,5 +155,28 @@ mod tests {
         assert_eq!(parse_header("MAP Boss GAINS:"), Some(Target::Boss));
         assert_eq!(parse_header("NEARBY ENEMIES GAIN 100% OF THEIR PHYSICAL DAMAGE AS EXTRA COLD DAMAGE"), None);
         assert_eq!(parse_header("GAIN 82% OF PHYSICAL DAMAGE AS EXTRA FIRE DAMAGE"), None);
+    }
+}
+
+#[cfg(test)]
+mod timing {
+    use super::*;
+
+    #[test]
+    #[ignore]
+    fn timing() {
+        let a = "FINAL BOSS DROPS # ADDITIONAL CHAOS ORBS WHICH ABC";
+        let b = "FINAL BOSS DROPS # ADDITIONAL CHAOS ORBS WHICH ABD";
+        let t = std::time::Instant::now();
+        let mut s = 0.0;
+        for _ in 0..10_000 {
+            s += ratio(std::hint::black_box(a), std::hint::black_box(b));
+        }
+        println!("10k ratio: {:?} ({s})", t.elapsed());
+        let t = std::time::Instant::now();
+        for _ in 0..10_000 {
+            s += partial_ratio("GAIN", std::hint::black_box("NEARBY ENEMIES GAIN:"));
+        }
+        println!("10k partial_ratio: {:?} ({s})", t.elapsed());
     }
 }

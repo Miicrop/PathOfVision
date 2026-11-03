@@ -1,5 +1,6 @@
 use std::path::{Path, PathBuf};
 
+use anyhow::Context;
 use serde::Deserialize;
 
 use crate::text::normalize;
@@ -65,8 +66,8 @@ struct RawVariant {
 }
 
 pub fn load_cards(path: &Path) -> anyhow::Result<Vec<Card>> {
-    let text = std::fs::read_to_string(path)?;
-    let file: ModsFile = serde_json::from_str(&text)?;
+    let text = std::fs::read_to_string(path).with_context(|| format!("reading {}", path.display()))?;
+    let file: ModsFile = serde_json::from_str(&text).with_context(|| format!("parsing {}", path.display()))?;
     Ok(file
         .mods
         .into_iter()

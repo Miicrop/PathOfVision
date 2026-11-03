@@ -73,7 +73,7 @@ function visible(m) {
   if (filter.side !== "all" && m.side !== filter.side) return false;
   if (filter.target !== "all" && m.target !== filter.target) return false;
   if (filter.reward !== "all" && rewardOf(m) !== filter.reward) return false;
-  if (filter.q && !text(m).toLowerCase().includes(filter.q)) return false;
+  if (filter.q && !`${text(m)} ${m.alias || ""}`.toLowerCase().includes(filter.q)) return false;   // short label too, e.g. "Turbo"
   return true;
 }
 

@@ -57,7 +57,7 @@ Reward: [ All ]  [ Currency ] [ Eldritch ] [ Scarabs ] [ Div Cards ] [ Duplicate
 Search: _______
 ```
 
-- The filter bar stays at the top while scrolling (sticky). Filters combine (AND). Choosing an altar also shows generic mods. The reward group comes from the card's icon name in `labels.json` (`*-scarab`, `div-card-*`, `dup-*`, `stat-*`, `*eldritch-*`, everything else = Currency; each button shows a representative icon); downsides have no reward, so a reward filter hides the downside board.
+- The filter bar stays at the top while scrolling (sticky). Search matches the mod text and the short label from `labels.json` (community names like "Turbo"). Filters combine (AND). Choosing an altar also shows generic mods. The reward group comes from the card's icon name in `labels.json` (`*-scarab`, `div-card-*`, `dup-*`, `stat-*`, `*eldritch-*`, everything else = Currency; each button shows a representative icon); downsides have no reward, so a reward filter hides the downside board.
 - **Upside board:** `Unrated | own columns … | top column`. Unrated (fixed, left) means NEUTRAL. The user adds, names, moves and deletes the columns in between; all of them count as rated, further right = higher priority. The top column (fixed, right, renamable; "S" by default) is the only one that can make a Brick workable. Order inside a column = priority (top = best). Old profiles (`s`/`a`/`b`) are upgraded to columns B, A and top S.
 - **Downside board:** `Fine | Dangerous | Brick`. Unrated downsides count as Fine.
 - New mods after a data update land in Unrated/Fine and are flagged as new.

@@ -270,9 +270,12 @@ name = "pov-core"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "pov-capture",
+ "pov-game",
  "serde",
  "serde_json",
  "tempfile",
+ "vision",
 ]
 
 [[package]]

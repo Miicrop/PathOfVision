@@ -27,6 +27,7 @@ function connectBackend() {
 
 const ALTAR = { eater: ["Eater", "var(--eater)"], exarch: ["Exarch", "var(--exarch)"] };
 const TARGET = { player: "Player", minions: "Minions", boss: "Map Boss" };
+const ICON_DIR = "../../prototype/assets/mods/";   // reward icons named in data/labels.json
 const DOWN_COLS = [
   { key: null, name: "Fine", tier: "var(--t-fine)", hint: "Unrated downsides count as fine" },
   { key: "dangerous", name: "Dangerous", tier: "var(--t-danger)", hint: "Gives a warning" },
@@ -34,7 +35,7 @@ const DOWN_COLS = [
 ];
 
 let api, state, byId, profile, file;
-let dragging = null;                                   // id of the card being dragged
+let dragging = null;                                   // ids of the cards being dragged
 const dropMark = document.createElement("div");         // line where the card will land
 dropMark.className = "drop-mark";
 const filter = { altar: "both", side: "all", target: "all", q: "" };
@@ -73,17 +74,79 @@ function columnIds(side, col) {
   return state.mods.filter(m => m.side === side && !listed.has(m.id)).map(m => m.id);
 }
 
-function moveCard(id, side, colIndex, beforeId) {
-  if (profile.readOnly) return;
+// Moves the cards (kept in the given order) into a column, in front of beforeId or at the end.
+function moveCards(ids, side, colIndex, beforeId) {
+  if (profile.readOnly || !ids.length) return;
   for (const list of allLists(side)) {
-    const at = list.indexOf(id);
-    if (at >= 0) list.splice(at, 1);
+    for (const id of ids) {
+      const at = list.indexOf(id);
+      if (at >= 0) list.splice(at, 1);
+    }
   }
   const target = columnsFor(side)[colIndex].list;
   if (target) {
     const at = beforeId ? target.indexOf(beforeId) : -1;
-    if (at >= 0) target.splice(at, 0, id); else target.push(id);
+    if (at >= 0) target.splice(at, 0, ...ids); else target.push(...ids);
   }
+  render();
+  save();
+}
+
+// Selection: click selects one card, Ctrl+click adds or removes one, Shift+click selects the
+// range from the last clicked card within its column. Only one side at a time.
+const selected = new Set();
+let anchor = null;                                     // last clicked card, start of a Shift range
+
+function showSelection() {
+  document.querySelectorAll(".card").forEach(el => el.classList.toggle("selected", selected.has(el.dataset.id)));
+}
+
+function clickCard(e, el) {
+  const id = el.dataset.id, side = byId[id].side;
+  if ([...selected].some(s => byId[s].side !== side)) selected.clear();
+  const list = el.closest(".list");
+  const ids = [...list.querySelectorAll(".card")].map(c => c.dataset.id);
+  if (e.shiftKey && anchor && ids.includes(anchor)) {
+    const [a, b] = [ids.indexOf(anchor), ids.indexOf(id)].sort((x, y) => x - y);
+    if (!e.ctrlKey) selected.clear();
+    ids.slice(a, b + 1).forEach(s => selected.add(s));
+  } else if (e.ctrlKey || e.metaKey) {
+    selected.has(id) ? selected.delete(id) : selected.add(id);
+    anchor = id;
+  } else {
+    const only = selected.size === 1 && selected.has(id);
+    selected.clear();
+    if (!only) selected.add(id);                      // clicking the only selected card deselects it
+    anchor = id;
+  }
+  showSelection();
+}
+
+// Selected ids in board order: column by column, top to bottom.
+function selectedInOrder(side) {
+  return columnsFor(side).flatMap(col => columnIds(side, col)).filter(id => selected.has(id));
+}
+
+// ← / → move the selection one column; every card steps on from where it is.
+function stepSelection(step) {
+  const ids = [...selected];
+  if (profile.readOnly || !ids.length) return;
+  const side = byId[ids[0]].side;
+  const cols = columnsFor(side);
+  const colOf = id => cols.findIndex(col => columnIds(side, col).includes(id));
+  const order = selectedInOrder(side);
+  // Move the column nearest the edge first, so cards from neighboring columns keep their order.
+  const groups = [...new Set(order.map(colOf))].sort((a, b) => step > 0 ? b - a : a - b);
+  let moved = false;
+  for (const from of groups) {
+    const to = from + step;
+    if (to < 0 || to >= cols.length) continue;
+    const ids = order.filter(id => colOf(id) === from);
+    for (const list of allLists(side)) for (const id of ids) { const at = list.indexOf(id); if (at >= 0) list.splice(at, 1); }
+    if (cols[to].list) cols[to].list.push(...ids);
+    moved = true;
+  }
+  if (!moved) return;
   render();
   save();
 }
@@ -124,42 +187,45 @@ async function save() {
   save.timer = setTimeout(() => ($("saved").textContent = ""), 1500);
 }
 
-function cardEl(m, colIndex, colCount) {
+function cardEl(m) {
   const el = document.createElement("div");
-  el.className = `card ${m.side}` + (profile.readOnly ? " locked" : "");
+  el.className = `card ${m.side}` + (profile.readOnly ? " locked" : "") + (selected.has(m.id) ? " selected" : "");
   el.dataset.id = m.id;
   el.draggable = !profile.readOnly;
   const w = totalWeight(m);
   const rare = m.side === "upside" && w <= 1000;
+  // The frame color shows the altar (split diagonally when the mod rolls on both), the faded
+  // scene behind the text shows the target, the icon on the right shows the reward.
+  el.dataset.alt = m.altars.length > 1 ? "both" : m.altars[0];
   el.innerHTML = `
-    <div class="meta">
-      ${m.altars.map(a => `<span class="chip altar" style="--c:${ALTAR[a][1]}">${ALTAR[a][0]}</span>`).join("")}
-      <span class="chip">${TARGET[m.target]}</span>
-      ${rare ? '<span class="chip rare">rare</span>' : ""}
-      <span class="w" title="Spawn weight">w ${w.toLocaleString("en-US")}</span>
+    ${m.altars.map(a => `<span class="art art-${a}" style="background-image:url(img/art_${m.target}_${a}.png)"></span>`).join("")}
+    ${m.altars.map(a => `<span class="fr fr-${a}"></span>`).join("")}
+    <div class="body">
+      <div class="meta">
+        <span class="sr">${m.altars.map(a => ALTAR[a][0]).join(", ")}</span>
+        <span class="chip">${TARGET[m.target]}</span>
+        ${rare ? '<span class="chip rare">rare</span>' : ""}
+      </div>
+      <div class="txt"></div>
     </div>
-    <div class="txt"></div>
-    <div class="moves">
-      <button type="button" data-move="-1" aria-label="Move to the column on the left" ${profile.readOnly || colIndex === 0 ? "disabled" : ""}>‹</button>
-      <button type="button" data-move="1" aria-label="Move to the column on the right" ${profile.readOnly || colIndex === colCount - 1 ? "disabled" : ""}>›</button>
-    </div>`;
+    ${m.icon ? `<img class="reward" src="${ICON_DIR}${m.icon}.png" alt="">` : ""}`;
+  el.classList.toggle("has-reward", !!m.icon);
   el.querySelector(".txt").textContent = text(m);
+  if (!profile.readOnly) el.addEventListener("click", e => clickCard(e, el));
   el.addEventListener("dragstart", e => {
-    e.dataTransfer.setData("text/plain", m.id);
+    // Dragging a selected card takes the whole selection along; any other card goes alone.
+    dragging = selected.has(m.id) ? selectedInOrder(m.side) : [m.id];
+    e.dataTransfer.setData("text/plain", dragging.join(" "));
     e.dataTransfer.effectAllowed = "move";
-    dragging = m.id;
-    requestAnimationFrame(() => el.classList.add("dragging"));   // after the browser took the drag image
+    const els = dragging.map(id => document.querySelector(`.card[data-id="${id}"]`)).filter(Boolean);
+    requestAnimationFrame(() => els.forEach(c => c.classList.add("dragging")));   // after the browser took the drag image
   });
   el.addEventListener("dragend", () => {
     dragging = null;
-    el.classList.remove("dragging");
+    document.querySelectorAll(".card.dragging").forEach(c => c.classList.remove("dragging"));
     dropMark.remove();
     document.querySelectorAll(".col.over").forEach(c => c.classList.remove("over"));
   });
-  el.querySelectorAll("[data-move]").forEach(b => b.addEventListener("click", () => {
-    const to = colIndex + Number(b.dataset.move);
-    if (to >= 0 && to < colCount) moveCard(m.id, m.side, to, null);
-  }));
   return el;
 }
 
@@ -224,10 +290,10 @@ function renderBoard(side) {
     const list = document.createElement("div");
     list.className = "list";
     if (!ids.length) list.innerHTML = `<div class="empty">${profile.readOnly ? "No cards" : "Drop cards here"}</div>`;
-    ids.forEach(id => list.appendChild(cardEl(byId[id], i, cols.length)));
+    ids.forEach(id => list.appendChild(cardEl(byId[id])));
     // The whole column is the drop target; over its header the card goes to the top.
     colEl.addEventListener("dragover", e => {
-      if (profile.readOnly || !dragging || byId[dragging].side !== side) return;
+      if (profile.readOnly || !dragging || byId[dragging[0]].side !== side) return;
       e.preventDefault();
       e.dataTransfer.dropEffect = "move";
       document.querySelectorAll(".col.over").forEach(c => c !== colEl && c.classList.remove("over"));
@@ -245,12 +311,12 @@ function renderBoard(side) {
     });
     colEl.addEventListener("drop", e => {
       e.preventDefault();
-      const id = dragging;
-      if (!id || byId[id].side !== side) return;
+      const ids = dragging;
+      if (!ids || byId[ids[0]].side !== side) return;
       let next = dropMark.nextElementSibling;
       while (next && (!next.classList.contains("card") || next.classList.contains("dragging"))) next = next.nextElementSibling;
       dropMark.remove();
-      moveCard(id, side, i, next ? next.dataset.id : null);
+      moveCards(ids, side, i, next ? next.dataset.id : null);
     });
     colEl.appendChild(list);
     wrap.appendChild(colEl);
@@ -280,6 +346,7 @@ function render() {
   $("board-downside").hidden = filter.side === "upside";
   $("ro").hidden = !profile.readOnly;
   $("del").disabled = profile.readOnly;
+  for (const id of selected) if (!visible(byId[id])) selected.delete(id);   // filtered-out cards never move unseen
   renderBoard("upside");
   renderBoard("downside");
 }
@@ -288,6 +355,7 @@ async function openProfile(name) {
   if (!state.profiles.some(p => p.file === name)) state.profiles = (await api.getState()).profiles;
   file = name;
   profile = await api.loadProfile(file);
+  selected.clear();
   profile.upsides ||= { columns: [], top: { name: "S", ids: [] } };
   profile.downsides ||= {};
   await api.setActive(file);   // the selected profile is the one the overlay uses
@@ -307,6 +375,14 @@ document.querySelectorAll(".seg[data-filter]").forEach(seg => seg.addEventListen
   filter[seg.dataset.filter] = b.dataset.v;
   render();
 }));
+document.addEventListener("keydown", e => {
+  if (!selected.size || e.target.closest("input, select, textarea")) return;
+  if (e.key === "Escape") { selected.clear(); showSelection(); }
+  else if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); stepSelection(e.key === "ArrowLeft" ? -1 : 1); }
+});
+document.addEventListener("click", e => {
+  if (selected.size && !e.target.closest(".card, button") && e.target.closest(".board")) { selected.clear(); showSelection(); }
+});
 $("q").addEventListener("input", e => { filter.q = e.target.value.trim().toLowerCase(); render(); });
 $("profile").addEventListener("change", e => openProfile(e.target.value));
 $("dup").addEventListener("click", async () => {

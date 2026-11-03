@@ -24,6 +24,7 @@
   --v-neutral: #a3a7ad;
   --v-avoid: #e04848;
   --v-adapt: #d65db1;
+  --card-art: .4;                     /* how strongly the target scene shows behind a card */
   --font-display: "Palatino Linotype", "Book Antiqua", Georgia, serif;
   --font-body: "Segoe UI", system-ui, sans-serif;
 }
@@ -91,22 +92,62 @@ button.btn:disabled { opacity: .4; cursor: default; }
 .drop-mark { flex: none; height: 3px; margin: -2px 2px; border-radius: 2px; background: var(--tier); box-shadow: 0 0 6px var(--tier); pointer-events: none; }
 .empty { color: var(--muted); font-size: 12px; text-align: center; padding: 18px 4px; border: 1px dashed var(--line); border-radius: 4px; }
 
-.card { background: var(--panel-2); border: 1px solid var(--line); border-radius: 5px; padding: 8px 9px; cursor: grab; display: flex; flex-direction: column; gap: 6px; user-select: none; }
-.card:hover { border-color: color-mix(in srgb, var(--gold) 60%, var(--line)); }
+/* Card: altar-colored frame (split along a slanted gold seam when the mod rolls on both altars),
+   the target scene faded in behind the text, the reward icon on the right. */
+.card {
+  --cut-a: 57%; --cut-b: 43%;                         /* where the seam meets the top and bottom edge */
+  position: relative; isolation: isolate; overflow: hidden; flex: none;
+  background: var(--panel-2); border-radius: 6px; cursor: grab; user-select: none;
+}
 .card.dragging { opacity: .4; }
+.card.selected { outline: 2px solid var(--gold); outline-offset: 1px; box-shadow: 0 0 10px color-mix(in srgb, var(--gold) 45%, transparent); }
 .card.locked { cursor: default; }
+.card .body { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 6px; padding: 8px 10px 8px 9px; }
+.card.has-reward .body { padding-right: 58px; }
+.card::before {                                       /* evens out the scene so the text stays calm */
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(to right, rgb(15 14 18 / .55), rgb(15 14 18 / .35));
+}
+.card .art {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: var(--card-art);
+  background-repeat: no-repeat; background-size: 130% auto; background-position: center 30%;
+  filter: blur(1px) saturate(.8);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 35%, transparent 75%);
+  mask-image: radial-gradient(ellipse at 50% 40%, #000 35%, transparent 75%);
+}
+.card .fr { position: absolute; inset: 0; z-index: 3; border: 2px solid var(--c); border-radius: inherit; pointer-events: none; }
+.card .fr-eater { --c: var(--eater); }
+.card .fr-exarch { --c: var(--exarch); }
+.card:hover .fr { filter: brightness(1.3); }
+.card[data-alt="both"] .art-eater { background-position: 10% 30%; }
+.card[data-alt="both"] .art-exarch { background-position: 90% 30%; }
+.card[data-alt="both"] :is(.art-eater, .fr-eater) { clip-path: polygon(0 0, var(--cut-a) 0, var(--cut-b) 100%, 0 100%); }
+.card[data-alt="both"] :is(.art-exarch, .fr-exarch) { clip-path: polygon(var(--cut-a) 0, 100% 0, 100% 100%, var(--cut-b) 100%); }
+.card[data-alt="both"]::after {                       /* the gold seam: a short piece on each edge plus a faint line across */
+  content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background:
+    linear-gradient(var(--gold), var(--gold)) top / 100% 2px no-repeat,
+    linear-gradient(var(--gold), var(--gold)) bottom / 100% 2px no-repeat;
+  clip-path: polygon(calc(var(--cut-a) - 4px) 0, calc(var(--cut-a) + 4px) 0, calc(var(--cut-b) + 4px) 100%, calc(var(--cut-b) - 4px) 100%);
+}
+.card[data-alt="both"] .body::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: color-mix(in srgb, var(--gold) 22%, transparent);
+  clip-path: polygon(calc(var(--cut-a) - .5px) 0, calc(var(--cut-a) + .5px) 0, calc(var(--cut-b) + .5px) 100%, calc(var(--cut-b) - .5px) 100%);
+}
+.card .reward {
+  position: absolute; z-index: 2; right: 8px; top: 50%; transform: translateY(-50%);
+  width: 46px; height: 46px; object-fit: contain; pointer-events: none;
+  filter: drop-shadow(0 1px 3px rgb(0 0 0 / .8));
+}
 .card .meta { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; font-size: 11px; }
-.chip { border: 1px solid var(--line); border-radius: 3px; padding: 1px 6px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
-.chip.altar { color: var(--c); border-color: color-mix(in srgb, var(--c) 45%, var(--line)); }
+.card .txt, .card .meta { text-shadow: 0 0 3px rgb(0 0 0 / .9), 0 1px 2px #000; }
+.chip { border: 1px solid var(--line); border-radius: 3px; padding: 1px 6px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; background: color-mix(in srgb, var(--panel-2) 70%, transparent); }
 .chip.rare { color: var(--t-s); border-color: color-mix(in srgb, var(--t-s) 45%, var(--line)); }
-.card .w { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; }
 .card .txt { font-size: 13.5px; line-height: 1.3; }
-.card.upside .txt { color: var(--up-text); }
-.card.downside .txt { color: var(--down-text); }
-.card .moves { display: flex; justify-content: space-between; }
-.card .moves button { background: transparent; border: 1px solid transparent; color: var(--muted); border-radius: 3px; padding: 0 6px; cursor: pointer; font-size: 13px; }
-.card .moves button:hover:not(:disabled) { border-color: var(--line); color: var(--fg); }
-.card .moves button:disabled { visibility: hidden; }
+.card.upside .txt { color: color-mix(in srgb, var(--up-text) 80%, #fff); }
+.card.downside .txt { color: color-mix(in srgb, var(--down-text) 80%, #fff); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 .legend { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; font-size: 12px; color: var(--muted); max-width: 640px; }
 .legend b { font-family: var(--font-display); letter-spacing: .06em; }

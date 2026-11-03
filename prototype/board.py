@@ -19,6 +19,7 @@ from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWidgets import QApplication
 
 from . import settings
+from .labels import load_labels
 from .settings import PROFILES_DIR, ROOT
 from .verdict import upgrade_upsides
 
@@ -46,9 +47,11 @@ class BoardApi(QObject):
     @Slot(result=str)
     def getState(self) -> str:
         mods = json.loads(MODS_PATH.read_text(encoding="utf-8"))
+        labels = load_labels()
         return json.dumps({
             "gameVersion": mods["gameVersion"],
-            "mods": [{k: m[k] for k in ("id", "side", "target", "altars", "lines", "weights")} for m in mods["mods"]],
+            "mods": [{k: m[k] for k in ("id", "side", "target", "altars", "lines", "weights")}
+                     | {"icon": labels[m["id"]].icon if m["id"] in labels else ""} for m in mods["mods"]],
             "profiles": self._profiles(),
             "active": settings.active_profile_path().name,
         })

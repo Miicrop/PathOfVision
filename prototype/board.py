@@ -10,7 +10,14 @@ on its next scan.
 from __future__ import annotations
 
 import json
+import os
 import sys
+
+# Qt WebEngine paces Chromium at a fixed 60 fps, which feels choppy next to a 144 Hz monitor. Without
+# the limit it draws at the screen's pace while scrolling and nothing while idle. Read when WebEngine
+# starts (the first board window), so setting it at import is early enough, also from the tray app.
+if "--disable-frame-rate-limit" not in os.environ.get("QTWEBENGINE_CHROMIUM_FLAGS", ""):
+    os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = (os.environ.get("QTWEBENGINE_CHROMIUM_FLAGS", "") + " --disable-frame-rate-limit").strip()
 
 from PySide6.QtCore import QObject, QUrl, Slot
 from PySide6.QtWebChannel import QWebChannel

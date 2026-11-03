@@ -59,7 +59,7 @@ button.btn:disabled { opacity: .4; cursor: default; }
 .seg .ico { width: 20px; height: 20px; object-fit: contain; margin: -3px 6px -3px -3px; vertical-align: middle; }
 .seg .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
 /* The filter bar stays at the top while scrolling down to the downsides. */
-.filters.sticky { position: sticky; top: 0; z-index: 20; box-shadow: 0 6px 14px rgb(0 0 0 / .55), 0 -20px 0 var(--bg); }
+.filters.sticky { position: sticky; top: 0; z-index: 20; box-shadow: 0 4px 0 rgb(0 0 0 / .35), 0 -20px 0 var(--bg);   /* no blur: a blurred shadow over scrolling cards costs frames */ }
 .filters .grp { grid-column: 1 / -1; margin: 4px 0 -2px; font-family: var(--font-display); font-variant: small-caps; font-size: 16px; letter-spacing: .06em; color: var(--gold); }
 .filters .grp:not(:first-child) { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
 .search-row input { width: 100%; max-width: 420px; }
@@ -117,14 +117,12 @@ button.btn:disabled { opacity: .4; cursor: default; }
 .card .art {
   position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: var(--card-art);
   background-repeat: no-repeat; background-size: 130% auto; background-position: center 30%;
-  filter: blur(1px) saturate(.8);
-  -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 35%, transparent 75%);
-  mask-image: radial-gradient(ellipse at 50% 40%, #000 35%, transparent 75%);
+  /* blur, saturation and the oval fade are baked into the images (tools/gen_board_art): as CSS they made scrolling stutter */
 }
 .card .fr { position: absolute; inset: 0; z-index: 3; border: 2px solid var(--c); border-radius: inherit; pointer-events: none; }
 .card .fr-eater { --c: var(--eater); }
 .card .fr-exarch { --c: var(--exarch); }
-.card:hover .fr { filter: brightness(1.3); }
+.card:hover .fr { border-color: color-mix(in srgb, var(--c) 70%, #fff); }
 .card[data-alt="both"] .art-eater { background-position: 10% 30%; }
 .card[data-alt="both"] .art-exarch { background-position: 90% 30%; }
 .card[data-alt="both"] :is(.art-eater, .fr-eater) { clip-path: polygon(0 0, var(--cut-a) 0, var(--cut-b) 100%, 0 100%); }

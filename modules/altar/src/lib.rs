@@ -2,6 +2,7 @@ pub mod data;
 pub mod detect;
 pub mod fill;
 pub mod matching;
+pub mod read;
 pub mod text;
 pub mod verdict;
 

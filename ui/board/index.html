@@ -18,7 +18,7 @@
       <select id="profile"></select>
       <button class="btn" id="dup" type="button">Duplicate</button>
       <button class="btn" id="del" type="button">Delete</button>
-      <button class="btn" id="hud-toggle" type="button" aria-expanded="false" aria-controls="hud">Overlay settings</button>
+      <button class="btn" id="hud-toggle" type="button" aria-expanded="false" aria-controls="hud">Settings</button>
       <span class="saved" id="saved" aria-live="polite"></span>
     </div>
   </header>
@@ -28,7 +28,20 @@
   </div>
   <div class="notice error" id="err" hidden></div>
 
-  <section class="filters hud" id="hud" aria-label="Overlay settings" hidden>
+  <section class="filters hud" id="hud" aria-label="Settings" hidden>
+    <h3 class="grp">Board cards</h3>
+    <span class="lbl">Text</span>
+    <div class="seg" data-setting="board_cards">
+      <button type="button" data-v="short">Short + text</button>
+      <button type="button" data-v="full">Full text</button>
+      <button type="button" data-v="compact">Compact</button>
+    </div>
+    <span class="lbl">Target tag</span>
+    <div class="seg" data-setting="board_target_tag">
+      <button type="button" data-v="true">On</button>
+      <button type="button" data-v="false">Off</button>
+    </div>
+    <h3 class="grp">Overlay</h3>
     <span class="lbl">Text size</span>
     <div class="ctl">
       <input type="range" id="s-font" min="10" max="24" step="1">
@@ -59,12 +72,12 @@
     </div>
     <span></span>
     <div class="ctl">
-      <button class="btn" id="s-reset" type="button">Reset to defaults</button>
+      <button class="btn" id="s-reset" type="button">Reset overlay to defaults</button>
       <span class="saved" id="s-saved" aria-live="polite"></span>
     </div>
   </section>
 
-  <section class="filters" aria-label="Filters">
+  <section class="filters sticky" aria-label="Filters">
     <span class="lbl">Altar</span>
     <div class="seg" data-filter="altar">
       <button type="button" data-v="both" aria-pressed="true">Both</button>
@@ -98,22 +111,10 @@
     <div class="search-row">
       <input type="search" id="q" placeholder="e.g. divine, scarab, sap" autocomplete="off">
     </div>
-    <span class="lbl">Cards</span>
-    <div class="view-row">
-      <div class="seg" data-setting="board_cards" aria-label="Card text">
-        <button type="button" data-v="full">Full text</button>
-        <button type="button" data-v="short">Short + text</button>
-        <button type="button" data-v="compact">Compact</button>
-      </div>
-      <div class="seg" data-setting="board_target_tag" aria-label="Target tag">
-        <button type="button" data-v="true">Target tag</button>
-        <button type="button" data-v="false">No tag</button>
-      </div>
-    </div>
   </section>
 
   <section class="board" id="board-upside">
-    <h2>Upsides <small>Drag to rank; Ctrl or Shift + click selects several cards, ← → moves them, Ctrl+Z undoes. Columns further right and cards higher in a column win. Only the top column can outweigh a Brick.</small></h2>
+    <h2>Upsides <small>Drag to rank; Ctrl or Shift + click selects several cards, arrow keys move the selection, Ctrl+Z undoes. Columns further right and cards higher in a column win. Only the top column can outweigh a Brick.</small></h2>
     <div class="cols-wrap"><div class="cols up" id="cols-upside"></div></div>
   </section>
   <section class="board" id="board-downside">

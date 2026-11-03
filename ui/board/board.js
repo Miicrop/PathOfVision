@@ -57,14 +57,6 @@ function colorKeywords(s) {
   return keywordRe ? out.replace(keywordRe, w => `<span style="color:${colors[w.toLowerCase()]}">${w}</span>`) : out;
 }
 
-// True when the short label says nearly the same as the mod text ("+50000 Armour" / "+50000 to Armour"),
-// so the "short" card style shows it once.
-function sameAsText(alias, full) {
-  const words = t => t.toLowerCase().replace(/[^a-z0-9+%.\s-]/g, " ").split(/\s+/).filter(w => w && !["to", "a", "an", "the", "of"].includes(w));
-  const a = new Set(words(alias));
-  return words(full).every(w => a.has(w));
-}
-
 // Reward group of an upside, from its icon name in labels.json.
 function rewardOf(m) {
   const icon = m.icon || "";
@@ -264,7 +256,6 @@ function cardEl(m) {
   paint(".head", alias);
   paint(".txt", full);
   el.querySelector(".head").title = full;   // the compact style hides the mod text
-  el.classList.toggle("same", sameAsText(alias, full));
   if (!profile.readOnly) el.addEventListener("click", e => clickCard(e, el));
   el.addEventListener("dragstart", e => {
     // Dragging a selected card takes the whole selection along; any other card goes alone.
@@ -462,7 +453,7 @@ $("del").addEventListener("click", async () => {
   await openProfile(result.active);
 });
 
-// Overlay settings: written to settings.json right away; the overlay reloads the file by itself.
+// Settings (board cards and overlay): written to settings.json right away; the overlay reloads the file by itself.
 let hud = {}, hudDefaults = {}, pending = {};
 
 function renderSettings() {

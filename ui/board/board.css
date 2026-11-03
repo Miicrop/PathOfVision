@@ -57,8 +57,11 @@ button.btn:disabled { opacity: .4; cursor: default; }
 .seg button { background: transparent; border: 1px solid var(--line); border-radius: 4px; padding: 5px 12px; cursor: pointer; color: var(--muted); }
 .seg button[aria-pressed="true"] { color: var(--fg); border-color: var(--gold); background: var(--panel-2); }
 .seg .ico { width: 20px; height: 20px; object-fit: contain; margin: -3px 6px -3px -3px; vertical-align: middle; }
-.view-row { display: flex; flex-wrap: wrap; gap: 6px 16px; }
 .seg .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+/* The filter bar stays at the top while scrolling down to the downsides. */
+.filters.sticky { position: sticky; top: 0; z-index: 20; box-shadow: 0 6px 14px rgb(0 0 0 / .55), 0 -20px 0 var(--bg); }
+.filters .grp { grid-column: 1 / -1; margin: 4px 0 -2px; font-family: var(--font-display); font-variant: small-caps; font-size: 16px; letter-spacing: .06em; color: var(--gold); }
+.filters .grp:not(:first-child) { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
 .search-row input { width: 100%; max-width: 420px; }
 
 .board h2 { font-family: var(--font-display); font-weight: 700; font-size: 19px; margin: 0 0 8px; font-variant: small-caps; letter-spacing: .04em; display: flex; align-items: baseline; gap: 10px; }
@@ -149,14 +152,13 @@ button.btn:disabled { opacity: .4; cursor: default; }
 .card.upside .txt { color: color-mix(in srgb, var(--up-text) 80%, #fff); }
 .card.downside .txt { color: color-mix(in srgb, var(--down-text) 80%, #fff); }
 /* Card styles (settings.json board_cards): full = mod text only, short = short label above the
-   mod text (shown once when both say the same), compact = short label only, one line. */
+   mod text, compact = short label only, one line. */
 .card .head { font-family: var(--font-display); font-size: 17px; font-weight: 700; line-height: 1.15; letter-spacing: .01em; }
 .card.upside .head { color: color-mix(in srgb, var(--up-text) 55%, #fff); }
 .card.downside .head { color: color-mix(in srgb, var(--down-text) 60%, #fff); }
 body[data-cards="full"] .card .head { display: none; }
 body[data-cards="short"] .card .body { gap: 4px; }
-body[data-cards="short"] .card:not(.same) .txt { font-size: 12px; line-height: 1.25; color: var(--muted); }
-body[data-cards="short"] .card.same .txt,
+body[data-cards="short"] .card .txt { font-size: 12px; line-height: 1.25; color: var(--muted); }
 body[data-cards="compact"] .card .txt { display: none; }
 body[data-cards="compact"] .card .body { flex-direction: row; align-items: center; gap: 8px; padding-block: 7px; min-height: 48px; }
 body[data-cards="compact"] .card .meta { width: 76px; flex: none; }

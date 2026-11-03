@@ -251,6 +251,8 @@ impl FrameSource for WindowCapture {
 
     fn pause(&mut self) {
         self.stop();
+        // Frees the ~20 MB staging texture; the next grab recreates it.
+        self.staging = None;
     }
 }
 

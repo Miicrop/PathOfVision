@@ -78,7 +78,19 @@ fn option_ids(v: &AltarView, i: usize) -> Vec<String> {
 /// `"<altar> top: <verdict> [<ids>] | bottom: <verdict> [<ids>] -> <recommendation>"`
 pub fn view_line(v: &AltarView) -> String {
     let side = |i: usize| format!("{} [{}]", v.verdicts[i].verdict.label(), option_ids(v, i).join(", "));
-    format!("{} top: {} | bottom: {} -> {}", kind_name(v.altar.altar), side(0), side(1), v.recommendation.text)
+    format!(
+        "{} top: {} | bottom: {} -> {}{}",
+        kind_name(v.altar.altar),
+        side(0),
+        side(1),
+        v.recommendation.text,
+        completeness_suffix(v.complete)
+    )
+}
+
+/// Marks an altar whose text was only partly readable.
+pub fn completeness_suffix(complete: bool) -> &'static str {
+    if complete { "" } else { " (partly hidden)" }
 }
 
 pub fn view_json(views: &[AltarView]) -> Value {

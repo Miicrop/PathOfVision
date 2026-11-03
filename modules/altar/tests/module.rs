@@ -55,6 +55,16 @@ fn module_reads_altars_on_a_screenshot() {
         assert!(line.contains("top:") && line.contains("->"), "{line}");
     }
     assert_eq!(out.view["altars"].as_array().map(Vec::len), Some(2));
+    for (line, a) in out.lines.iter().zip(out.view["altars"].as_array().unwrap()) {
+        let complete = a["complete"].as_bool().unwrap();
+        assert_eq!(line.ends_with(" (partly hidden)"), !complete, "{line}");
+    }
+}
+
+#[test]
+fn incomplete_altars_are_marked_in_the_line() {
+    assert_eq!(altar::module::completeness_suffix(true), "");
+    assert_eq!(altar::module::completeness_suffix(false), " (partly hidden)");
 }
 
 #[test]

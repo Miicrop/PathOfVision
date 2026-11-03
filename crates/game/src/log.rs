@@ -22,7 +22,7 @@ pub struct Area {
 
 fn area_regex() -> &'static Regex {
     static RE: OnceLock<Regex> = OnceLock::new();
-    RE.get_or_init(|| Regex::new(r#"Generating level (\d+) area "([^"]+)""#).unwrap())
+    RE.get_or_init(|| Regex::new(r#"\] Generating level (\d+) area "([^"]+)""#).unwrap())
 }
 
 pub fn classify(id: &str) -> AreaKind {
@@ -152,6 +152,8 @@ mod tests {
         assert_eq!(parse_area_line(&line("2_11_endgame_town")).unwrap().kind, AreaKind::Town);
         assert_eq!(parse_area_line(&line("1_1_town")).unwrap().kind, AreaKind::Town);
         assert_eq!(parse_area_line(&line("1_1_2")).unwrap().kind, AreaKind::Other);
+        let chat = "2026/11/03 17:12:45 1678793844 1186a8a3 [INFO Client 47376] @From Someone: Generating level 1 area \"HideoutFoo\" with seed 1";
+        assert_eq!(parse_area_line(chat), None);
         assert_eq!(parse_area_line("2026/11/03 [INFO Client 1] @From Bob: what area is this"), None);
     }
 

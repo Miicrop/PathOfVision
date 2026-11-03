@@ -278,6 +278,7 @@ impl SettingsStore {
         if let Some((k, _)) = changes.iter().find(|(k, _)| !known.contains_key(k)) {
             anyhow::bail!("unknown setting {section}.{k}");
         }
+        self.sync_from_disk()?;
         let mut raw = self.raw.clone();
         let obj = section_object(&mut raw, section);
         for (k, v) in &changes {
@@ -298,6 +299,24 @@ impl SettingsStore {
         self.raw = raw;
         self.settings = s.clone();
         Ok(s)
+    }
+
+    /// Picks up edits made since the last load, so a write never overwrites them. A file that
+    /// exists but does not parse is an error: the user's text must not be replaced.
+    fn sync_from_disk(&mut self) -> Result<()> {
+        match std::fs::read_to_string(&self.path) {
+            Ok(text) => {
+                let (raw, settings) = parse(&text)
+                    .context("settings.json is not valid JSON; fix or delete it")?;
+                (self.raw, self.settings) = (raw, settings);
+            }
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => {
+                (self.raw, self.settings) = (Value::Object(Map::new()), Settings::default());
+            }
+            Err(e) => return Err(e).with_context(|| format!("reading {}", self.path.display())),
+        }
+        self.mtime = mtime_of(&self.path);
+        Ok(())
     }
 
     /// Replaces the whole file; only `import_prototype` writes whole files, through `write_atomic`.
@@ -482,6 +501,33 @@ mod tests {
         assert!(store.reload_if_changed());
         store.update("altar", "hud_bottom", serde_json::json!(5)).unwrap();
         assert_eq!(read_json(&p)["top"], 2);
+    }
+
+    #[test]
+    fn update_sees_hand_edits_made_since_last_reload() {
+        let (_d, p) = paths();
+        write(&p, r#"{"top":1,"modules":{"altar":{"hud_bottom":10}}}"#);
+        let mut store = SettingsStore::open(&p);
+        write(&p, r#"{"top":1,"added":"by hand","modules":{"altar":{"hud_bottom":77}}}"#);
+        let s = store.update("altar", "hud_font_size", serde_json::json!(20)).unwrap();
+        assert_eq!((s.altar.hud_bottom, s.altar.hud_font_size), (77, 20));
+        let v = read_json(&p);
+        assert_eq!(v["added"], "by hand");
+        assert_eq!(v["modules"]["altar"]["hud_bottom"], 77);
+        assert_eq!(v["modules"]["altar"]["hud_font_size"], 20);
+    }
+
+    #[test]
+    fn update_refuses_to_overwrite_a_broken_file() {
+        let (_d, p) = paths();
+        let broken = r#"{"modules": {"altar": {"hud_bottom": 5,"#;
+        write(&p, broken);
+        let mut store = SettingsStore::open(&p);
+        assert_eq!(store.get(), &Settings::default());
+        let e = store.update("altar", "hud_font_size", serde_json::json!(20)).unwrap_err();
+        assert!(format!("{e:#}").contains("not valid JSON"));
+        assert!(store.reset("altar", &["hud_bottom"]).is_err());
+        assert_eq!(std::fs::read_to_string(p.settings_file()).unwrap(), broken);
     }
 
     #[test]

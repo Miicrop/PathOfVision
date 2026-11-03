@@ -159,6 +159,25 @@ mod tests {
     }
 
     #[test]
+    fn slider_and_number_bounds_match_clean_altar() {
+        let d = tempfile::tempdir().unwrap();
+        let paths = crate::AppPaths::with(d.path().join("data"), d.path().join("user"));
+        let mut store = crate::SettingsStore::open(&paths);
+        for f in section("altar").groups.iter().flat_map(|g| &g.fields) {
+            let (min, max) = match f.kind {
+                FieldKind::Slider { min, max, .. } => (serde_json::json!(min), serde_json::json!(max)),
+                FieldKind::Number { min, max, .. } => (serde_json::json!(min), serde_json::json!(max)),
+                _ => continue,
+            };
+            for v in [min, max] {
+                store.update("altar", f.key, v.clone()).unwrap();
+                let got = serde_json::to_value(&store.get().altar).unwrap();
+                assert_eq!(got[f.key].as_f64(), v.as_f64(), "{} = {v}", f.key);
+            }
+        }
+    }
+
+    #[test]
     fn schema_serializes_for_the_window() {
         let v = serde_json::to_value(settings_schema()).unwrap();
         assert_eq!(v[1]["groups"][1]["fields"][0]["kind"]["type"], "slider");

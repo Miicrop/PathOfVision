@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
-**Status:** ✅ Done 2026-11-03. Tasks 1–8 done and reviewed, final branch review done, merged into `main`, user's in-game test passed (results in `plans/Plan.md`, Phase 4).
+**Status:** ✅ Done and merged into `main` (2026-11-03). Result in-game (3440×1440, 24 logical cores): 3.2–3.4 scans/s, scan avg 35–45 ms, CPU 0.7 % of total, FPS unchanged, verdicts correct; without the game 0.01 % CPU. Details and carry-over notes in `plans/Plan.md`, Phase 4.
 
 **Goal:** A console program `pov-scan` that finds the running PoE window, knows from the game log whether the player is in a map, captures the window with Windows.Graphics.Capture only then, and prints the altar recommendations live, within the CPU budget.
 
@@ -237,3 +237,17 @@ Port `prototype/live.py` `Scanner.scan` with its constants `TRACK_DISTANCE = 250
 - [x] **Step 4: Verify:** `cargo test --workspace --release` green; golden test unchanged; `cargo run -p pov-scan --release -- --replay tests/fixtures/screens --hold 1 --stats` prints altar lines and, after 10 s, a stats line with CPU ≤ 3 % of total (report the numbers); `cargo run -p pov-scan --release` without the game prints "PoE not found" and the process stays at ~0 % CPU (check with the stats line).
 - [x] **Step 5: Update `plans/Plan.md`** Phase 4 with a short "Plan B1 done" entry (what `pov-scan` does, measured CPU in replay, the `--import-prototype` step) and commit: `git add modules/altar apps/scan Cargo.toml Cargo.lock plans/Plan.md && git commit -m "Live: altar module and pov-scan console app"`
 - [x] **Step 6 (user, after the branch review):** the controller asks the user to run `pov-scan --import-prototype` once and then `pov-scan --stats` during a real mapping session (borderless 3440×1440): verdicts correct, CPU ≤ 3 % total, FPS unchanged. Results go into `plans/Plan.md`.
+
+## After Plan B1
+
+Deviations from the plan text, decided during execution:
+- `pov-scan --import-prototype` finds the repo root via `CARGO_MANIFEST_DIR/../..` (dev tool only).
+- PoE window lookup: class `POEWindowClass`, falling back to the largest visible top-level window of a process whose exe name starts with `PathOfExile`.
+- `AltarModule::new` always uses `altar::assets_dir()`; the installed resource layout is decided in B2/C.
+- A failed settings reload (file half-written or broken) keeps the previous settings.
+- On a truncated game log the watcher re-reads the tail of the new file (required by the test `truncated_log_restarts`).
+- The runner grabs a frame only when an active module is due.
+- `wants_frames` also reloads settings, so re-enabling the altar module works while it is idle.
+- Added after the final review: incomplete altars print `(partly hidden)`; the area regex is anchored on `] Generating level` (chat text cannot spoof the area); the capture staging texture is freed on pause.
+
+Open points for Plan B2 are listed in `plans/Plan.md`, Phase 4, "Carry-over into Plan B2".

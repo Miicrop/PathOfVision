@@ -243,6 +243,7 @@ tests/                   # unit + recognition accuracy tests
 - Settings: HUD position/scale, profile switching, start with Windows (optional).
 - Releases via GitHub with a changelog.
 - The app becomes a generic PoE helper with modules (see Phase 6). It needs a new name; architecture spec and port plan come next.
+- **Plan A done (2026-11-03):** the Rust pipeline (`crates/vision`, `crates/ocr`, `modules/altar`) reproduces the prototype on the 39 local screenshots: `altars detected : 44/44 (+0 false)`, `options correct : 84/85 (98.8 %)`, same single miss (`screen_10.png [856, 1152] bottom`). Median per screen 174 ms vs 202 ms for Python on the same machine (244 ms measured earlier). `cargo run -p altar --release --bin evaluate` prints the report; `modules/altar/tests/golden.rs` guards it. Next: Plan B (live app).
 
 ### Phase 5 – Future changes (backlog, not committed)
 - **Resolutions & UI scale:** support 1080p, 1440p, 4K, ultrawide and different in-game UI scales (scale-invariant detection, test fixtures per resolution).

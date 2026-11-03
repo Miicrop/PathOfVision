@@ -87,10 +87,19 @@ impl Rgb {
         Ok(Rgb { w, h, px })
     }
 
-    /// Builds from tightly packed BGRA bytes (screen captures); alpha is dropped.
-    pub fn from_bgra(w: usize, h: usize, bytes: &[u8]) -> Rgb {
-        let px = bytes.chunks_exact(4).take(w * h).map(|c| [c[2], c[1], c[0]]).collect();
-        Rgb { w, h, px }
+    /// Builds from BGRA bytes with a row pitch of `stride` bytes (screen captures); alpha is dropped.
+    pub fn from_bgra(w: usize, h: usize, stride: usize, bytes: &[u8]) -> anyhow::Result<Rgb> {
+        anyhow::ensure!(stride >= w * 4, "stride {stride} is smaller than a row ({} bytes)", w * 4);
+        if h > 0 {
+            let need = stride * (h - 1) + w * 4;
+            anyhow::ensure!(bytes.len() >= need, "buffer too short: {} bytes, need {need}", bytes.len());
+        }
+        let mut px = Vec::with_capacity(w * h);
+        for y in 0..h {
+            let row = &bytes[y * stride..y * stride + w * 4];
+            px.extend(row.as_chunks::<4>().0.iter().map(|c| [c[2], c[1], c[0]]));
+        }
+        Ok(Rgb { w, h, px })
     }
 
     pub fn crop(&self, x0: usize, y0: usize, x1: usize, y1: usize) -> Rgb {
@@ -189,8 +198,22 @@ mod tests {
 
     #[test]
     fn from_bgra_drops_alpha() {
-        let r = Rgb::from_bgra(1, 1, &[3, 2, 1, 255]);
+        let r = Rgb::from_bgra(1, 1, 4, &[3, 2, 1, 255]).unwrap();
         assert_eq!(r.px, vec![[1, 2, 3]]);
+    }
+
+    #[test]
+    fn from_bgra_handles_row_padding() {
+        // 2x2 image, stride 12: each row is 8 pixel bytes + 4 padding bytes (last row unpadded).
+        let bytes = [3, 2, 1, 255, 6, 5, 4, 255, 0, 0, 0, 0, 9, 8, 7, 255, 12, 11, 10, 255];
+        let r = Rgb::from_bgra(2, 2, 12, &bytes).unwrap();
+        assert_eq!(r.px, vec![[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]);
+    }
+
+    #[test]
+    fn from_bgra_rejects_short_buffer_and_small_stride() {
+        assert!(Rgb::from_bgra(2, 2, 8, &[0u8; 15]).is_err());
+        assert!(Rgb::from_bgra(2, 1, 4, &[0u8; 8]).is_err());
     }
 
     #[test]

@@ -121,7 +121,7 @@ pub fn altar_type(img: &Rgb, icon: &Icon) -> AltarKind {
     for &p in &patch.px {
         let (h, s, v) = hsv(p);
         if s > 90 && v > 70 {
-            if h < 20 || h > 165 {
+            if !(20..=165).contains(&h) {
                 red += 1;
             }
             if h > 80 && h < 125 {

@@ -7,8 +7,7 @@ use serde_json::{Map, Value};
 
 use crate::paths::AppPaths;
 
-#[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
-#[serde(default)]
+#[derive(Debug, Clone, PartialEq, Default, Serialize)]
 pub struct General {
     pub autostart: bool,
     pub client_log: Option<PathBuf>,
@@ -85,14 +84,12 @@ pub struct Settings {
     pub altar: AltarSettings,
 }
 
-#[derive(Serialize, Deserialize, Default)]
-#[serde(default)]
+#[derive(Serialize)]
 struct Modules {
     altar: AltarSettings,
 }
 
-#[derive(Serialize, Deserialize, Default)]
-#[serde(default)]
+#[derive(Serialize)]
 struct Wire {
     general: General,
     modules: Modules,
@@ -106,8 +103,33 @@ impl Serialize for Settings {
 
 impl<'de> Deserialize<'de> for Settings {
     fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
-        let w = Wire::deserialize(d)?;
-        Ok(Settings { general: w.general, altar: w.modules.altar })
+        Ok(Settings::from_value(&Value::deserialize(d)?))
+    }
+}
+
+impl General {
+    pub fn from_map(m: &Map<String, Value>) -> General {
+        let mut g = General::default();
+        g.autostart = m.get("autostart").and_then(Value::as_bool).unwrap_or(g.autostart);
+        g.try_unsupported_size = m.get("try_unsupported_size").and_then(Value::as_bool).unwrap_or(g.try_unsupported_size);
+        g.client_log = m.get("client_log").and_then(Value::as_str).map(PathBuf::from);
+        g
+    }
+}
+
+impl Settings {
+    /// Lenient: every level falls back to defaults when missing or of the wrong type.
+    pub fn from_value(v: &Value) -> Settings {
+        let obj = v.as_object();
+        let general = obj.and_then(|o| o.get("general")).and_then(Value::as_object).map(General::from_map).unwrap_or_default();
+        let altar = obj
+            .and_then(|o| o.get("modules"))
+            .and_then(Value::as_object)
+            .and_then(|m| m.get("altar"))
+            .and_then(Value::as_object)
+            .map(AltarSettings::from_map)
+            .unwrap_or_default();
+        Settings { general, altar }
     }
 }
 
@@ -133,13 +155,15 @@ pub fn clean_altar(mut s: AltarSettings) -> AltarSettings {
     s
 }
 
-fn load_file(path: &Path) -> Settings {
-    let mut s = std::fs::read_to_string(path)
-        .ok()
-        .and_then(|t| serde_json::from_str::<Settings>(&t).ok())
-        .unwrap_or_default();
+fn try_load(path: &Path) -> Option<Settings> {
+    let text = std::fs::read_to_string(path).ok()?;
+    let mut s = Settings::from_value(&serde_json::from_str::<Value>(&text).ok()?);
     s.altar = clean_altar(s.altar);
-    s
+    Some(s)
+}
+
+fn load_file(path: &Path) -> Settings {
+    try_load(path).unwrap_or_default()
 }
 
 fn mtime_of(path: &Path) -> Option<SystemTime> {
@@ -181,7 +205,12 @@ impl SettingsStore {
             return false;
         }
         self.mtime = m;
-        self.settings = load_file(&self.path);
+        // A file that exists but cannot be read or parsed right now (mid-write) keeps the old settings.
+        match try_load(&self.path) {
+            Some(s) => self.settings = s,
+            None if m.is_some() => return false,
+            None => self.settings = Settings::default(),
+        }
         true
     }
 
@@ -270,5 +299,28 @@ mod tests {
         assert!(store.reload_if_changed());
         assert_eq!(store.get().altar.hud_bottom, 99);
         assert!(!store.reload_if_changed());
+    }
+
+    #[test]
+    fn wrong_types_outside_altar_do_not_discard_the_file() {
+        let (_d, p) = paths();
+        write(&p, r#"{"general":{"autostart":"yes","client_log":5},"modules":{"altar":{"hud_bottom":99}}}"#);
+        let s = SettingsStore::open(&p);
+        assert_eq!(s.get().altar.hud_bottom, 99);
+        assert_eq!(s.get().general, General::default());
+        write(&p, r#"{"general":3,"modules":[1]}"#);
+        assert_eq!(SettingsStore::open(&p).get(), &Settings::default());
+    }
+
+    #[test]
+    fn reload_keeps_previous_settings_on_broken_file() {
+        let (_d, p) = paths();
+        write(&p, r#"{"modules": {"altar": {"hud_bottom": 99}}}"#);
+        let mut store = SettingsStore::open(&p);
+        write(&p, "{broken");
+        let f = std::fs::File::options().write(true).open(p.settings_file()).unwrap();
+        f.set_modified(SystemTime::now() + Duration::from_secs(5)).unwrap();
+        store.reload_if_changed();
+        assert_eq!(store.get().altar.hud_bottom, 99);
     }
 }

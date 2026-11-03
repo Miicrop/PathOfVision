@@ -8,9 +8,10 @@ use pov_overlay::{hide, make_overlay, show_at};
 use windows::Win32::Foundation::{HWND, LPARAM, LRESULT, WPARAM};
 use windows::Win32::System::LibraryLoader::GetModuleHandleW;
 use windows::Win32::UI::WindowsAndMessaging::{
-    CreateWindowExW, DefWindowProcW, DispatchMessageW, GWL_EXSTYLE, GetForegroundWindow,
-    GetMessageW, GetWindowLongPtrW, IsWindowVisible, MSG, PostMessageW, PostQuitMessage,
-    RegisterClassW, SW_SHOWNOACTIVATE, SetForegroundWindow, ShowWindow, TranslateMessage,
+    CreateWindowExW, DefWindowProcW, DispatchMessageW, GUITHREADINFO, GWL_EXSTYLE,
+    GetForegroundWindow, GetGUIThreadInfo, GetMessageW, GetWindowLongPtrW,
+    GetWindowThreadProcessId, IsWindowVisible, MSG, PostMessageW, PostQuitMessage, RegisterClassW,
+    SW_SHOWNOACTIVATE, SetForegroundWindow, SetWindowPos, ShowWindow, TranslateMessage,
     WINDOW_EX_STYLE, WM_CLOSE, WM_DESTROY, WNDCLASSW, WS_EX_LAYERED, WS_EX_NOACTIVATE,
     WS_EX_TOOLWINDOW, WS_EX_TOPMOST, WS_EX_TRANSPARENT, WS_OVERLAPPEDWINDOW,
 };
@@ -90,6 +91,19 @@ impl Drop for TestWindow {
     }
 }
 
+/// The active window of `w`'s own GUI thread (what activation would change even if the process is in the background).
+fn thread_active(w: &TestWindow) -> HWND {
+    unsafe {
+        let tid = GetWindowThreadProcessId(w.handle(), None);
+        let mut info = GUITHREADINFO {
+            cbSize: std::mem::size_of::<GUITHREADINFO>() as u32,
+            ..Default::default()
+        };
+        GetGUIThreadInfo(tid, &mut info).unwrap();
+        info.hwndActive
+    }
+}
+
 fn ex_style(w: &TestWindow) -> u32 {
     unsafe { GetWindowLongPtrW(w.handle(), GWL_EXSTYLE) as u32 }
 }
@@ -126,6 +140,11 @@ fn show_does_not_take_focus() {
 
     assert_eq!(unsafe { GetForegroundWindow() }, before);
     assert_ne!(unsafe { GetForegroundWindow() }, b.handle());
+    assert_ne!(
+        thread_active(&b),
+        b.handle(),
+        "show_at activated the overlay window"
+    );
     assert!(unsafe { IsWindowVisible(b.handle()) }.as_bool());
 
     hide(b.hwnd).unwrap();

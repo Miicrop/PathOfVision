@@ -72,6 +72,7 @@ pub fn show_at(hwnd: isize, rect: Rect) -> anyhow::Result<()> {
     Ok(())
 }
 
+/// Hides the window; it keeps its overlay styles for the next `show_at`.
 pub fn hide(hwnd: isize) -> anyhow::Result<()> {
     // ShowWindow returns the previous visibility, not success.
     let _ = unsafe { ShowWindow(handle(hwnd), SW_HIDE) };

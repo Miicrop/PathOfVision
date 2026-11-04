@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+
+- Update test: no changes to the app itself.
+
 ## 0.1.0
 
 First release.

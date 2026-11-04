@@ -74,7 +74,7 @@ pub fn open_settings_window(app: &AppHandle, section: Option<&str>) -> tauri::Re
     }
     WebviewWindowBuilder::new(app, SETTINGS_WINDOW, WebviewUrl::App(url.into()))
         .title("Path of Vision \u{2013} Settings")
-        .inner_size(900.0, 640.0)
+        .inner_size(900.0, 700.0)
         .center()
         .build()?;
     Ok(())

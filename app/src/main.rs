@@ -15,7 +15,7 @@ use pov_core::AppPaths;
 use tauri::image::Image;
 use tauri::menu::{Menu, MenuEvent, MenuItem};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
-use tauri::{AppHandle, Manager, RunEvent, WebviewUrl, WebviewWindowBuilder, WindowEvent};
+use tauri::{AppHandle, Manager, RunEvent, WebviewUrl, WebviewWindow, WebviewWindowBuilder};
 
 use crate::commands::HUD_WINDOW;
 use crate::scanner::Mode;
@@ -23,7 +23,9 @@ use crate::state::{AppState, ScannerThread, lock};
 
 const TITLE: &str = "Path of Vision";
 const MAIN_WINDOW: &str = "main";
-const USAGE: &str = "usage: pov-app [--replay <dir>] [--hold <secs>] [--stats] [--dev]";
+const USAGE: &str = "usage: pov-app [--replay <dir>] [--hold <secs>] [--stats] [--dev] [--hidden]";
+/// Autostart passes this: start in the tray (HUD and tray only, no main window).
+const HIDDEN_FLAG: &str = "--hidden";
 /// Share of the primary monitor's work area the main window covers.
 const MAIN_SIZE: f64 = 0.9;
 
@@ -33,6 +35,7 @@ struct Args {
     hold: f64,
     stats: bool,
     dev: bool,
+    hidden: bool,
 }
 
 fn parse_args() -> anyhow::Result<Args> {
@@ -49,6 +52,7 @@ fn parse_args() -> anyhow::Result<Args> {
             }
             "--stats" => a.stats = true,
             "--dev" => a.dev = true,
+            HIDDEN_FLAG => a.hidden = true,
             "-h" | "--help" => {
                 println!("{USAGE}");
                 std::process::exit(0);
@@ -73,17 +77,27 @@ fn app_paths(dev: bool) -> anyhow::Result<AppPaths> {
     Ok(dev)
 }
 
-/// Shows, restores and focuses the main window.
+/// Shows, restores and focuses the main window, or creates it again after it was closed.
+/// Called from event-loop callbacks (tray, single instance) on the main thread.
 fn show_main(app: &AppHandle) {
     if let Some(w) = app.get_webview_window(MAIN_WINDOW) {
         let _ = w.unminimize();
         let _ = w.show();
         let _ = w.set_focus();
+    } else {
+        match create_main_window(app) {
+            Ok(w) => {
+                let _ = w.set_focus();
+            }
+            // E.g. a reopen while the closed window is still being torn down; the next click works.
+            Err(e) => eprintln!("main window: {e}"),
+        }
     }
 }
 
-/// The main window: Home, 90 % of the primary monitor's work area, centered on it.
-fn create_main_window(app: &AppHandle) -> tauri::Result<()> {
+/// The main window: Home, 90 % of the primary monitor's work area, centered on it. Closing it
+/// destroys it (and its WebView renderer); the app lives on in the tray.
+fn create_main_window(app: &AppHandle) -> tauri::Result<WebviewWindow> {
     let mut builder = WebviewWindowBuilder::new(app, MAIN_WINDOW, WebviewUrl::App("shell/home.html".into()))
         .title(TITLE)
         .min_inner_size(640.0, 480.0);
@@ -99,16 +113,7 @@ fn create_main_window(app: &AppHandle) -> tauri::Result<()> {
         }
         None => builder.inner_size(1280.0, 800.0).center(),
     };
-    let window = builder.build()?;
-    let w = window.clone();
-    window.on_window_event(move |event| {
-        // Closing the main window only hides it; the app lives on in the tray.
-        if let WindowEvent::CloseRequested { api, .. } = event {
-            api.prevent_close();
-            let _ = w.hide();
-        }
-    });
-    Ok(())
+    builder.build()
 }
 
 /// The in-game HUD: transparent, click-through, topmost, never focused, hidden until the page
@@ -200,11 +205,15 @@ fn main() {
         None => Mode::Live,
     };
     let stats = args.stats;
+    let hidden = args.hidden;
 
     let app = tauri::Builder::default()
         // First, so a second start hands over before anything else is set up.
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| show_main(app)))
-        .plugin(tauri_plugin_autostart::init(tauri_plugin_autostart::MacosLauncher::LaunchAgent, None))
+        .plugin(tauri_plugin_autostart::init(
+            tauri_plugin_autostart::MacosLauncher::LaunchAgent,
+            Some(vec![HIDDEN_FLAG]),
+        ))
         .manage(AppState::new(paths))
         .manage(ScannerThread::default())
         .invoke_handler(tauri::generate_handler![
@@ -224,7 +233,9 @@ fn main() {
         ])
         .setup(move |app| {
             let handle = app.handle().clone();
-            create_main_window(&handle)?;
+            if !hidden {
+                create_main_window(&handle)?;
+            }
             if let Err(e) = create_hud_window(&handle) {
                 // The app (Home, board) still works without the HUD.
                 eprintln!("HUD window: {e:#}");
@@ -238,7 +249,8 @@ fn main() {
         .expect("building the app");
 
     app.run(|_app, event| {
-        // Only "Quit" ends the app (with an exit code); closing the last window does not.
+        // Only "Quit" ends the app (with an exit code); closing the last window does not, the
+        // app stays in the tray.
         if let RunEvent::ExitRequested { code: None, api, .. } = event {
             api.prevent_exit();
         }

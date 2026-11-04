@@ -11,19 +11,19 @@ use crate::matching::{Match, match_box};
 use crate::text::parse_header;
 use crate::verdict::Pos;
 
-/// px left/right of the icon center to OCR (widest box is ~1000 px).
+/// Reference px left/right of the icon center to OCR (widest box is ~1000 px).
 const SEARCH_HALF_WIDTH: i32 = 650;
-/// px above/below the icon to OCR (tallest box is ~250 px).
+/// Reference px above/below the icon to OCR (tallest box is ~250 px).
 const SEARCH_HEIGHT: i32 = 320;
 /// OCR upscale at the reference scale; smaller clients are upscaled more (`UPSCALE / s`).
 const UPSCALE: f32 = 2.0;
 /// max(R, G, B) above this counts as text.
 const TEXT_BRIGHTNESS: u8 = 110;
-/// Slack when testing that a line crosses the icon center column.
+/// Slack (reference px) when testing that a line crosses the icon center column.
 const CENTER_TOLERANCE: f32 = 20.0;
-/// px between pieces of one row split by an icon or life bar.
+/// Reference px between pieces of one row split by an icon or life bar.
 const MAX_FRAGMENT_GAP: f32 = 220.0;
-/// Max vertical gap (px) between lines of one box.
+/// Max vertical gap (reference px) between lines of one box.
 const LINE_GAP: f32 = 22.0;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -256,8 +256,12 @@ impl Reader {
         Ok(Some(AltarRead { icon: *icon, altar: altar_type(img, icon, scale), options }))
     }
 
-    /// Reads a whole client frame; the scale follows from its size.
+    /// Reads a whole client frame; the scale follows from its size. Frames too small to scan
+    /// ([`Scale::is_scannable`]) give no altars.
     pub fn read_altars(&self, img: &Rgb) -> anyhow::Result<Vec<AltarRead>> {
+        if !Scale::is_scannable(img.w, img.h) {
+            return Ok(Vec::new());
+        }
         let scale = Scale::for_client(img.w, img.h);
         let mut altars = Vec::new();
         for icon in self.detector.find_icons(&img.to_gray(), scale) {

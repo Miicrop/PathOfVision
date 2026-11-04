@@ -5,8 +5,9 @@ use altar::read::{AltarRead, OptionRead};
 use altar::verdict::{Pos, Verdict};
 use altar::{AltarKind, Card, Target, load_cards, repo_data_dir};
 use std::cell::{Cell, RefCell};
-use vision::Scale;
 use std::path::PathBuf;
+
+use vision::Scale;
 
 const TOP_ID: &str = "TangleAltarUpsideBossDivineOrb"; // top column of the default profile
 const UP_A: &str = "CleansingAltarUpsideBossChaosOrb";

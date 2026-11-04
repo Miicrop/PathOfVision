@@ -128,3 +128,16 @@ fn module_loads_assets_from_app_paths() {
     let chain = format!("{err:#}");
     assert!(chain.contains("icon_eater.png"), "{chain}");
 }
+
+#[test]
+fn tiny_frames_are_skipped() {
+    let (_dir, mut m) = module();
+    let c = ctx(true, Some(AreaKind::Map));
+    let t0 = std::time::Instant::now();
+    for (w, h) in [(3440, 10), (3440, 0), (0, 1440)] {
+        let out = m.on_frame(&Rgb { w, h, px: vec![[30; 3]; w * h] }, &c).unwrap();
+        assert!(out.lines.is_empty(), "{w}x{h}: {:?}", out.lines);
+        assert_eq!(out.view["altars"].as_array().map(Vec::len), Some(0), "{w}x{h}");
+    }
+    assert!(t0.elapsed() < std::time::Duration::from_millis(500), "{:?}", t0.elapsed());
+}

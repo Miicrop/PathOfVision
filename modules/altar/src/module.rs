@@ -113,6 +113,12 @@ impl Module for AltarModule {
         };
         self.labels.refresh();
         self.keywords.refresh();
+        // Minimized or mid-resize: nothing is scanned or shown. The tracks stay; they time out,
+        // or are cleared by the scale change if the client comes back at another size.
+        if !Scale::is_scannable(frame.w, frame.h) {
+            let hud = hud_view(&[], &self.reader.cards, self.labels.get(), self.keywords.get(), style, (0, 0));
+            return Ok(ModuleOutput { module: ID, lines: Vec::new(), view: serde_json::to_value(hud)? });
+        }
         let now = self.start.elapsed().as_secs_f64();
         let scale = Scale::for_client(frame.w, frame.h);
         let icons = self.reader.detector.find_icons(&frame.to_gray(), scale);

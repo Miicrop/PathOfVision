@@ -6,6 +6,9 @@
 /// Client height all templates, offsets and thresholds were made at.
 pub const REFERENCE_HEIGHT: f64 = 1440.0;
 
+/// Client height (px) below which nothing is scanned (minimized or mid-resize windows).
+pub const MIN_CLIENT_HEIGHT: usize = 480;
+
 /// Native pixels per reference pixel.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Scale(pub f64);
@@ -26,6 +29,11 @@ impl Scale {
     /// Reference px to native px, rounded.
     pub fn px_i(self, reference_px: i32) -> i32 {
         self.px(f64::from(reference_px)).round() as i32
+    }
+
+    /// Large enough to scan: `w > 0` and `h >= MIN_CLIENT_HEIGHT`.
+    pub fn is_scannable(w: usize, h: usize) -> bool {
+        w > 0 && h >= MIN_CLIENT_HEIGHT
     }
 
     /// Narrower than 16:9 (e.g. 16:10); PoE may limit the UI by width there.
@@ -51,6 +59,16 @@ mod tests {
         assert_eq!(Scale(0.75).px_i(63), 47);
         assert_eq!(Scale(0.75).px(220.0), 165.0);
         assert_eq!(Scale::REFERENCE.px_i(650), 650);
+    }
+
+    #[test]
+    fn tiny_frames_are_not_scannable() {
+        assert!(Scale::is_scannable(1920, 1080));
+        assert!(Scale::is_scannable(640, MIN_CLIENT_HEIGHT));
+        assert!(!Scale::is_scannable(3440, MIN_CLIENT_HEIGHT - 1));
+        assert!(!Scale::is_scannable(3440, 10));
+        assert!(!Scale::is_scannable(3440, 0));
+        assert!(!Scale::is_scannable(0, 1440));
     }
 
     #[test]

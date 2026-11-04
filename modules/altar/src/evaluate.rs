@@ -90,6 +90,9 @@ pub fn evaluate(screens: &Path, labels: &Path) -> anyhow::Result<Report> {
 /// Like [`evaluate`], but with `Some(h)` every screen is first resized to height `h`, and the
 /// labeled icon positions and the icon tolerance are scaled by the same factor.
 pub fn evaluate_scaled(screens: &Path, labels: &Path, height: Option<u32>) -> anyhow::Result<Report> {
+    if let Some(h) = height {
+        anyhow::ensure!(h as usize >= vision::MIN_CLIENT_HEIGHT, "height {h} is below the minimum client height of {} px", vision::MIN_CLIENT_HEIGHT);
+    }
     let text = std::fs::read_to_string(labels).with_context(|| format!("reading {}", labels.display()))?;
     let labels: Value = serde_json::from_str(&text).context("parsing labels")?;
     let reader = Reader::new()?;

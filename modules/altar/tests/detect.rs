@@ -106,6 +106,17 @@ fn icons_found_on_downscaled_screen() {
 }
 
 #[test]
+fn tiny_frames_are_skipped() {
+    let det = detector();
+    let t0 = std::time::Instant::now();
+    for (w, h) in [(3440, 10), (3440, 0), (0, 1440)] {
+        let f = Rgb { w, h, px: vec![[30; 3]; w * h] };
+        assert!(det.find_icons(&f.to_gray(), Scale::for_client(w, h)).is_empty(), "{w}x{h}");
+    }
+    assert!(t0.elapsed() < std::time::Duration::from_millis(500), "{:?}", t0.elapsed());
+}
+
+#[test]
 #[ignore = "bench: cargo test -p altar --release --test detect -- --ignored --nocapture"]
 fn bench_find_icons_screen_02() {
     let path = altar::evaluate::fixtures_dir().join("screens/screen_02.png");

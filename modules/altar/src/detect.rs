@@ -72,8 +72,12 @@ impl Detector {
     /// Icons on a native-resolution frame of the given scale; centers in native px.
     ///
     /// The frame is resized so the icons have the templates' size: coarse and fine search run
-    /// at `COARSE_SCALE / s` and `FINE_SCALE / s` of the native frame.
+    /// at `COARSE_SCALE / s` and `FINE_SCALE / s` of the native frame. Frames too small to
+    /// scan ([`Scale::is_scannable`]) or a non-positive scale give no icons.
     pub fn find_icons(&self, gray: &Gray, scale: Scale) -> Vec<Icon> {
+        if !Scale::is_scannable(gray.w, gray.h) || scale.0.is_nan() || scale.0 <= 0.0 {
+            return Vec::new();
+        }
         let (w, h) = (gray.w as i32, gray.h as i32);
         let (coarse_f, fine_f) = (COARSE_SCALE / scale.0, FINE_SCALE / scale.0);
         let radius = scale.px_i(self.radius);

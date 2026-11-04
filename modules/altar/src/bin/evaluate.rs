@@ -5,6 +5,7 @@ use std::path::PathBuf;
 
 use altar::evaluate::{evaluate_scaled, fixtures_dir};
 use anyhow::{Context, bail};
+use vision::MIN_CLIENT_HEIGHT;
 
 const USAGE: &str = "usage: evaluate [<screens> <labels>] [--height <px>]";
 
@@ -16,7 +17,11 @@ fn main() -> anyhow::Result<()> {
         match arg.as_str() {
             "--height" => {
                 let v = args.next().context(USAGE)?;
-                height = Some(v.parse().with_context(|| format!("--height {v}: not a pixel count"))?);
+                let h: u32 = v.parse().with_context(|| format!("--height {v}: not a pixel count"))?;
+                if (h as usize) < MIN_CLIENT_HEIGHT {
+                    bail!("--height {h}: below the minimum client height of {MIN_CLIENT_HEIGHT} px");
+                }
+                height = Some(h);
             }
             "-h" | "--help" => {
                 println!("{USAGE}");
@@ -31,8 +36,8 @@ fn main() -> anyhow::Result<()> {
         _ => bail!(USAGE),
     };
     match height {
-        Some(h) => println!("scale: screens resized to height {h} px, s = {:.4}", f64::from(h) / vision::REFERENCE_HEIGHT),
-        None => println!("scale: native, s = screen height / {}", vision::REFERENCE_HEIGHT),
+        Some(h) => println!("scale: each screen resized to height {h} px (factor {h} / screen height)"),
+        None => println!("scale: native screens"),
     }
     let report = evaluate_scaled(&screens, &labels, height)?;
     println!("{report}");

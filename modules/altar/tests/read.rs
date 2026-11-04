@@ -140,3 +140,15 @@ fn reads_downscaled_screen_02() {
     want.sort();
     assert_eq!(got, want);
 }
+
+#[cfg(windows)]
+#[test]
+fn tiny_frames_are_skipped() {
+    let reader = Reader::new().unwrap();
+    let t0 = std::time::Instant::now();
+    for (w, h) in [(3440, 10), (3440, 0), (0, 1440)] {
+        let f = vision::Rgb { w, h, px: vec![[30; 3]; w * h] };
+        assert!(reader.read_altars(&f).unwrap().is_empty(), "{w}x{h}");
+    }
+    assert!(t0.elapsed() < std::time::Duration::from_millis(500), "{:?}", t0.elapsed());
+}

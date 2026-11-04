@@ -13,7 +13,24 @@
     }
   },
   "bundle": {
-    "active": false,
-    "icon": ["icons/icon.ico", "icons/icon.png"]
+    "active": true,
+    "targets": ["nsis"],
+    "publisher": "miicrop",
+    "licenseFile": "../LICENSE",
+    "icon": ["icons/icon.ico", "icons/icon.png"],
+    "resources": {
+      "../data/mods.json": "data/mods.json",
+      "../data/labels.json": "data/labels.json",
+      "../data/keywords.json": "data/keywords.json",
+      "../data/profiles/default.json": "data/profiles/default.json",
+      "../data/profiles/empty.json": "data/profiles/empty.json",
+      "../modules/altar/assets/": "modules/altar/assets/"
+    },
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "installerHooks": "installer/hooks.nsh"
+      }
+    }
   }
 }

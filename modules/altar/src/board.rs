@@ -17,6 +17,9 @@ const DEFAULT_PROFILE: &str = "default.json";
 pub struct BoardApi {
     paths: AppPaths,
     settings: Arc<Mutex<SettingsStore>>,
+    /// Held across every write to the profile folders or the active profile: the app runs its
+    /// IPC commands in parallel, and two saves of one profile would share its `.json.tmp` file.
+    writes: Mutex<()>,
 }
 
 fn truthy(v: &Value) -> bool {
@@ -125,7 +128,7 @@ fn check_file_name(file: &str) -> Result<()> {
 
 impl BoardApi {
     pub fn new(paths: AppPaths, settings: Arc<Mutex<SettingsStore>>) -> BoardApi {
-        BoardApi { paths, settings }
+        BoardApi { paths, settings, writes: Mutex::new(()) }
     }
 
     fn user_path(&self, file: &str) -> PathBuf {
@@ -229,7 +232,12 @@ impl BoardApi {
         Ok(profile)
     }
 
+    fn write_guard(&self) -> std::sync::MutexGuard<'_, ()> {
+        self.writes.lock().unwrap_or_else(|e| e.into_inner())
+    }
+
     pub fn save_profile(&self, file: &str, mut profile: Value) -> Result<Value> {
+        let _guard = self.write_guard();
         if self.is_read_only(file)? {
             return Ok(read_only_error());
         }
@@ -239,28 +247,38 @@ impl BoardApi {
     }
 
     pub fn duplicate_profile(&self, file: &str, name: &str) -> Result<Value> {
+        let _guard = self.write_guard();
         let mut profile = self.load_profile(file)?;
         let obj = profile.as_object_mut().expect("load_profile returns an object");
         obj.insert("name".into(), json!(name));
         obj.insert("readOnly".into(), json!(false));
         let new_file = profile_file_name(name, |f| self.user_path(f).exists() || self.shipped_path(f).exists());
         write_profile(&self.user_path(&new_file), &profile)?;
-        self.set_active(&new_file)?;
+        self.write_active(&new_file)?;
         Ok(json!({"file": new_file, "profiles": self.profiles()}))
     }
 
     pub fn delete_profile(&self, file: &str) -> Result<Value> {
+        let _guard = self.write_guard();
         if self.is_read_only(file)? {
             return Ok(read_only_error());
         }
+        // Read before deleting: once the file is gone the active profile resolves to the default.
+        let was_active = self.active() == file;
         std::fs::remove_file(self.user_path(file)).with_context(|| format!("deleting {file}"))?;
-        if self.active() == file {
-            self.set_active(DEFAULT_PROFILE)?;
+        if was_active {
+            self.write_active(DEFAULT_PROFILE)?;
         }
         Ok(json!({"ok": true, "profiles": self.profiles(), "active": self.active()}))
     }
 
     pub fn set_active(&self, file: &str) -> Result<()> {
+        let _guard = self.write_guard();
+        self.write_active(file)
+    }
+
+    /// `set_active` for callers that hold the write lock already.
+    fn write_active(&self, file: &str) -> Result<()> {
         check_file_name(file)?;
         let mut settings = self.settings.lock().unwrap_or_else(|e| e.into_inner());
         settings.update(MODULE, "profile", json!(file))?;

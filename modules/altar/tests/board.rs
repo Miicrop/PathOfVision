@@ -103,6 +103,32 @@ fn delete_active_profile_falls_back_to_default() {
     assert_eq!(out["active"], "default.json");
     assert_eq!(files(&out["profiles"]), ["default.json", "empty.json"]);
     assert!(!paths.profiles_dir("altar").join(&file).exists());
+    let settings: Value = serde_json::from_str(&std::fs::read_to_string(paths.settings_file()).unwrap()).unwrap();
+    assert_eq!(settings["modules"]["altar"]["profile"], "default.json");
+}
+
+#[test]
+fn parallel_saves_of_one_profile_do_not_collide() {
+    let (_t, api, paths) = setup();
+    let file = api.duplicate_profile("default.json", "Busy").unwrap()["file"].as_str().unwrap().to_string();
+    let base = api.load_profile(&file).unwrap();
+    let mut a = base.clone();
+    a["name"] = json!("A");
+    let mut b = base;
+    b["name"] = json!("B");
+    let path = paths.profiles_dir("altar").join(&file);
+    let (api, file, path, a, b) = (&api, &file, &path, &a, &b);
+    std::thread::scope(|s| {
+        for p in [a, b] {
+            s.spawn(move || {
+                for _ in 0..50 {
+                    assert_eq!(api.save_profile(file, p.clone()).unwrap(), json!({"ok": true}));
+                    let v: Value = serde_json::from_str(&std::fs::read_to_string(path).unwrap()).unwrap();
+                    assert!(&v == a || &v == b, "file holds neither save: {v}");
+                }
+            });
+        }
+    });
 }
 
 #[test]

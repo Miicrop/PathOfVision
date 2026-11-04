@@ -20,7 +20,6 @@ Open topics and ideas. Nothing here is committed; the project's current state is
 - ~~**Profile import/export** as a shareable text code (like PoB codes).~~ Done (board Export/Import, `POV1:` codes).
 - **Short links for profile codes** (like pobb.in for PoB): needs a hosting service and network traffic beyond the update check; only if players ask for it.
 - **In-app mod data updates:** download the newest `mods.json`; new cards show up as "new" on the board.
-- **Profile hotkey switching** (e.g. per farm strategy).
 - **Roll value scaling:** a high roll scores better than a low one within the same tier (needs the player's atlas scaling).
 - **Configurable thresholds** per profile, **combination rules** ("downside X only matters together with upside Y").
 - **Accessibility:** colorblind-safe verdict colors.
@@ -36,7 +35,7 @@ Open topics and ideas. Nothing here is committed; the project's current state is
 
 - **Atlas tree overlay:** import a planned atlas tree and show in-game where to go next.
 - **Passive tree overlay:** the same for the character tree, from Path of Building.
-- **Travel wheel:** radial menu at the mouse to travel via `/` commands. Conflicts with "never send input to the game" (see below).
+- **Wheel:** radial menu at the mouse (one hotkey, many actions, since most keys are taken): travel via `/` commands, switch altar profiles (e.g. per farm strategy), later more. Conflicts with "never send input to the game" (see below).
 - **Stash prices:** overlay on stash tabs with poe.ninja prices.
 - **Faustus trade helper:** prices and good ratios.
 - **Nameless Ritual alert.**

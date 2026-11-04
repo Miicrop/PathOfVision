@@ -11,9 +11,9 @@ use windows::Win32::UI::WindowsAndMessaging::{
     CreateWindowExW, DefWindowProcW, DispatchMessageW, GUITHREADINFO, GWL_EXSTYLE,
     GetForegroundWindow, GetGUIThreadInfo, GetMessageW, GetWindowLongPtrW,
     GetWindowThreadProcessId, IsWindowVisible, MSG, PostMessageW, PostQuitMessage, RegisterClassW,
-    SW_SHOWNOACTIVATE, SetForegroundWindow, ShowWindow, TranslateMessage, WINDOW_EX_STYLE,
-    WM_CLOSE, WM_DESTROY, WNDCLASSW, WS_EX_LAYERED, WS_EX_NOACTIVATE, WS_EX_TOOLWINDOW,
-    WS_EX_TRANSPARENT, WS_OVERLAPPEDWINDOW,
+    SW_SHOWNOACTIVATE, SetForegroundWindow, SetWindowLongPtrW, ShowWindow, TranslateMessage,
+    WINDOW_EX_STYLE, WM_CLOSE, WM_DESTROY, WNDCLASSW, WS_EX_APPWINDOW, WS_EX_LAYERED,
+    WS_EX_NOACTIVATE, WS_EX_TOOLWINDOW, WS_EX_TRANSPARENT, WS_OVERLAPPEDWINDOW,
 };
 use windows::core::w;
 
@@ -154,6 +154,15 @@ fn show_does_not_take_focus() {
 #[test]
 fn overlay_window_is_click_through() {
     let b = TestWindow::spawn(false);
+    // Like tao's windows: WS_EX_APPWINDOW set, which would put the HUD into Alt+Tab.
+    unsafe {
+        SetWindowLongPtrW(
+            b.handle(),
+            GWL_EXSTYLE,
+            ex_style(&b) as isize | WS_EX_APPWINDOW.0 as isize,
+        );
+    }
+    assert_ne!(ex_style(&b) & WS_EX_APPWINDOW.0, 0);
     make_overlay(b.hwnd).unwrap();
     let ex = ex_style(&b);
     for flag in [
@@ -164,4 +173,9 @@ fn overlay_window_is_click_through() {
     ] {
         assert_eq!(ex & flag.0, flag.0, "missing ex style {:#x}", flag.0);
     }
+    assert_eq!(
+        ex & WS_EX_APPWINDOW.0,
+        0,
+        "WS_EX_APPWINDOW puts the HUD into Alt+Tab"
+    );
 }

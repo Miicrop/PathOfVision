@@ -8,7 +8,7 @@ use windows::Win32::Foundation::HWND;
 use windows::Win32::UI::WindowsAndMessaging::{
     GWL_EXSTYLE, GetWindowLongPtrW, HWND_TOPMOST, SET_WINDOW_POS_FLAGS, SW_HIDE, SWP_NOACTIVATE,
     SWP_NOMOVE, SWP_NOSIZE, SWP_SHOWWINDOW, SetWindowLongPtrW, SetWindowPos, ShowWindow,
-    WS_EX_LAYERED, WS_EX_NOACTIVATE, WS_EX_TOOLWINDOW, WS_EX_TRANSPARENT,
+    WS_EX_APPWINDOW, WS_EX_LAYERED, WS_EX_NOACTIVATE, WS_EX_TOOLWINDOW, WS_EX_TRANSPARENT,
 };
 
 /// Flags for showing the HUD: visible, never activated.
@@ -40,11 +40,16 @@ pub fn hud_rect(client: Rect, size: (i32, i32), offset_x: i64, bottom: i64) -> R
 pub fn make_overlay(hwnd: isize) -> anyhow::Result<()> {
     let h = handle(hwnd);
     let add = (WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW).0 as isize;
+    // tao keeps WS_EX_APPWINDOW, which would put the HUD into Alt+Tab despite WS_EX_TOOLWINDOW.
+    let remove = WS_EX_APPWINDOW.0 as isize;
     unsafe {
         let cur = GetWindowLongPtrW(h, GWL_EXSTYLE);
-        SetWindowLongPtrW(h, GWL_EXSTYLE, cur | add);
+        SetWindowLongPtrW(h, GWL_EXSTYLE, (cur | add) & !remove);
         let now = GetWindowLongPtrW(h, GWL_EXSTYLE);
-        anyhow::ensure!(now & add == add, "could not set the overlay window style");
+        anyhow::ensure!(
+            now & add == add && now & remove == 0,
+            "could not set the overlay window style"
+        );
         // WS_EX_TOPMOST is ignored by SetWindowLongPtr; it only takes effect through the z-order.
         SetWindowPos(
             h,

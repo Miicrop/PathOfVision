@@ -19,13 +19,14 @@ It only looks at the picture on your screen, like a screenshot would.
 ## Supported setups
 
 - Windows 10 or 11, English game client, windowed or borderless.
-- Resolution support (by client height, 16:10 or wider):
+- Resolution support (by client height, aspect ratio 16:10 up to about 21:9):
 
 | Resolution | Status |
 | --- | --- |
-| 1080 to 1440 px height (verified on 1920x1080, 1920x1200, 2560x1353 and 3440x1440) | Verified (also windowed clients down to 90 % of 1080 px) |
+| 1080 to 1440 px height (verified on 1920x1080, 1920x1200, 2560x1353 and 3440x1440) | Verified (windowed clients down to 90 % of 1080 px count too; that case was checked on downscaled screenshots only) |
 | 4K and heights up to 2160 px | Runs, with an "untested resolution" note in the HUD |
 | Narrower than 16:10 (e.g. 4:3) | Runs, with an "untested resolution" note in the HUD |
+| Wider than about 2.6:1 (e.g. a window stretched across an ultrawide at reduced height) | Runs, with an "untested resolution" note in the HUD |
 | Smaller than the verified range | Unsupported, unless "Try unsupported resolutions" is enabled in Settings |
 
 ## Install

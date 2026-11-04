@@ -23,7 +23,8 @@ const TEXT_BRIGHTNESS: u8 = 110;
 const CENTER_TOLERANCE: f32 = 20.0;
 /// Reference px between pieces of one row split by an icon or life bar.
 const MAX_FRAGMENT_GAP: f32 = 220.0;
-/// Fragments are one row when their vertical centers differ by at most this share of the smaller height.
+/// Fragments are one row when their vertical centers differ by at most this share of the larger
+/// height (the larger, so a lone "-" or "," still finds its row).
 const ROW_ALIGN: f32 = 1.0 / 3.0;
 /// Max vertical gap (reference px) between lines of one box.
 const LINE_GAP: f32 = 22.0;
@@ -135,10 +136,10 @@ pub fn merge_rows(mut lines: Vec<Line>, scale: Scale) -> Vec<Line> {
     let mut merged: Vec<Line> = Vec::new();
     for line in lines {
         let row = merged.iter_mut().find(|row| {
-            // Same row: vertical centers within a third of the smaller height. (Mere overlap let
+            // Same row: vertical centers within a third of the larger height. (Mere overlap let
             // taller HUD text next to a box bridge two box rows.)
             let offset = ((row.y0 + row.y1) - (line.y0 + line.y1)).abs() / 2.0;
-            offset <= ROW_ALIGN * (row.y1 - row.y0).min(line.y1 - line.y0) && line.x0 - row.x1 <= max_gap
+            offset <= ROW_ALIGN * (row.y1 - row.y0).max(line.y1 - line.y0) && line.x0 - row.x1 <= max_gap
         });
         match row {
             Some(row) => {

@@ -22,6 +22,14 @@ fn merge_rows_keeps_far_fragments_apart() {
 }
 
 #[test]
+fn merge_rows_joins_a_short_fragment() {
+    // A lone "-" sits low in its row and is only a few px tall; it still joins the row.
+    let merged = merge_rows(vec![line("TO COLD RESISTANCE", 130.0, 400.0, 10.0, 30.0), line("-", 100.0, 108.0, 22.0, 25.0)], Scale::REFERENCE);
+    assert_eq!(merged.len(), 1);
+    assert_eq!(merged[0].text, "- TO COLD RESISTANCE");
+}
+
+#[test]
 fn merge_rows_keeps_misaligned_rows_apart() {
     // Taller HUD text ("Shield 52/152") level with two box rows must not join either of them
     // (from a real 2560x1353 shot, native px).

@@ -35,12 +35,6 @@ impl Scale {
     pub fn is_scannable(w: usize, h: usize) -> bool {
         w > 0 && h >= MIN_CLIENT_HEIGHT
     }
-
-    /// Narrower than 16:9 (e.g. 16:10). At 16:10 the UI still scales with the height
-    /// (measured on 1920x1200); narrower aspects are unmeasured.
-    pub fn is_narrow(w: usize, h: usize) -> bool {
-        w * 9 < h * 16
-    }
 }
 
 #[cfg(test)]
@@ -76,12 +70,5 @@ mod tests {
     #[test]
     fn narrow_is_height_limited() {
         assert_eq!(Scale::for_client(1920, 1200), Scale(1200.0 / REFERENCE_HEIGHT));
-    }
-
-    #[test]
-    fn narrow_is_below_16_by_9() {
-        assert!(Scale::is_narrow(1920, 1200));
-        assert!(!Scale::is_narrow(1920, 1080));
-        assert!(!Scale::is_narrow(3440, 1440));
     }
 }

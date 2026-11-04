@@ -3,14 +3,19 @@
 import json
 from pathlib import Path
 
-from prototype.verdict import upgrade_upsides
-
 DATA = Path(__file__).resolve().parents[1] / "data"
 MODS = json.loads((DATA / "mods.json").read_text(encoding="utf-8"))
 CARDS = {c["id"]: c for c in MODS["mods"]}
 PROFILES = sorted((DATA / "profiles").glob("*.json"))
 LABELS = json.loads((DATA / "labels.json").read_text(encoding="utf-8"))["labels"]
 MOD_ICONS = DATA.parent / "ui" / "modules" / "altar" / "img" / "mods"
+
+def upgrade_upsides(upsides):
+    """Old profiles ({"s", "a", "b"}) become top = S, columns = [B, A]; the column format passes through."""
+    if "top" in upsides or "columns" in upsides:
+        return {"columns": upsides.get("columns", []), "top": upsides.get("top", {"name": "S", "ids": []})}
+    return {"columns": [{"name": "B", "ids": upsides.get("b", [])}, {"name": "A", "ids": upsides.get("a", [])}],
+            "top": {"name": "S", "ids": upsides.get("s", [])}}
 
 
 def test_mods_have_unique_ids_and_variants():

@@ -183,7 +183,7 @@ data/mods.json
 data/profiles/default.json
 tools/gen_mods/          # mod list generator + diff report
 ui/board/                # tier board (HTML/JS/CSS), grown from the mockup
-prototype/               # Python: capture, detect, ocr, match, verdict, overlay, app
+prototype/               # removed 2026-11-04 (see the Phase 4 note); replaced by the Rust crates
 tests/fixtures/screens/  # altar screenshots (local only, not in git)
 tests/fixtures/labels.json  # verified labels for the screenshots
 tests/                   # unit + recognition accuracy tests
@@ -236,6 +236,7 @@ tests/                   # unit + recognition accuracy tests
 **Board round done (2026-11-03):** card look, multi-select, undo, reward filter, card styles, key columns, the CONSIDER-beats-TAKE rule and smooth scrolling are in; the user is happy with the board for now. **Next:** the Phase 4 decision (new chat). The board loads reward icons from `prototype/assets/mods/`; the port has to move them next to `ui/board/`.
 
 ### Phase 4 – Distributable app
+**Python prototype removed (2026-11-04):** `prototype/` and its tests are gone; the Rust app replaced it (parity shown in Plan A). The last commit that still contains it is the one before the commit "Remove the Python prototype; slim Python requirements to the dev tools" (find it with `git log --diff-filter=D -- prototype/app.py`, then check out its parent). The older Phase 2/3 entries below describe the prototype as it was and are kept as history; `python -m prototype.*` no longer runs on `main`. The Python dev tools in `tools/` stay (`requirements.txt` now covers only them).
 - **Decision (2026-11-03): Rust + Tauri 2.** The user does not write code, so learning curve and port effort no longer count; only the result for the player does. Compared with C#/.NET (the earlier preference) and Python/Nuitka: smallest download (~10–20 MB estimated, no runtime), lowest idle RAM, built-in installer and signed auto-updater via GitHub Releases, WebView2 is already part of Windows 10/11. The strict compiler keeps a growing, AI-written code base safe to refactor.
 - Native APIs through Microsoft's `windows` crate: Windows.Graphics.Capture (GPU capture, replaces `mss`) and Windows.Media.Ocr. No OpenCV: the few vision steps we need (color mask, template matching) are written in Rust.
 - All UI is web UI (board, settings, module pages, HUD as a transparent click-through always-on-top window). If the HUD window costs noticeable RAM or FPS, it moves to a native Direct2D window without touching the rest.
@@ -264,6 +265,7 @@ tests/                   # unit + recognition accuracy tests
 - **Combination rules** ("downside X only matters together with upside Y").
 - **Accessibility:** colorblind-safe verdict colors (HUD text size is done, see Overlay settings).
 - **Additional game languages** (needs per-language mod data and OCR models).
+- **Direct2D HUD:** long-term optimization, only when RAM becomes a problem (WebView HUD ~380 MB working set with the main window closed, 2026-11-04).
 
 ### Phase 6 – More modules (ideas, not committed)
 Collected 2026-11-03. Only the altar module is ported in Phase 4; the architecture must let these fit in later without rework.

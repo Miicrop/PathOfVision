@@ -74,7 +74,7 @@ fn app_paths(dev: bool) -> anyhow::Result<AppPaths> {
         return Ok(AppPaths::dev());
     }
     let p = AppPaths::installed()?;
-    if p.data.join("mods.json").is_file() {
+    if p.is_complete() {
         return Ok(p);
     }
     // A release build run from `target/` has no data folder next to it.

@@ -9,6 +9,8 @@ pub const USER_DIR_NAME: &str = "miicrop-pov";
 pub struct AppPaths {
     /// Shipped data, read-only.
     pub data: PathBuf,
+    /// Shipped module folders (`modules/<id>/assets`), read-only.
+    pub modules: PathBuf,
     /// Per-user data (`%APPDATA%\miicrop-pov`).
     pub user: PathBuf,
 }
@@ -19,19 +21,42 @@ fn user_dir() -> PathBuf {
 }
 
 impl AppPaths {
+    fn repo_root() -> PathBuf {
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..").join("..")
+    }
+
     pub fn installed() -> Result<AppPaths> {
         let exe = std::env::current_exe().context("cannot locate the executable")?;
         let dir = exe.parent().context("executable has no parent folder")?;
-        Ok(AppPaths { data: dir.join("data"), user: user_dir() })
+        Ok(AppPaths::next_to(dir))
+    }
+
+    /// Shipped folders next to `dir` (the installed layout).
+    pub fn next_to(dir: &std::path::Path) -> AppPaths {
+        AppPaths { data: dir.join("data"), modules: dir.join("modules"), user: user_dir() }
     }
 
     pub fn dev() -> AppPaths {
-        let data = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..").join("..").join("data");
-        AppPaths { data, user: user_dir() }
+        let root = Self::repo_root();
+        AppPaths { data: root.join("data"), modules: root.join("modules"), user: user_dir() }
     }
 
+    /// Tests: the repo's `modules/` folder.
     pub fn with(data: impl Into<PathBuf>, user: impl Into<PathBuf>) -> AppPaths {
-        AppPaths { data: data.into(), user: user.into() }
+        AppPaths::with_modules(data, Self::repo_root().join("modules"), user)
+    }
+
+    pub fn with_modules(data: impl Into<PathBuf>, modules: impl Into<PathBuf>, user: impl Into<PathBuf>) -> AppPaths {
+        AppPaths { data: data.into(), modules: modules.into(), user: user.into() }
+    }
+
+    pub fn module_assets(&self, module: &str) -> PathBuf {
+        self.modules.join(module).join("assets")
+    }
+
+    /// True when both the shipped data and the altar templates exist.
+    pub fn is_complete(&self) -> bool {
+        self.data.join("mods.json").is_file() && self.module_assets("altar").join("icon_eater.png").is_file()
     }
 
     pub fn settings_file(&self) -> PathBuf {
@@ -44,5 +69,19 @@ impl AppPaths {
 
     pub fn shipped_profiles_dir(&self, _module: &str) -> PathBuf {
         self.data.join("profiles")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn installed_layout_is_next_to_the_exe() {
+        let x = PathBuf::from("X");
+        let p = AppPaths::next_to(&x);
+        assert_eq!(p.data, x.join("data"));
+        assert_eq!(p.modules, x.join("modules"));
+        assert_eq!(p.module_assets("altar"), x.join("modules").join("altar").join("assets"));
     }
 }

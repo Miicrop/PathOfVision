@@ -97,3 +97,34 @@ fn settings_changes_apply_while_idle() {
     write(true, 0);
     assert!(m.wants_frames(&c));
 }
+
+fn copy_dir(from: &std::path::Path, to: &std::path::Path) {
+    std::fs::create_dir_all(to).unwrap();
+    for e in std::fs::read_dir(from).unwrap() {
+        let e = e.unwrap();
+        let dest = to.join(e.file_name());
+        if e.path().is_dir() {
+            copy_dir(&e.path(), &dest);
+        } else {
+            std::fs::copy(e.path(), dest).unwrap();
+        }
+    }
+}
+
+#[test]
+fn module_loads_assets_from_app_paths() {
+    let tmp = tempfile::tempdir().unwrap();
+    let repo_modules = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..");
+    copy_dir(&repo_modules.join("altar").join("assets"), &tmp.path().join("modules/altar/assets"));
+    copy_dir(&repo_data_dir(), &tmp.path().join("data"));
+    let paths = AppPaths::with_modules(tmp.path().join("data"), tmp.path().join("modules"), tmp.path().join("user"));
+    let store = Arc::new(Mutex::new(SettingsStore::open(&paths)));
+    assert!(AltarModule::new(&paths, store).is_ok());
+
+    let empty = tempfile::tempdir().unwrap();
+    let paths = AppPaths::with_modules(tmp.path().join("data"), empty.path(), tmp.path().join("user"));
+    let store = Arc::new(Mutex::new(SettingsStore::open(&paths)));
+    let err = AltarModule::new(&paths, store).err().expect("must fail").to_string();
+    let chain = format!("{err:#}");
+    assert!(chain.contains("icon_eater.png"), "{chain}");
+}

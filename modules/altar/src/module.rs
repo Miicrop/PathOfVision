@@ -11,7 +11,6 @@ use pov_game::GameContext;
 use vision::Rgb;
 
 use crate::data::AltarKind;
-use crate::detect::assets_dir;
 use crate::hud::{HudStyle, hud_view};
 use crate::labels::{Label, Watched, load_keywords, load_labels};
 use crate::live::{AltarView, ProfileCache, Tracker};
@@ -33,7 +32,7 @@ pub struct AltarModule {
 
 impl AltarModule {
     pub fn new(paths: &AppPaths, settings: Arc<Mutex<SettingsStore>>) -> anyhow::Result<AltarModule> {
-        let reader = Reader::with_paths(&assets_dir(), &paths.data.join("mods.json"), "en-US")?;
+        let reader = Reader::with_paths(&paths.module_assets(ID), &paths.data.join("mods.json"), "en-US")?;
         let fallback: PathBuf = paths.shipped_profiles_dir(ID).join("default.json");
         Ok(AltarModule {
             paths: paths.clone(),

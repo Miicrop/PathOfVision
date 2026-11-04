@@ -39,7 +39,7 @@ pub fn hud_fit(app: AppHandle, state: State<'_, AppState>, width: u32, height: u
                 let altar = &store.get().altar;
                 (altar.hud_offset_x, altar.hud_bottom)
             };
-            pov_overlay::show_at(hwnd, pov_overlay::hud_rect(client, (w, h), offset_x, bottom))
+            pov_overlay::show_at(hwnd, pov_overlay::hud_rect(client, (w, h), pov_overlay::scaled(offset_x, client.h), pov_overlay::scaled(bottom, client.h)))
         }
         _ => pov_overlay::hide(hwnd),
     }

@@ -57,6 +57,12 @@ pub fn settings_schema() -> Vec<SettingsSection> {
                         "Only needed if Path of Exile is installed somewhere unusual.",
                         FieldKind::Path { placeholder: "found automatically" },
                     ),
+                    field(
+                        "try_unsupported_size",
+                        "Try unsupported resolutions",
+                        "Scan game sizes that were never tested. Results may be wrong or missing.",
+                        FieldKind::Toggle,
+                    ),
                 ],
             }],
         },

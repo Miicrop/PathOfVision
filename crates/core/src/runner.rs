@@ -43,6 +43,7 @@ pub struct Runner {
     now: Box<dyn FnMut() -> Instant + Send>,
     paused: bool,
     grab_error_logged: bool,
+    try_unsupported: Box<dyn Fn() -> bool + Send>,
 }
 
 impl Runner {
@@ -51,7 +52,13 @@ impl Runner {
             .into_iter()
             .map(|module| Slot { module, active: false, last_run: None, error_logged: false })
             .collect();
-        Runner { slots, context, frames, now: Box::new(Instant::now), paused: false, grab_error_logged: false }
+        Runner { slots, context, frames, now: Box::new(Instant::now), paused: false, grab_error_logged: false, try_unsupported: Box::new(|| false) }
+    }
+
+    /// Where the runner reads `general.try_unsupported_size` for the status.
+    pub fn with_try_unsupported(mut self, f: impl Fn() -> bool + Send + 'static) -> Runner {
+        self.try_unsupported = Box::new(f);
+        self
     }
 
     /// Replaces the clock (for tests).
@@ -65,7 +72,7 @@ impl Runner {
         let ctx = self.context.current();
         let outputs = self.step(&ctx);
         let active = self.slots.iter().filter(|s| s.active).map(|s| s.module.id().to_string()).collect();
-        Tick { status: RunnerStatus::from_context(&ctx, active), poe: ctx.poe, outputs }
+        Tick { status: RunnerStatus::from_context(&ctx, active, (self.try_unsupported)()), poe: ctx.poe, outputs }
     }
 
     fn step(&mut self, ctx: &GameContext) -> Vec<ModuleOutput> {

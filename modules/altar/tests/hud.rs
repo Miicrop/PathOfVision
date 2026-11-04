@@ -37,7 +37,7 @@ fn view(with_labels: bool) -> Option<(HudView, Vec<altar::Card>)> {
     let views = tracker.views(&reader.cards, &profile);
     let labels = if with_labels { load_labels(&repo_data_dir().join("labels.json")) } else { HashMap::new() };
     let keywords = load_keywords(&repo_data_dir().join("keywords.json"));
-    let style = HudStyle { font_size: 15, tiers: true, other_opacity: 0.6, values: true };
+    let style = HudStyle { font_size: 15, tiers: true, other_opacity: 0.6, values: true, scale: 1.0, untested: false };
     let hud = hud_view(&views, &reader.cards, &labels, &keywords, style, ((img.w / 2) as i32, (img.h / 2) as i32));
     Some((hud, reader.cards))
 }
@@ -70,4 +70,17 @@ fn mod_without_alias_shows_full_text() {
         n += 1;
     }
     assert!(n > 0);
+}
+
+#[test]
+fn hud_style_carries_scale_and_untested() {
+    let s = pov_core::AltarSettings::default();
+    let v = serde_json::to_value(HudStyle::from_settings(&s, 1920, 1080, true)).unwrap();
+    assert_eq!(v["scale"], 0.75);
+    assert_eq!(v["untested"], true);
+    let v = serde_json::to_value(HudStyle::from_settings(&s, 3440, 1440, false)).unwrap();
+    assert_eq!((v["scale"].as_f64(), v["untested"].as_bool()), (Some(1.0), Some(false)));
+    // Unsupported sizes are untested once the user opts in.
+    let v = serde_json::to_value(HudStyle::from_settings(&s, 1280, 720, true)).unwrap();
+    assert_eq!(v["untested"], true);
 }

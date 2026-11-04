@@ -30,16 +30,19 @@
     return `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(3)})`;
   }
 
-  /** Sizes that follow the font size, as in the prototype. */
+  /** Sizes that follow the font size, in CSS px so they come out as `font_size * scale`
+   *  physical px: `k` also scales the fixed paddings and borders of hud.css. */
   function applyStyle(style) {
-    const fs = style.font_size;
-    const target = Math.round(fs * 3.6);
+    const k = (style.scale || 1) / window.devicePixelRatio;
+    const fs = style.font_size * k;
+    const target = Math.round(style.font_size * 3.6) * k;
     const s = document.body.style;
+    s.setProperty("--k", String(k));
     s.setProperty("--fs", `${fs}px`);
-    s.setProperty("--mod-icon", `${Math.round(fs * 1.6)}px`);
+    s.setProperty("--mod-icon", `${Math.round(style.font_size * 1.6) * k}px`);
     s.setProperty("--target-icon", `${target}px`);
-    s.setProperty("--target-col", `${Math.floor(target * 2.1)}px`);
-    s.setProperty("--legend-top", `${Math.max(Math.round(fs * 0.6), 12)}px`);
+    s.setProperty("--target-col", `${Math.floor(target / k * 2.1) * k}px`);
+    s.setProperty("--legend-top", `${Math.max(Math.round(style.font_size * 0.6), 12) * k}px`);
     s.setProperty("--other-opacity", String(style.other_opacity));
   }
 
@@ -91,7 +94,7 @@
     return wrap;
   }
 
-  function recommendationBox(altar) {
+  function recommendationBox(altar, style) {
     const rec = altar.recommendation;
     const box = el("div", "rec");
     box.style.setProperty("--c", rec.color);
@@ -103,6 +106,7 @@
     }
     box.append(line);
     if (!altar.complete) box.append(el("div", "note", "partly hidden, verdict may change"));
+    if (style.untested) box.append(el("div", "note", "untested resolution"));
     return box;
   }
 
@@ -110,7 +114,7 @@
     const column = el("div", "column");
     const option = (pos) => altar.options.find((o) => o.position === pos);
     for (const part of [option("top"), null, option("bottom")]) {
-      if (part === null) column.append(recommendationBox(altar));
+      if (part === null) column.append(recommendationBox(altar, style));
       else if (part) column.append(optionBox(part, style));
     }
     return column;

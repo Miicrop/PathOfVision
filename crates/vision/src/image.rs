@@ -120,6 +120,13 @@ impl Rgb {
         Ok(Rgb { w, h, px })
     }
 
+    /// Writes the image as PNG.
+    pub fn save(&self, path: &Path) -> anyhow::Result<()> {
+        let bytes: Vec<u8> = self.px.iter().flatten().copied().collect();
+        let img = ::image::RgbImage::from_raw(self.w as u32, self.h as u32, bytes).context("image buffer size")?;
+        img.save(path).with_context(|| format!("writing {}", path.display()))
+    }
+
     /// Builds from BGRA bytes with a row pitch of `stride` bytes (screen captures); alpha is dropped.
     pub fn from_bgra(w: usize, h: usize, stride: usize, bytes: &[u8]) -> anyhow::Result<Rgb> {
         anyhow::ensure!(stride >= w * 4, "stride {stride} is smaller than a row ({} bytes)", w * 4);

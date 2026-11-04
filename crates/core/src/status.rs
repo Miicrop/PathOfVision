@@ -2,6 +2,8 @@
 use pov_game::{AreaKind, GameContext};
 use serde::Serialize;
 
+use crate::resolution::{Support, support};
+
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum PoeState {
@@ -19,12 +21,16 @@ pub struct RunnerStatus {
     pub area_kind: Option<String>,
     /// Ids of the modules currently scanning.
     pub active: Vec<String>,
+    /// Support level of the game client's size; `None` without a PoE window.
+    pub resolution: Option<Support>,
+    /// Client size (width, height) in px; `None` without a PoE window.
+    pub client_size: Option<(u32, u32)>,
     /// `describe()` of the other fields.
     pub text: String,
 }
 
 impl RunnerStatus {
-    pub fn from_context(ctx: &GameContext, active: Vec<String>) -> RunnerStatus {
+    pub fn from_context(ctx: &GameContext, active: Vec<String>, try_anyway: bool) -> RunnerStatus {
         let poe = match &ctx.poe {
             None => PoeState::NotFound,
             Some(w) if w.minimized || !w.foreground => PoeState::Background,
@@ -39,7 +45,17 @@ impl RunnerStatus {
             }
             .to_string()
         });
-        let mut s = RunnerStatus { poe, area: ctx.area.as_ref().map(|a| a.id.clone()), area_kind, active, text: String::new() };
+        let client_size = ctx.poe.as_ref().map(|w| (w.client.w.max(0) as u32, w.client.h.max(0) as u32));
+        let resolution = client_size.map(|(w, h)| support(w, h, try_anyway));
+        let mut s = RunnerStatus {
+            poe,
+            area: ctx.area.as_ref().map(|a| a.id.clone()),
+            area_kind,
+            active,
+            resolution,
+            client_size,
+            text: String::new(),
+        };
         s.text = s.describe();
         s
     }
@@ -89,7 +105,7 @@ mod tests {
     }
 
     fn text(c: &GameContext, active: &[&str]) -> String {
-        RunnerStatus::from_context(c, active.iter().map(|s| s.to_string()).collect()).describe()
+        RunnerStatus::from_context(c, active.iter().map(|s| s.to_string()).collect(), false).describe()
     }
 
     #[test]
@@ -109,7 +125,7 @@ mod tests {
 
     #[test]
     fn from_context_fills_the_fields() {
-        let s = RunnerStatus::from_context(&ctx(Some(window(true, false)), Some(AreaKind::Map)), vec!["altar".into()]);
+        let s = RunnerStatus::from_context(&ctx(Some(window(true, false)), Some(AreaKind::Map)), vec!["altar".into()], false);
         assert_eq!(s.poe, PoeState::Foreground);
         assert_eq!((s.area.as_deref(), s.area_kind.as_deref()), (Some("A1"), Some("map")));
         assert_eq!(s.text, s.describe());

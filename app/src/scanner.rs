@@ -104,11 +104,14 @@ pub fn spawn(app: AppHandle, state: &AppState, mode: Mode, stats: bool) -> JoinH
                     ),
                     Mode::Replay { dir, hold } => replay_sources(replay_images(&dir)?, hold)?,
                 };
+                let try_unsupported = settings.clone();
                 let mut module: Box<dyn Module> = Box::new(AltarModule::new(&paths, settings)?);
                 if stats {
                     module = Box::new(Timed { inner: module, scans: scans.clone() });
                 }
-                Ok(Runner::new(vec![module], context, frames))
+                Ok(Runner::new(vec![module], context, frames).with_try_unsupported(move || {
+                    lock(&try_unsupported).get().general.try_unsupported_size
+                }))
             })();
             let mut runner = match built {
                 Ok(r) => r,

@@ -6,7 +6,7 @@ use std::path::PathBuf;
 use std::sync::{Arc, Mutex, MutexGuard};
 use std::time::{Duration, Instant};
 
-use pov_core::{AppPaths, Module, ModuleOutput, SettingsStore, active_profile_path};
+use pov_core::{AppPaths, Module, ModuleOutput, SettingsStore, Support, active_profile_path, support};
 use pov_game::GameContext;
 use vision::{Rgb, Scale};
 
@@ -97,19 +97,26 @@ impl Module for AltarModule {
 
     fn wants_frames(&self, ctx: &GameContext) -> bool {
         // Reloaded here too: while idle no `on_frame` runs, and re-enabling must still take effect.
-        let enabled = {
+        let (enabled, try_anyway) = {
             let mut store = self.store();
             store.reload_if_changed();
-            store.get().altar.enabled
+            (store.get().altar.enabled, store.get().general.try_unsupported_size)
         };
-        enabled && ctx.poe_active() && (ctx.area.is_none() || ctx.in_map())
+        let supported = ctx.poe.as_ref().is_none_or(|w| {
+            support(w.client.w.max(0) as u32, w.client.h.max(0) as u32, try_anyway) != Support::Unsupported
+        });
+        enabled && supported && ctx.poe_active() && (ctx.area.is_none() || ctx.in_map())
     }
 
     fn on_frame(&mut self, frame: &Rgb, _ctx: &GameContext) -> anyhow::Result<ModuleOutput> {
         let (profile_path, style) = {
             let mut store = self.store();
             store.reload_if_changed();
-            (active_profile_path(&self.paths, store.get()), HudStyle::from_settings(&store.get().altar))
+            let cur = store.get();
+            (
+                active_profile_path(&self.paths, cur),
+                HudStyle::from_settings(&cur.altar, frame.w, frame.h, cur.general.try_unsupported_size),
+            )
         };
         self.labels.refresh();
         self.keywords.refresh();

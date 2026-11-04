@@ -3,8 +3,9 @@
 
 use std::collections::HashMap;
 
-use pov_core::AltarSettings;
+use pov_core::{AltarSettings, Support, support};
 use serde::Serialize;
+use vision::Scale;
 
 use crate::data::{AltarKind, Card, Side, Target};
 use crate::labels::{Label, RolledValue, Segment, color_keywords, render_alias, rolled_values};
@@ -21,15 +22,22 @@ pub struct HudStyle {
     pub tiers: bool,
     pub other_opacity: f64,
     pub values: bool,
+    /// Client height over 1440: the page multiplies every size by it.
+    pub scale: f64,
+    /// The client size has no verified acceptance run.
+    pub untested: bool,
 }
 
 impl HudStyle {
-    pub fn from_settings(s: &AltarSettings) -> HudStyle {
+    /// `w`/`h`: the client size the frame was taken at; `try_anyway`: `general.try_unsupported_size`.
+    pub fn from_settings(s: &AltarSettings, w: usize, h: usize, try_anyway: bool) -> HudStyle {
         HudStyle {
             font_size: s.hud_font_size,
             tiers: s.hud_tiers == "highlight",
             other_opacity: s.hud_other_opacity,
             values: s.hud_values,
+            scale: Scale::for_client(w, h).0,
+            untested: support(w as u32, h as u32, try_anyway) != Support::Verified,
         }
     }
 }

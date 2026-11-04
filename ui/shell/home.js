@@ -15,6 +15,21 @@
     $("poe-dot").className = "dot " + dot;
     $("area").textContent = s.area || "unknown";
     $("status-text").textContent = s.text;
+    showResolution(s);
+  }
+
+  /** The resolution note under the status line; nothing for verified sizes. */
+  function showResolution(s) {
+    const box = $("resolution");
+    let text = "";
+    if (s.resolution === "unsupported" && s.client_size) {
+      const [w, h] = s.client_size;
+      text = `Unsupported game size ${w}×${h} – enable 'Try unsupported resolutions' in Settings → General to try anyway`;
+    } else if (s.resolution === "untested") {
+      text = "Untested resolution";
+    }
+    box.textContent = text;
+    box.hidden = !text;
   }
 
   function showError(e) {

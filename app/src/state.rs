@@ -27,7 +27,7 @@ impl AppState {
         AppState {
             paths,
             settings,
-            status: Arc::new(Mutex::new(RunnerStatus::from_context(&GameContext::default(), Vec::new()))),
+            status: Arc::new(Mutex::new(RunnerStatus::from_context(&GameContext::default(), Vec::new(), false))),
             poe: Arc::new(Mutex::new(None)),
             board,
             stop: Arc::new(AtomicBool::new(false)),

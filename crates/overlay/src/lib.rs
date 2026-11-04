@@ -36,6 +36,11 @@ pub fn hud_rect(client: Rect, size: (i32, i32), offset_x: i64, bottom: i64) -> R
     }
 }
 
+/// A user offset given at the 1440 px reference height, in pixels of a client `client_h` tall.
+pub fn scaled(offset: i64, client_h: i32) -> i64 {
+    (offset as f64 * f64::from(client_h) / 1440.0).round() as i64
+}
+
 /// Makes the window click-through, topmost, activation-free and hidden from the taskbar/Alt-Tab.
 pub fn make_overlay(hwnd: isize) -> anyhow::Result<()> {
     let h = handle(hwnd);
@@ -138,5 +143,17 @@ mod tests {
         };
         let r = hud_rect(narrow, (1000, 100), 0, 0);
         assert_eq!(r.x, narrow.x - 100);
+    }
+
+    #[test]
+    fn hud_rect_offsets_follow_scale() {
+        // The caller scales the user's offsets (set at 1440 px) by client.h / 1440.
+        let client = Rect { x: 0, y: 0, w: 1920, h: 1080 };
+        let s = 1080.0 / 1440.0;
+        let r = hud_rect(client, (600, 200), (-100.0 * s) as i64, (60.0 * s) as i64);
+        assert_eq!((r.x, r.y), (660 - 75, 1080 - 200 - 45));
+        assert_eq!(scaled(-100, 1080), -75);
+        assert_eq!(scaled(60, 1440), 60);
+        assert_eq!(scaled(60, 2160), 90);
     }
 }

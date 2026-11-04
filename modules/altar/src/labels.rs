@@ -94,30 +94,61 @@ fn push_plain(out: &mut Vec<Segment>, text: &str) {
     }
 }
 
-/// The text split into segments, every keyword (whole word, any case) in its color.
-pub fn color_keywords(text: &str, keywords: &[(String, String)]) -> Vec<Segment> {
-    let mut out: Vec<Segment> = Vec::new();
-    let mut sorted: Vec<&(String, String)> = keywords.iter().collect();
-    sorted.sort_by_key(|(k, _)| std::cmp::Reverse(k.chars().count()));
-    let words: Vec<String> = sorted.iter().map(|(k, _)| fancy_regex::escape(k).into_owned()).collect();
-    let re = if words.is_empty() { None } else { Regex::new(&format!(r"(?i)\b(?:{})\b", words.join("|"))).ok() };
-    let Some(re) = re else {
-        push_plain(&mut out, text);
-        return out;
-    };
-    let mut last = 0;
-    for m in re.find_iter(text) {
-        let m = m.unwrap();
-        let lower = m.as_str().to_lowercase();
-        push_plain(&mut out, &text[last..m.start()]);
-        match sorted.iter().find(|(k, _)| k.to_lowercase() == lower) {
-            Some((_, c)) => out.push(Segment { text: m.as_str().to_string(), color: Some(c.clone()) }),
-            None => push_plain(&mut out, m.as_str()),
-        }
-        last = m.end();
+#[cfg(test)]
+thread_local! {
+    /// Keyword regexes built on this thread (tests only).
+    static REGEX_BUILDS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+}
+
+/// Colors keywords in HUD text. Built once per keywords reload: the regex is not rebuilt per mod.
+pub struct KeywordMatcher {
+    /// (lowercase word, color), longest word first.
+    colors: Vec<(String, String)>,
+    re: Option<Regex>,
+}
+
+impl KeywordMatcher {
+    pub fn new(keywords: &[(String, String)]) -> KeywordMatcher {
+        let mut sorted: Vec<&(String, String)> = keywords.iter().collect();
+        sorted.sort_by_key(|(k, _)| std::cmp::Reverse(k.chars().count()));
+        let words: Vec<String> = sorted.iter().map(|(k, _)| fancy_regex::escape(k).into_owned()).collect();
+        let re = if words.is_empty() {
+            None
+        } else {
+            #[cfg(test)]
+            REGEX_BUILDS.with(|c| c.set(c.get() + 1));
+            Regex::new(&format!(r"(?i)\b(?:{})\b", words.join("|"))).ok()
+        };
+        let colors = sorted.into_iter().map(|(k, c)| (k.to_lowercase(), c.clone())).collect();
+        KeywordMatcher { colors, re }
     }
-    push_plain(&mut out, &text[last..]);
-    out
+
+    /// The text split into segments, every keyword (whole word, any case) in its color.
+    pub fn color(&self, text: &str) -> Vec<Segment> {
+        let mut out: Vec<Segment> = Vec::new();
+        let Some(re) = &self.re else {
+            push_plain(&mut out, text);
+            return out;
+        };
+        let mut last = 0;
+        for m in re.find_iter(text) {
+            let m = m.unwrap();
+            let lower = m.as_str().to_lowercase();
+            push_plain(&mut out, &text[last..m.start()]);
+            match self.colors.iter().find(|(k, _)| *k == lower) {
+                Some((_, c)) => out.push(Segment { text: m.as_str().to_string(), color: Some(c.clone()) }),
+                None => push_plain(&mut out, m.as_str()),
+            }
+            last = m.end();
+        }
+        push_plain(&mut out, &text[last..]);
+        out
+    }
+}
+
+/// `load` for `Watched`: the keywords file as a ready matcher.
+pub fn load_keyword_matcher(path: &Path) -> KeywordMatcher {
+    KeywordMatcher::new(&load_keywords(path))
 }
 
 /// One rolled value as shown text, and whether it was read in game (else it is the range).
@@ -219,9 +250,24 @@ mod tests {
     }
 
     #[test]
+    fn color_keywords_regex_is_cached() {
+        let colors = vec![("Fire".to_string(), "#f00".to_string())];
+        let before = REGEX_BUILDS.with(|c| c.get());
+        let m = KeywordMatcher::new(&colors);
+        for _ in 0..3 {
+            assert_eq!(m.color("a fire b").len(), 3);
+        }
+        assert_eq!(REGEX_BUILDS.with(|c| c.get()) - before, 1);
+        // No keywords: no regex at all.
+        let none = KeywordMatcher::new(&[]);
+        assert_eq!(none.color("fire"), vec![Segment { text: "fire".into(), color: None }]);
+        assert_eq!(REGEX_BUILDS.with(|c| c.get()) - before, 1);
+    }
+
+    #[test]
     fn keywords_are_colored_as_whole_words_in_any_case() {
         let colors = vec![("Fire".to_string(), "#f00".to_string()), ("Cold".to_string(), "#00f".to_string())];
-        let out = color_keywords("Phys as Extra fire & Cold <x> Firestorm", &colors);
+        let out = KeywordMatcher::new(&colors).color("Phys as Extra fire & Cold <x> Firestorm");
         let colored: Vec<_> = out.iter().filter(|s| s.color.is_some()).collect();
         assert_eq!(colored.len(), 2);
         assert_eq!(colored[0], &Segment { text: "fire".into(), color: Some("#f00".into()) });

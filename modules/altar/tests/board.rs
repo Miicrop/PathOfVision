@@ -60,6 +60,17 @@ fn duplicate_picks_a_free_file_name() {
 }
 
 #[test]
+fn reserved_names_get_a_suffix() {
+    assert_eq!(profile_file_name("CON", |_| false), "con-profile.json");
+    assert_eq!(profile_file_name("lpt1", |_| false), "lpt1-profile.json");
+    assert_eq!(profile_file_name("Nul", |_| false), "nul-profile.json");
+    assert_eq!(profile_file_name("com9", |_| false), "com9-profile.json");
+    assert_eq!(profile_file_name("console", |_| false), "console.json");
+    assert_eq!(profile_file_name("com0", |_| false), "com0.json");
+    assert_eq!(profile_file_name("con", |f| f == "con-profile.json"), "con-profile-2.json");
+}
+
+#[test]
 fn save_keeps_unknown_keys() {
     let (_t, api, paths) = setup();
     let file = api.duplicate_profile("default.json", "Mine").unwrap()["file"].as_str().unwrap().to_string();

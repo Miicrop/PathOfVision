@@ -203,21 +203,47 @@ fn section_object<'a>(raw: &'a mut Value, section: &str) -> &'a mut Map<String, 
     }
 }
 
-/// Default value of every key the typed settings know for `section`; `None` for an unknown section.
-fn known_values(section: &str) -> Option<Map<String, Value>> {
-    let v = match section {
-        "general" => serde_json::to_value(General::default()),
-        "altar" => serde_json::to_value(AltarSettings::default()),
-        _ => return None,
-    };
-    v.ok()?.as_object().cloned()
+/// What the settings need to know about one module's section under `modules.<id>`.
+pub struct ModuleSettingsDef {
+    pub id: &'static str,
+    /// The default value of every key the module knows.
+    pub defaults: fn() -> Value,
+    /// The section as stored, coerced into its valid ranges (all known keys present).
+    pub validate: fn(&Map<String, Value>) -> Value,
 }
 
-fn section_value(s: &Settings, section: &str) -> Value {
-    match section {
-        "general" => serde_json::to_value(&s.general).unwrap_or_default(),
-        _ => serde_json::to_value(&s.altar).unwrap_or_default(),
+fn altar_defaults() -> Value {
+    serde_json::to_value(AltarSettings::default()).unwrap_or_default()
+}
+
+fn altar_validate(m: &Map<String, Value>) -> Value {
+    serde_json::to_value(clean_altar(AltarSettings::from_map(m))).unwrap_or_default()
+}
+
+/// Every module with settings. A new module adds one entry here.
+const MODULES: &[ModuleSettingsDef] = &[ModuleSettingsDef { id: "altar", defaults: altar_defaults, validate: altar_validate }];
+
+pub fn module_def(id: &str) -> Option<&'static ModuleSettingsDef> {
+    MODULES.iter().find(|d| d.id == id)
+}
+
+/// Default value of every key the typed settings know for `section`; `None` for an unknown section.
+fn known_values(section: &str) -> Option<Map<String, Value>> {
+    let v = if section == "general" {
+        serde_json::to_value(General::default()).ok()?
+    } else {
+        (module_def(section)?.defaults)()
+    };
+    v.as_object().cloned()
+}
+
+/// `section` after cleaning: `general` from the typed settings, a module through its `validate`.
+fn section_value(s: &Settings, raw: &mut Value, section: &str) -> Value {
+    if section == "general" {
+        return serde_json::to_value(&s.general).unwrap_or_default();
     }
+    let obj = section_object(raw, section).clone();
+    module_def(section).map_or(Value::Null, |d| (d.validate)(&obj))
 }
 
 pub struct SettingsStore {
@@ -287,7 +313,7 @@ impl SettingsStore {
         let mut s = Settings::from_value(&raw);
         s.altar = clean_altar(s.altar);
         // Write the cleaned values back, so the file never holds what was clamped away.
-        let cleaned = section_value(&s, section);
+        let cleaned = section_value(&s, &mut raw, section);
         let obj = section_object(&mut raw, section);
         for (k, _) in &changes {
             if let Some(v) = cleaned.get(k) {
@@ -453,6 +479,26 @@ mod tests {
         assert!(store.update("ghost", "enabled", serde_json::json!(true)).is_err());
         assert!(store.reset("altar", &["nope"]).is_err());
         assert_eq!(std::fs::read_to_string(p.settings_file()).unwrap(), text);
+    }
+
+    #[test]
+    fn unknown_module_section_is_an_error() {
+        assert!(module_def("altar").is_some());
+        assert!(module_def("ghost").is_none());
+        let (_d, p) = paths();
+        let text = r#"{"modules":{"ghost":{"a":1}}}"#;
+        write(&p, text);
+        let mut store = SettingsStore::open(&p);
+        let e = store.update("ghost", "a", serde_json::json!(2)).unwrap_err();
+        assert!(format!("{e:#}").contains("unknown settings section"));
+        assert!(store.reset("ghost", &[]).is_err());
+        assert_eq!(std::fs::read_to_string(p.settings_file()).unwrap(), text);
+        // The registry's entry drives the known keys and the cleaning.
+        let def = module_def("altar").unwrap();
+        let defaults = (def.defaults)();
+        assert_eq!(defaults["hud_bottom"], 60);
+        let cleaned = (def.validate)(serde_json::json!({"hud_font_size": 99}).as_object().unwrap());
+        assert_eq!(cleaned["hud_font_size"], 24);
     }
 
     #[test]

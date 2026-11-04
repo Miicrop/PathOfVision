@@ -99,6 +99,7 @@ pub struct WindowCapture {
     has_frame: bool,
     /// Grabs failed in a row; reset by a successful grab or a device reset.
     failures: u32,
+    backoff: ResetBackoff,
 }
 
 /// `DXGI_ERROR_DEVICE_REMOVED`.
@@ -112,6 +113,35 @@ const MAX_FAILURES: u32 = 3;
 /// reset, or grabs keep failing for any reason.
 pub fn needs_device_reset(hresult: Option<i32>, consecutive_failures: u32) -> bool {
     matches!(hresult, Some(DEVICE_REMOVED | DEVICE_RESET)) || consecutive_failures >= MAX_FAILURES
+}
+
+const BACKOFF_FIRST: Duration = Duration::from_secs(1);
+const BACKOFF_MAX: Duration = Duration::from_secs(60);
+
+/// Spaces out GPU device resets: 1 s after the first, then 2 s, 4 s ... up to 60 s, so a device
+/// that cannot be recreated is not hammered every frame. A successful grab resets it.
+#[derive(Debug, Default)]
+pub struct ResetBackoff {
+    failures: u32,
+    next_allowed: Option<Instant>,
+}
+
+impl ResetBackoff {
+    /// Whether a reset may be attempted at `now`.
+    pub fn allow(&mut self, now: Instant) -> bool {
+        self.next_allowed.is_none_or(|t| now >= t)
+    }
+
+    /// A reset was attempted at `now` (and the grabs are still failing): the next one waits longer.
+    pub fn failed(&mut self, now: Instant) {
+        let factor = 1u32.checked_shl(self.failures).unwrap_or(u32::MAX);
+        self.next_allowed = Some(now + BACKOFF_FIRST.saturating_mul(factor).min(BACKOFF_MAX));
+        self.failures = self.failures.saturating_add(1);
+    }
+
+    pub fn reset(&mut self) {
+        *self = ResetBackoff::default();
+    }
 }
 
 /// The HRESULT of the first Windows error in `e`'s chain, if any.
@@ -137,7 +167,7 @@ impl WindowCapture {
             "Windows.Graphics.Capture is not supported on this system"
         );
         let (device, context, winrt_device) = create_devices()?;
-        Ok(WindowCapture { device, context, winrt_device, session: None, staging: None, has_frame: false, failures: 0 })
+        Ok(WindowCapture { device, context, winrt_device, session: None, staging: None, has_frame: false, failures: 0, backoff: ResetBackoff::default() })
     }
 
     /// Recreates the D3D11 device, the WinRT device and everything built on them. The frame pool
@@ -293,11 +323,14 @@ impl FrameSource for WindowCapture {
         match self.grab_once(window) {
             Ok(frame) => {
                 self.failures = 0;
+                self.backoff.reset();
                 Ok(frame)
             }
             Err(e) => {
                 self.failures += 1;
-                if needs_device_reset(hresult_of(&e), self.failures) {
+                let now = Instant::now();
+                if needs_device_reset(hresult_of(&e), self.failures) && self.backoff.allow(now) {
+                    self.backoff.failed(now);
                     eprintln!("capture: recreating the GPU device after: {e:#}");
                     if let Err(reset) = self.reset_device() {
                         eprintln!("capture: device reset failed: {reset:#}");
@@ -364,5 +397,39 @@ mod tests {
         assert!(needs_device_reset(Some(0x80004005u32 as i32), 3));
         assert!(!needs_device_reset(None, 0));
         assert!(needs_device_reset(None, 3));
+    }
+
+    #[test]
+    fn backoff_doubles_and_caps() {
+        let t0 = Instant::now();
+        let at = |s: f64| t0 + Duration::from_secs_f64(s);
+        let mut b = ResetBackoff::default();
+        assert!(b.allow(at(0.0)));
+        b.failed(at(0.0));
+        assert!(!b.allow(at(0.9)));
+        assert!(b.allow(at(1.0)));
+        b.failed(at(1.0));
+        assert!(!b.allow(at(2.9)));
+        assert!(b.allow(at(3.0)));
+        b.failed(at(3.0));
+        assert!(!b.allow(at(6.9)));
+        assert!(b.allow(at(7.0)));
+        // Keeps doubling up to the cap and never beyond.
+        let mut now = at(7.0);
+        for _ in 0..12 {
+            b.failed(now);
+            assert!(!b.allow(now + Duration::from_secs_f64(0.5)));
+            let next = b.next_allowed.expect("armed");
+            assert!(next - now <= Duration::from_secs(60), "{:?}", next - now);
+            now = next;
+            assert!(b.allow(now));
+        }
+        b.failed(now);
+        assert_eq!(b.next_allowed.unwrap() - now, Duration::from_secs(60));
+        b.reset();
+        assert!(b.allow(now));
+        b.failed(now);
+        assert!(!b.allow(now + Duration::from_millis(900)));
+        assert!(b.allow(now + Duration::from_secs(1)));
     }
 }

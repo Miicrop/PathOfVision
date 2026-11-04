@@ -8,7 +8,7 @@ use serde::Serialize;
 use vision::Scale;
 
 use crate::data::{AltarKind, Card, Side, Target};
-use crate::labels::{Label, RolledValue, Segment, color_keywords, render_alias, rolled_values};
+use crate::labels::{Label, RolledValue, Segment, KeywordMatcher, render_alias, rolled_values};
 use crate::live::AltarView;
 use crate::verdict::{Pos, Tier, Verdict};
 
@@ -140,6 +140,10 @@ fn mod_text(alias: Option<&str>, display: &[String]) -> String {
     format!("{cut}…")
 }
 
+fn plain(text: &str) -> Vec<Segment> {
+    if text.is_empty() { Vec::new() } else { vec![Segment { text: text.to_string(), color: None }] }
+}
+
 fn target_icon(target: Option<Target>, position: Pos, altar: AltarKind) -> Option<String> {
     let target = match target? {
         Target::Player => "player",
@@ -153,7 +157,7 @@ fn target_icon(target: Option<Target>, position: Pos, altar: AltarKind) -> Optio
     Some(format!("target_{target}_{}_{kind}.png", pos_name(position)))
 }
 
-fn hud_altar(view: &AltarView, cards: &[Card], labels: &HashMap<String, Label>, keywords: &[(String, String)]) -> HudAltar {
+fn hud_altar(view: &AltarView, cards: &[Card], labels: &HashMap<String, Label>, keywords: &KeywordMatcher) -> HudAltar {
     let verdict_at = |pos: Pos| (0..2).find(|&i| view.altar.options[i].position == pos).map(|i| view.verdicts[i].verdict);
     let pick = view.recommendation.choice.or(view.recommendation.about);
     let leave_alone = view.verdicts.iter().all(|v| v.verdict == Verdict::Avoid);
@@ -176,7 +180,7 @@ fn hud_altar(view: &AltarView, cards: &[Card], labels: &HashMap<String, Label>, 
                     let text = mod_text(label.map(|l| l.alias.as_str()), &display);
                     let upside = card.side == Side::Upside;
                     // Keyword colors only on downsides: upsides like "Chaos Orb" would light up as Chaos.
-                    let segments = color_keywords(&text, if upside { &[] } else { keywords });
+                    let segments = if upside { plain(&text) } else { keywords.color(&text) };
                     HudMod {
                         upside,
                         icon: label.filter(|l| !l.icon.is_empty()).map(|l| format!("mods/{}.png", l.icon)),
@@ -224,7 +228,7 @@ pub fn hud_view(
     views: &[AltarView],
     cards: &[Card],
     labels: &HashMap<String, Label>,
-    keywords: &[(String, String)],
+    keywords: &KeywordMatcher,
     style: HudStyle,
     center: (i32, i32),
 ) -> HudView {

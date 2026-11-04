@@ -88,6 +88,12 @@ pub fn profile_file_name(name: &str, taken: impl Fn(&str) -> bool) -> String {
     if stem.is_empty() {
         stem = "profile".into();
     }
+    // Windows cannot create files named after devices, with any extension.
+    let reserved = matches!(stem.as_str(), "con" | "prn" | "aux" | "nul")
+        || (stem.len() == 4 && (stem.starts_with("com") || stem.starts_with("lpt")) && matches!(stem.as_bytes()[3], b'1'..=b'9'));
+    if reserved {
+        stem.push_str("-profile");
+    }
     let mut candidate = format!("{stem}.json");
     let mut n = 2;
     while taken(&candidate) {

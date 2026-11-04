@@ -76,7 +76,8 @@ impl RunnerStatus {
         if !self.active.is_empty() {
             format!("{place} \u{2013} scanning")
         } else if matches!(self.area_kind.as_deref(), None | Some("map")) {
-            format!("{place} \u{2013} idle (no module enabled)")
+            let why = if self.resolution == Some(Support::Unsupported) { "unsupported size" } else { "no module enabled" };
+            format!("{place} \u{2013} idle ({why})")
         } else {
             format!("{place} \u{2013} idle")
         }
@@ -94,7 +95,7 @@ mod tests {
             hwnd: 1,
             pid: 1,
             exe: "poe.exe".into(),
-            client: Rect { x: 0, y: 0, w: 1, h: 1 },
+            client: Rect { x: 0, y: 0, w: 3440, h: 1440 },
             foreground,
             minimized,
         }
@@ -121,6 +122,39 @@ mod tests {
         assert_eq!(text(&ctx(fg.clone(), Some(AreaKind::Other)), &[]), "outside maps \u{2013} idle");
         assert_eq!(text(&ctx(fg.clone(), Some(AreaKind::Map)), &[]), "in map \u{2013} idle (no module enabled)");
         assert_eq!(text(&ctx(fg, None), &[]), "area unknown \u{2013} idle (no module enabled)");
+    }
+
+    fn sized(w: i32, h: i32) -> PoeWindow {
+        PoeWindow { client: Rect { x: 0, y: 0, w, h }, ..window(true, false) }
+    }
+
+    #[test]
+    fn unsupported_size_is_named_in_the_text() {
+        let c = ctx(Some(sized(1280, 720)), Some(AreaKind::Map));
+        let s = RunnerStatus::from_context(&c, vec![], false);
+        assert_eq!(s.resolution, Some(Support::Unsupported));
+        assert_eq!(s.describe(), "in map \u{2013} idle (unsupported size)");
+        // Trying anyway lifts the block; with nothing active the module is simply off.
+        let s = RunnerStatus::from_context(&c, vec![], true);
+        assert_eq!(s.describe(), "in map \u{2013} idle (no module enabled)");
+        // A supported size keeps the old text.
+        let s = RunnerStatus::from_context(&ctx(Some(sized(3440, 1440)), Some(AreaKind::Map)), vec![], false);
+        assert_eq!(s.describe(), "in map \u{2013} idle (no module enabled)");
+    }
+
+    #[test]
+    fn resolution_serializes_per_level_and_is_null_without_a_window() {
+        let level = |w, h, anyway| {
+            let s = RunnerStatus::from_context(&ctx(Some(sized(w, h)), None), vec![], anyway);
+            serde_json::to_value(&s).unwrap()
+        };
+        let v = level(3440, 1440, false);
+        assert_eq!(v["resolution"], "verified");
+        assert_eq!(v["client_size"], serde_json::json!([3440, 1440]));
+        assert_eq!(level(3840, 2160, false)["resolution"], "untested");
+        assert_eq!(level(1280, 720, false)["resolution"], "unsupported");
+        let none = serde_json::to_value(RunnerStatus::from_context(&ctx(None, None), vec![], false)).unwrap();
+        assert!(none["resolution"].is_null() && none["client_size"].is_null());
     }
 
     #[test]

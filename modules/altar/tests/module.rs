@@ -77,6 +77,27 @@ fn module_is_idle_outside_maps() {
     assert!(!m.wants_frames(&GameContext::default()));
 }
 
+fn ctx_sized(w: i32, h: i32) -> GameContext {
+    let mut c = ctx(true, Some(AreaKind::Map));
+    c.poe.as_mut().unwrap().client = Rect { x: 0, y: 0, w, h };
+    c
+}
+
+#[test]
+fn unsupported_sizes_want_no_frames_unless_tried() {
+    let (_dir, m) = module();
+    assert!(!m.wants_frames(&ctx_sized(1280, 720)));
+    assert!(m.wants_frames(&ctx_sized(3440, 1440)));
+
+    let dir = tempfile::tempdir().unwrap();
+    let paths = AppPaths::with(repo_data_dir(), dir.path().join("user"));
+    std::fs::create_dir_all(&paths.user).unwrap();
+    std::fs::write(paths.settings_file(), r#"{"general": {"try_unsupported_size": true}}"#).unwrap();
+    let store = Arc::new(Mutex::new(SettingsStore::open(&paths)));
+    let m = AltarModule::new(&paths, store).unwrap();
+    assert!(m.wants_frames(&ctx_sized(1280, 720)));
+}
+
 #[test]
 fn settings_changes_apply_while_idle() {
     let dir = tempfile::tempdir().unwrap();

@@ -12,7 +12,7 @@ use vision::{Rgb, Scale};
 
 use crate::data::AltarKind;
 use crate::hud::{HudStyle, hud_view};
-use crate::labels::{Label, Watched, load_keywords, load_labels};
+use crate::labels::{KeywordMatcher, Label, Watched, load_keyword_matcher, load_labels};
 use crate::live::{AltarView, ProfileCache, Tracker};
 use crate::read::Reader;
 
@@ -26,7 +26,7 @@ pub struct AltarModule {
     tracker: Tracker,
     profiles: ProfileCache,
     labels: Watched<HashMap<String, Label>>,
-    keywords: Watched<Vec<(String, String)>>,
+    keywords: Watched<KeywordMatcher>,
     start: Instant,
 }
 
@@ -41,7 +41,7 @@ impl AltarModule {
             tracker: Tracker::new(),
             profiles: ProfileCache::new(fallback),
             labels: Watched::new(paths.data.join("labels.json"), load_labels),
-            keywords: Watched::new(paths.data.join("keywords.json"), load_keywords),
+            keywords: Watched::new(paths.data.join("keywords.json"), load_keyword_matcher),
             start: Instant::now(),
         })
     }

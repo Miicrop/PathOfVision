@@ -58,6 +58,22 @@ pub async fn open_settings(app: AppHandle, section: Option<String>) -> Result<()
     open_settings_window(&app, section.as_deref()).map_err(|e| format!("{e:#}"))
 }
 
+/// The settings page's URL, with `section` percent-encoded.
+fn settings_url(section: Option<&str>) -> String {
+    let mut url = "shell/settings.html".to_string();
+    if let Some(s) = section {
+        url.push_str("?section=");
+        for b in s.bytes() {
+            if b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_' | b'.' | b'~') {
+                url.push(b as char);
+            } else {
+                url.push_str(&format!("%{b:02X}"));
+            }
+        }
+    }
+    url
+}
+
 pub fn open_settings_window(app: &AppHandle, section: Option<&str>) -> tauri::Result<()> {
     if let Some(w) = app.get_webview_window(SETTINGS_WINDOW) {
         if let Some(s) = section {
@@ -68,11 +84,7 @@ pub fn open_settings_window(app: &AppHandle, section: Option<&str>) -> tauri::Re
         w.show()?;
         return w.set_focus();
     }
-    let mut url = "shell/settings.html".to_string();
-    if let Some(s) = section {
-        url = format!("{url}?section={s}");
-    }
-    WebviewWindowBuilder::new(app, SETTINGS_WINDOW, WebviewUrl::App(url.into()))
+    WebviewWindowBuilder::new(app, SETTINGS_WINDOW, WebviewUrl::App(settings_url(section).into()))
         .title("Path of Vision \u{2013} Settings")
         .inner_size(900.0, 700.0)
         .center()
@@ -184,4 +196,18 @@ pub async fn altar_set_active(app: AppHandle, state: State<'_, AppState>, file: 
 fn emit_settings(app: &AppHandle, state: &AppState) {
     let json = serde_json::to_value(lock(&state.settings).get()).unwrap_or_default();
     let _ = app.emit("settings:changed", json);
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn open_settings_url_encodes_section() {
+        assert_eq!(settings_url(None), "shell/settings.html");
+        assert_eq!(settings_url(Some("general")), "shell/settings.html?section=general");
+        assert_eq!(settings_url(Some("a b&c")), "shell/settings.html?section=a%20b%26c");
+        assert_eq!(settings_url(Some("x=1#y")), "shell/settings.html?section=x%3D1%23y");
+        assert_eq!(settings_url(Some("\u{e9}")), "shell/settings.html?section=%C3%A9");
+    }
 }

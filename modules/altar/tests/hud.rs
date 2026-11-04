@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::path::PathBuf;
 
 use altar::hud::{HudView, hud_view, HudStyle};
-use altar::labels::{load_keywords, load_labels};
+use altar::labels::{KeywordMatcher, load_keywords, load_labels};
 use altar::live::Tracker;
 use altar::read::Reader;
 use altar::verdict::Profile;
@@ -36,8 +36,8 @@ fn view(with_labels: bool) -> Option<(HudView, Vec<altar::Card>)> {
     let profile = Profile::load(&repo_data_dir().join("profiles/default.json")).unwrap();
     let views = tracker.views(&reader.cards, &profile);
     let labels = if with_labels { load_labels(&repo_data_dir().join("labels.json")) } else { HashMap::new() };
-    let keywords = load_keywords(&repo_data_dir().join("keywords.json"));
-    let style = HudStyle { font_size: 15, tiers: true, other_opacity: 0.6, values: true, scale: 1.0, untested: false };
+    let keywords = KeywordMatcher::new(&load_keywords(&repo_data_dir().join("keywords.json")));
+    let style = HudStyle { font_size: 15, tiers: true, other_opacity: 0.35, values: true, scale: 1.0, untested: false };
     let hud = hud_view(&views, &reader.cards, &labels, &keywords, style, ((img.w / 2) as i32, (img.h / 2) as i32));
     Some((hud, reader.cards))
 }
@@ -83,4 +83,29 @@ fn hud_style_carries_scale_and_untested() {
     // Unsupported sizes are untested once the user opts in.
     let v = serde_json::to_value(HudStyle::from_settings(&s, 1280, 720, true)).unwrap();
     assert_eq!(v["untested"], true);
+}
+
+#[test]
+fn hud_altar_recommendation_and_dimming() {
+    let Some((hud, _)) = view(true) else { return };
+    assert_eq!(hud.style.other_opacity, 0.35, "dimmed options are drawn at hud_other_opacity");
+    let mut picks = 0;
+    for a in &hud.altars {
+        let leave_alone = a.options.iter().all(|o| o.verdict == "AVOID");
+        let chosen: Vec<_> = a.options.iter().filter(|o| o.chosen).collect();
+        assert!(chosen.len() <= 1);
+        picks += chosen.len();
+        for o in &a.options {
+            if leave_alone {
+                assert!(o.dimmed, "both options of an AVOID altar are dimmed");
+            } else if o.chosen {
+                assert!(!o.dimmed, "the pick gets the glow, not the dimming");
+            } else if !chosen.is_empty() {
+                assert_eq!(o.dimmed, o.verdict != "ADAPT - BRICK", "{}", o.verdict);
+            } else {
+                assert!(!o.dimmed);
+            }
+        }
+    }
+    assert!(picks > 0, "the screenshot has a recommendation");
 }

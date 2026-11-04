@@ -21,9 +21,8 @@ pub enum Support {
 
 /// Support level of a `w x h` client; `try_anyway` turns `Unsupported` into `Untested`.
 pub fn support(w: u32, h: u32, try_anyway: bool) -> Support {
-    let floor = (f64::from(VERIFIED_MIN_H) * WINDOWED_SLACK).ceil() as u32;
     let narrow = Scale::is_narrow(w as usize, h as usize);
-    let level = if (floor..=UNTESTED_MAX_H).contains(&h) {
+    let level = if f64::from(h) >= f64::from(VERIFIED_MIN_H) * WINDOWED_SLACK && h <= UNTESTED_MAX_H {
         if !narrow && h <= VERIFIED_MAX_H { Support::Verified } else { Support::Untested }
     } else {
         Support::Unsupported
@@ -50,6 +49,13 @@ mod tests {
     fn windowed_1080_monitor_is_verified() {
         let h = (VERIFIED_MIN_H as f64 * 0.94) as u32;
         assert_eq!(support(3440, h, false), Support::Verified);
+    }
+
+    #[test]
+    fn the_slack_floor_is_exact() {
+        let floor = (f64::from(VERIFIED_MIN_H) * WINDOWED_SLACK) as u32;
+        assert_eq!(support(3440, floor, false), Support::Verified);
+        assert_eq!(support(3440, floor - 1, false), Support::Unsupported);
     }
 
     #[test]

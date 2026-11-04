@@ -31,7 +31,7 @@ impl AppPaths {
         Ok(AppPaths::next_to(dir))
     }
 
-    /// Shipped folders next to `dir` (the installed layout).
+    /// The installed layout: `data` and `modules` folders next to `dir` (the exe folder).
     pub fn next_to(dir: &std::path::Path) -> AppPaths {
         AppPaths { data: dir.join("data"), modules: dir.join("modules"), user: user_dir() }
     }
@@ -52,11 +52,6 @@ impl AppPaths {
 
     pub fn module_assets(&self, module: &str) -> PathBuf {
         self.modules.join(module).join("assets")
-    }
-
-    /// True when both the shipped data and the altar templates exist.
-    pub fn is_complete(&self) -> bool {
-        self.data.join("mods.json").is_file() && self.module_assets("altar").join("icon_eater.png").is_file()
     }
 
     pub fn settings_file(&self) -> PathBuf {

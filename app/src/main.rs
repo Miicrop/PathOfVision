@@ -68,12 +68,12 @@ fn app_paths(dev: bool) -> anyhow::Result<AppPaths> {
         return Ok(AppPaths::dev());
     }
     let p = AppPaths::installed()?;
-    if p.is_complete() {
+    if p.data.join("mods.json").is_file() && p.module_assets("altar").join("icon_eater.png").is_file() {
         return Ok(p);
     }
-    // A release build run from `target/` has no data folder next to it (until Plan C ships one).
+    // A release build run from `target/` has no shipped files next to it.
     let dev = AppPaths::dev();
-    eprintln!("no data folder at {}, using {}", p.data.display(), dev.data.display());
+    eprintln!("shipped files incomplete next to the exe ({}), using {}", p.data.display(), dev.data.display());
     Ok(dev)
 }
 

@@ -48,12 +48,12 @@ PoE 1 lays out its UI relative to the client height. The core defines a **refere
 
 - The scale hypothesis is verified first, before code is built on it (parent design section 8): measure the altar icon and box sizes in the windowed 1080p and 1440p shots against 3440×1440. If the UI does not scale linearly with height, fall back to a small multi-scale search, and tell the user.
 - Width does not change the scale for 16:9 and wider; wider clients only have more room at the sides (3440×1440 and 2560×1440 have the same UI size).
-- **Narrower than 16:9 (16:10, e.g. 1920×1200)** *(Claude's call)*: common on 24" office monitors, so in scope. PoE may limit the UI by width there; the scale check covers it with a real 1920×1200 windowed shot. If the UI is width-limited, the factor becomes `min(h/1440, w/2560)`. Until that is verified, clients narrower than 16:9 count as "untested" (section 4.4), never as normal.
+- **Narrower than 16:9 (16:10, e.g. 1920×1200)** *(builder's call)*: common on 24" office monitors, so in scope. PoE may limit the UI by width there; the scale check covers it with a real 1920×1200 windowed shot. If the UI is width-limited, the factor becomes `min(h/1440, w/2560)`. Until that is verified, clients narrower than 16:9 count as "untested" (section 4.4), never as normal.
 - The HUD size and position follow the same factor (on top of the user's HUD scale setting).
 
 ### 4.2 What the user provides (decided)
 
-- **Windowed screenshots on the user's 3440×1440 monitor** at 1920×1080 (main set, hardest case), 1920×1200 (16:10, small set) and a mid height such as 2304×1296 (small set, a real point between 1080 and 1440). *(Claude's call: a 2560×1440 window does not fit on a 1440 px tall screen with its title bar; 1440 px height is already covered by the 3440×1440 fixtures.)* Claude writes a short shot list (how to set the window size, how many altars, which variety: both altar colors, tall boxes, boxes near the screen edges). Screenshots stay local and git-ignored; labels go into git as today.
+- **Windowed screenshots on the user's 3440×1440 monitor** at 1920×1080 (main set, hardest case), 1920×1200 (16:10, small set) and a mid height such as 2304×1296 (small set, a real point between 1080 and 1440). *(builder's call: a 2560×1440 window does not fit on a 1440 px tall screen with its title bar; 1440 px height is already covered by the 3440×1440 fixtures.)* The builder writes a short shot list (how to set the window size, how many altars, which variety: both altar colors, tall boxes, boxes near the screen edges). Screenshots stay local and git-ignored; labels go into git as today.
 - No 4K screenshots for now.
 
 ### 4.3 Test layers (decided)
@@ -69,7 +69,7 @@ Acceptance per real resolution as in parent design section 8: all altars found, 
 ### 4.4 Unverified sizes (decided, from parent design section 8)
 
 - Client heights inside the verified range (lowest to highest height with passing real fixtures) run normally.
-- Heights above the verified range up to 2160 (4K) run, with a small "untested resolution" note in the HUD until someone confirms it. *(Claude's call: downscaling to the reference is the easy direction, so 4K is not blocked; the note keeps it honest.)*
+- Heights above the verified range up to 2160 (4K) run, with a small "untested resolution" note in the HUD until someone confirms it. *(builder's call: downscaling to the reference is the easy direction, so 4K is not blocked; the note keeps it honest.)*
 - Heights outside that: the game context reports "unsupported size"; the altar module shows no verdicts; Home explains why. A general setting "try anyway" opts in, with the "untested resolution" note.
 
 ### 4.5 For future modules
@@ -81,23 +81,23 @@ The shot list and the synthetic-downscale test tool are written so a future modu
 ### 5.1 Repository (decided)
 
 - The user creates a **public** GitHub repo named **PathOfVision** and pushes the existing history. The history contains `Altar.png` (an early 3440×1440 test screenshot, removed in `b3dfce4`); checked 2026-11-04: it shows no character or account name, only the league, realm and map, so it may stay.
-- **The Python prototype (`prototype/`, its tests, `requirements.txt`) is removed before the first push** *(Claude's call, following the parent design: "removed once parity is shown", which Plan A showed; its board no longer works)*. It stays available in git history. The Python dev tools in `tools/` stay. CI covers Rust only.
-- **Local cleanup too** (user request 2026-11-04): everything the prototype leaves behind that is no longer needed goes, in the repo and in the local working folder: `prototype/` (incl. its assets, which now live under `ui/modules/altar/img/` and `modules/altar/assets/`), the Python tests that only test the prototype (keep the ones for `tools/gen_mods`, labels and data files), prototype-only dependencies in `requirements.txt` (keep only what `tools/` needs), stale local caches (`.pytest_cache`, `__pycache__`), and the `.venv` rebuilt with the slim requirements. Docs and Plan.md stop describing the prototype as runnable. Before deleting anything untracked, Claude lists it for the user. The user's `settings.json`, profiles and screenshots are never deleted.
-- Claude prepares everything that has to be in place before the first push (README, LICENSE, `.gitignore` check that no screenshots, settings or personal profiles are tracked) and tells the user the exact steps.
+- **The Python prototype (`prototype/`, its tests, `requirements.txt`) is removed before the first push** *(builder's call, following the parent design: "removed once parity is shown", which Plan A showed; its board no longer works)*. It stays available in git history. The Python dev tools in `tools/` stay. CI covers Rust only.
+- **Local cleanup too** (user request 2026-11-04): everything the prototype leaves behind that is no longer needed goes, in the repo and in the local working folder: `prototype/` (incl. its assets, which now live under `ui/modules/altar/img/` and `modules/altar/assets/`), the Python tests that only test the prototype (keep the ones for `tools/gen_mods`, labels and data files), prototype-only dependencies in `requirements.txt` (keep only what `tools/` needs), stale local caches (`.pytest_cache`, `__pycache__`), and the `.venv` rebuilt with the slim requirements. Docs and Plan.md stop describing the prototype as runnable. Before deleting anything untracked, the builder lists it for the user. The user's `settings.json`, profiles and screenshots are never deleted.
+- The builder prepares everything that has to be in place before the first push (README, LICENSE, `.gitignore` check that no screenshots, settings or personal profiles are tracked) and tells the user the exact steps.
 
 ### 5.2 Build and CI (decided)
 
 - GitHub Actions on a Windows runner: build and unit tests on every push; on a version tag, build the NSIS installer and the updater artifacts and attach them to a GitHub Release with a changelog.
 - Fixture-based tests run locally only (screenshots are not in git).
 - Per-user install, no admin rights, no extras in the installer.
-- **Who releases** *(Claude's call)*: Claude bumps the version and pushes the tag when the user says "release"; CI creates a **draft** release; the user reads it and clicks "Publish". Only published releases reach friends' updaters.
+- **Who releases** *(builder's call)*: the builder bumps the version and pushes the tag when the user says "release"; CI creates a **draft** release; the user reads it and clicks "Publish". Only published releases reach friends' updaters.
 - **Plan C ends with a real published release** (`v0.1.0`) installed the way a friend would, and a tested update to a second release (`v0.1.1`) that shows "update available", installs on the next start and keeps settings and profiles.
 
 ### 5.3 Updates (decided)
 
 - Tauri updater with a signing key, feed from GitHub Releases (`latest.json`).
 - Check in the background at start; Home shows "update available"; install on next start or on "update now". Never during a map.
-- The updater signing key's private half is kept out of the repo (GitHub secret plus a backup the user stores safely). Claude explains to the user what to store where.
+- The updater signing key's private half is kept out of the repo (GitHub secret plus a backup the user stores safely). The builder explains to the user what to store where.
 - The update check is the only network traffic (parent constraint); the README says so.
 
 ### 5.4 README (decided)

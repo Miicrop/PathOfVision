@@ -9,7 +9,7 @@ The Python prototype proved that a passive screen-reading overlay can read Eldri
 
 The app is no longer "an altar scanner" but a **multi-module PoE 1 helper**, working name **Path of Vision** (final name later). The altar is its first and, in this phase, only module. The user has more ideas (Plan.md Phase 6: atlas/passive tree overlays, travel wheel, stash prices, Faustus helper, Ritual and Betrayal helpers, crafting help). They are not built now; they only shape the architecture so that adding a module later is easy.
 
-The user does not read or write the code. All code is written by Claude; language and structure are chosen for the end result only.
+The user does not read or write the code. Implementation choices are left to the builder; language and structure are chosen for the end result only.
 
 ## 2. Goals, non-goals, anti-goals
 
@@ -40,7 +40,7 @@ The user does not read or write the code. All code is written by Claude; languag
 - **Windows 10/11 only** (WebView2, Windows.Graphics.Capture, Windows.Media.Ocr).
 - **English game client.**
 - **Privacy:** screenshots never leave the PC. The only network traffic in this phase is the update check/download from GitHub.
-- **Open source** on GitHub. License: MIT *(Claude's call)*.
+- **Open source** on GitHub. License: MIT *(builder's call)*.
 - **Tests and dev tools never touch the user's real `settings.json` or profiles** (they edit them while work happens): use temporary copies.
 
 ## 4. Tech stack (decided)
@@ -98,7 +98,7 @@ Adding a module = new folder + one registration line. A module needing a service
 
 Only what the altar needs, shaped so later ones fit beside them:
 
-- **Game context:** finds the PoE window (process/window class), its client rect, monitor, DPI and focus; watches `Client.txt` for area changes to know map / hideout / town. If `Client.txt` cannot be found, fall back to "active whenever PoE is running" and let the user set the path in General settings. *(Map detection from `Client.txt` area lines is Claude's call; verify the exact log lines.)*
+- **Game context:** finds the PoE window (process/window class), its client rect, monitor, DPI and focus; watches `Client.txt` for area changes to know map / hideout / town. If `Client.txt` cannot be found, fall back to "active whenever PoE is running" and let the user set the path in General settings. *(Map detection from `Client.txt` area lines is builder's call; verify the exact log lines.)*
 - **Capture:** one Windows.Graphics.Capture session for the PoE window or its monitor (builder's call; watch for the yellow capture border on Windows 10), shared by all modules. Modules request regions and rates; frames are cropped/downscaled without full-frame copies where possible. No capture while no module is active.
 - **Vision:** image type, color masks, scaling, template matching with scores, helpers to place regions relative to a hit.
 - **OCR:** Windows.Media.Ocr wrapper with the prototype's preprocessing (bright pixels black on white, 2× upscale).
@@ -125,17 +125,17 @@ Everything in Plan.md Phases 2–3 and the board round, ported behavior-for-beha
 - Board: all current features unchanged; only the backend adapter `connectBackend()` in `board.js` is replaced by Tauri IPC. **The board's "Settings" panel moves out (user decision):** everything under today's "Settings" button (HUD options: font size, tier style, values column, other-option opacity, HUD position; board options: card style, target tag) goes to the settings window, entry "Altars", and the button disappears from the board. The filter bar stays in the board as it is: Altar, Side, Target, Reward, Search. The board applies card style and target tag changes from the settings window live (settings change event), so this is the one board change beyond the adapter. Reward icons move from `prototype/assets/mods/` next to the module's UI. Smooth scrolling must hold at high refresh rates (WebView2 has no 60 fps cap like Qt WebEngine, but verify).
 - Dev tools: replay mode (run on a folder of screenshots instead of the live screen) and a stats mode (scan timings, CPU) stay available in dev builds.
 
-Python dev tools (`tools/gen_mods`, `tools/gen_board_art`) may stay in Python; they are not shipped *(Claude's call)*. The Python prototype stays in the repo as the reference until parity is shown, then is removed.
+Python dev tools (`tools/gen_mods`, `tools/gen_board_art`) may stay in Python; they are not shipped *(builder's call)*. The Python prototype stays in the repo as the reference until parity is shown, then is removed.
 
 ## 8. Resolution support
 
 - Supported: 16:9 at 1920×1080, 2560×1440, 3840×2160; 21:9 at 2560×1080 and 3440×1440; 32:9 if fixtures exist. Windowed (any size within these) and borderless fullscreen. Multi-monitor: wherever the PoE window is.
 - Working hypothesis *(to verify first, before building on it)*: PoE 1's UI scales with the client height, so the scale factor is `client_height / 1440` and detection runs at a known scale instead of searching many. If this is wrong, fall back to a small multi-scale search.
 - OCR regions, box sizes and HUD size all follow the same scale factor.
-- **Fixtures:** the user captures altar screenshots at the resolutions that fit the user's own 3440×1440 monitor (windowed mode); friends with other monitors provide 4K, 32:9 and other native setups (user decision). Claude provides an exact shot list written so friends can follow it without help. Screenshots stay local and git-ignored; labels go in git as today.
-- **Acceptance per resolution:** all altars found, no false detections, ≥ 95 % of readable options fully correct *(Claude's threshold; 3440×1440 must stay at the prototype's 98.8 %)*.
+- **Fixtures:** the user captures altar screenshots at the resolutions that fit the user's own 3440×1440 monitor (windowed mode); friends with other monitors provide 4K, 32:9 and other native setups (user decision). The builder provides an exact shot list written so friends can follow it without help. Screenshots stay local and git-ignored; labels go in git as today.
+- **Acceptance per resolution:** all altars found, no false detections, ≥ 95 % of readable options fully correct *(builder's threshold; 3440×1440 must stay at the prototype's 98.8 %)*.
 - Unknown or failed reads never produce a confident verdict (anti-goal 1).
-- **Other sizes** (16:10, 1600×900, odd window sizes) *(Claude's call)*: if the scale hypothesis holds, the module runs at any client height inside the verified range (lowest to highest height with passing fixtures). Outside that range the game context reports "unsupported size"; the altar module does not show verdicts and Home explains why. A general setting "try anyway" lets players opt in, with a small "untested resolution" note in the HUD.
+- **Other sizes** (16:10, 1600×900, odd window sizes) *(builder's call)*: if the scale hypothesis holds, the module runs at any client height inside the verified range (lowest to highest height with passing fixtures). Outside that range the game context reports "unsupported size"; the altar module does not show verdicts and Home explains why. A general setting "try anyway" lets players opt in, with a small "untested resolution" note in the HUD.
 
 ## 9. Performance budget
 
@@ -149,10 +149,10 @@ Measured with the same method as Phase 3 (`--stats`, CPU total, in-game FPS with
 ## 10. Distribution and release
 
 - Tauri bundler: per-user NSIS installer (no admin), Tauri updater with a signing key, update feed from GitHub Releases, changelog per release.
-- **Name-independent identity** *(Claude's call)*: the final name may come after friends have installed the app. Bundle identifier, install folder, user data folder and updater key use a permanent neutral internal ID chosen once at the start; only the display name, window titles and README change on a rename. (Section 6.4's `%APPDATA%\PathOfVision\` stands for that ID's folder.)
+- **Name-independent identity** *(builder's call)*: the final name may come after friends have installed the app. Bundle identifier, install folder, user data folder and updater key use a permanent neutral internal ID chosen once at the start; only the display name, window titles and README change on a rename. (Section 6.4's `%APPDATA%\PathOfVision\` stands for that ID's folder.)
 - README: what it does, what it never does (no memory reading, no input to the game, no data leaves the PC), supported setups and resolutions, install, the SmartScreen warning on first start and why, privacy, license, how to report a bad read.
 - **Gates before a public release** (not before friends): GGG terms of use re-checked (Plan.md section 2) and the use of extracted game art (icons, altar art) cleared or replaced.
-- **Repository:** the project is local only for now. The user creates the GitHub repo once the app is testable (or earlier if Claude needs it, on request). Since releases and the updater feed live there, the game-art question has to be settled before that repo is made public *(Claude's note)*.
+- **Repository:** the project is local only for now. The user creates the GitHub repo once the app is testable (or earlier if the builder needs it, on request). Since releases and the updater feed live there, the game-art question has to be settled before that repo is made public *(builder's note)*.
 - CI on GitHub Actions (Windows runner): build, unit tests, release artifacts. Fixture-based tests run locally only, since screenshots are not in git.
 
 ## 11. Testing
@@ -164,7 +164,7 @@ Measured with the same method as Phase 3 (`--stats`, CPU total, in-game FPS with
 
 ## 12. Decided by the user
 
-- Rust + Tauri 2; Claude writes all code; the prototype code can be changed or replaced freely.
+- Rust + Tauri 2; the prototype code can be changed or replaced freely.
 - Working name Path of Vision.
 - Main window opens on start, closes to tray, reopen from tray.
 - Main window with a left sidebar of modules; settings in a separate window with "General" plus one entry per module.

@@ -21,7 +21,7 @@
 - Reference height: **1440 px**. Acceptance per real resolution: all altars found, no false detections, ≥ 95 % of readable options fully correct. 3440×1440 stays at exactly today's golden result (84/85, the one known miss `screen_10.png [856, 1152] bottom`).
 - **1080p is a hard gate:** `v0.1.0` is not published before the real 1080p set passes.
 - Screenshots stay local and git-ignored; label files go into git.
-- No `Co-Authored-By` trailer in commits (user rule). Claude/Anthropic is not named as author or contributor anywhere (commits, README, LICENSE, `Cargo.toml` `authors`, installer publisher, GitHub release text); the author is Miicrop.
+- No `Co-Authored-By` trailer in commits (user rule). No AI tool or vendor is named as author or contributor anywhere (commits, README, LICENSE, `Cargo.toml` `authors`, installer publisher, GitHub release text); the author is Miicrop.
 - Cargo lives at `%USERPROFILE%\.cargo\bin` (not on bash PATH; use PowerShell or the full path).
 - English only in code, data, UI and docs.
 
@@ -103,7 +103,7 @@ All existing constants (`RING`, `FINE_WINDOW`, `SEARCH_HALF_WIDTH`, `SEARCH_HEIG
 
 **Interfaces:**
 - Produces: `#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)] #[serde(rename_all = "lowercase")] pub enum Support { Verified, Untested, Unsupported }`; `pub fn support(w: u32, h: u32, try_anyway: bool) -> Support`; constants `VERIFIED_MIN_H: u32 = 1440`, `VERIFIED_MAX_H: u32 = 1440` (Task 7 widens them), `UNTESTED_MAX_H: u32 = 2160`, `WINDOWED_SLACK: f64 = 0.9`.
-- Rules *(Claude's call, spec 4.4)*: `Verified` if `!is_narrow` and `VERIFIED_MIN_H × 0.9 ≤ h ≤ VERIFIED_MAX_H`; `Untested` if `VERIFIED_MAX_H < h ≤ UNTESTED_MAX_H`, or narrow aspect inside `[min × 0.9, UNTESTED_MAX_H]`; otherwise `Unsupported`, which `try_anyway` turns into `Untested`. The 0.9 slack lets windowed clients on a monitor of a verified height count as verified.
+- Rules *(builder's call, spec 4.4)*: `Verified` if `!is_narrow` and `VERIFIED_MIN_H × 0.9 ≤ h ≤ VERIFIED_MAX_H`; `Untested` if `VERIFIED_MAX_H < h ≤ UNTESTED_MAX_H`, or narrow aspect inside `[min × 0.9, UNTESTED_MAX_H]`; otherwise `Unsupported`, which `try_anyway` turns into `Untested`. The 0.9 slack lets windowed clients on a monitor of a verified height count as verified.
 - `RunnerStatus` gets `pub resolution: Option<Support>` (None without a PoE window), filled by the runner from `ctx.poe.client` and `general.try_unsupported_size`.
 - `AltarModule::wants_frames` returns false when the support is `Unsupported`.
 - `HudStyle` gets `scale: f64` and `untested: bool`; `hud_rect` callers pass `offset_x × s` and `bottom × s` (`s = client.h / 1440`).
@@ -221,7 +221,7 @@ All existing constants (`RING`, `FINE_WINDOW`, `SEARCH_HALF_WIDTH`, `SEARCH_HEIG
 - [ ] **Step 4: `release.yml`** on tags `v*`: `tauri-apps/tauri-action@v0` with `projectPath: app`, `tagName: ${{ github.ref_name }}`, `releaseDraft: true`, `includeUpdaterJson: true`, env `TAURI_SIGNING_PRIVATE_KEY(_PASSWORD)` from secrets, release body from the matching `CHANGELOG.md` section.
 - [ ] **Step 5: Public-push audit:** `git ls-files` contains no `settings.json`, no `data/profiles/` except `default.json`/`empty.json`, no screenshots (`tests/fixtures/screens*`), no key files; history check `git log --all --name-only --format="" | sort -u` for the same patterns (only `Altar.png` expected, already cleared by the user).
 - [ ] **Step 6: Commit** `"Release: README, changelog, CI and release workflows"`.
-- [ ] **Step 7: User steps** (in German, numbered): create the public repo `PathOfVision` on GitHub (no README/license from GitHub), confirm the user name for the updater URL, add the two signing secrets, then Claude runs `git remote add origin …` and `git push -u origin main` after the user says so. Check that the CI run on GitHub passes (`gh run list`).
+- [ ] **Step 7: User steps** (in German, numbered): create the public repo `PathOfVision` on GitHub (no README/license from GitHub), confirm the user name for the updater URL, add the two signing secrets, then the builder runs `git remote add origin …` and `git push -u origin main` after the user says so. Check that the CI run on GitHub passes (`gh run list`).
 
 ### Task 12: First release and update test
 

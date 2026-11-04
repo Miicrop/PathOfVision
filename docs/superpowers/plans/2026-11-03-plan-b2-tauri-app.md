@@ -1,6 +1,6 @@
 # Plan B2 – Tauri app (main window, tray, HUD, board, settings window) Implementation Plan
 
-**Status:** Tasks 1–10 done; awaiting final branch review, merge and the user's in-game test (Task 10 Step 3).
+**Status:** ✅ Done and merged into `main` (2026-11-04). User's in-game test passed after the drag-and-drop fix; results and Plan C carry-over in `plans/Plan.md`, Phase 4.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -257,4 +257,4 @@ Rules copied from `prototype/overlay.py`: colors TAKE `#4fbf6a`, CONSIDER `#e0a3
 
 - [x] **Step 1: Measure in replay** (`cargo run -p pov-app --release -- --replay tests/fixtures/screens --hold 1 --stats`, 60 s): stats lines with CPU % of total; with the main window closed (tray only) note the app's total RAM from `Get-Process pov-app, msedgewebview2 | Where-Object { ... }` (the WebView2 processes started by the app: match by parent process id) for "main window closed, HUD only".
 - [x] **Step 2: Update `plans/Plan.md`** Phase 4 with "Plan B2 done": what the app does, how to start it (`cargo run -p pov-app --release`), the replay numbers (CPU, RAM main window closed) and the Python board no longer working (the Tauri board replaces it; the Python scanner + HUD still run). Commit `git commit -m "Plans: Plan B2 done"`.
-- [ ] **Step 3 (user, after the branch review):** the controller asks the user to start `target\release\pov-app.exe` and map for a while: HUD look and verdicts match the prototype, no focus loss while typing in chat, clicks go through the HUD, FPS unchanged, CPU ≤ 3 % (Home or `--stats`), RAM with the main window closed, board scrolling smooth at 144 Hz, tray/close/second start behave as described. Results go into `plans/Plan.md`; if the WebView HUD is clearly heavier than expected, the Direct2D HUD (spec 4) becomes a Plan C item.
+- [x] **Step 3 (user, after the branch review):** the controller asks the user to start `target\release\pov-app.exe` and map for a while: HUD look and verdicts match the prototype, no focus loss while typing in chat, clicks go through the HUD, FPS unchanged, CPU ≤ 3 % (Home or `--stats`), RAM with the main window closed, board scrolling smooth at 144 Hz, tray/close/second start behave as described. Results go into `plans/Plan.md`; if the WebView HUD is clearly heavier than expected, the Direct2D HUD (spec 4) becomes a Plan C item.

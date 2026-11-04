@@ -23,6 +23,8 @@ const TEXT_BRIGHTNESS: u8 = 110;
 const CENTER_TOLERANCE: f32 = 20.0;
 /// Reference px between pieces of one row split by an icon or life bar.
 const MAX_FRAGMENT_GAP: f32 = 220.0;
+/// Fragments are one row when their vertical centers differ by at most this share of the smaller height.
+const ROW_ALIGN: f32 = 1.0 / 3.0;
 /// Max vertical gap (reference px) between lines of one box.
 const LINE_GAP: f32 = 22.0;
 
@@ -133,8 +135,10 @@ pub fn merge_rows(mut lines: Vec<Line>, scale: Scale) -> Vec<Line> {
     let mut merged: Vec<Line> = Vec::new();
     for line in lines {
         let row = merged.iter_mut().find(|row| {
-            let overlap = row.y1.min(line.y1) - row.y0.max(line.y0);
-            overlap > 0.5 * (row.y1 - row.y0).min(line.y1 - line.y0) && line.x0 - row.x1 <= max_gap
+            // Same row: vertical centers within a third of the smaller height. (Mere overlap let
+            // taller HUD text next to a box bridge two box rows.)
+            let offset = ((row.y0 + row.y1) - (line.y0 + line.y1)).abs() / 2.0;
+            offset <= ROW_ALIGN * (row.y1 - row.y0).min(line.y1 - line.y0) && line.x0 - row.x1 <= max_gap
         });
         match row {
             Some(row) => {
@@ -152,27 +156,36 @@ pub fn merge_rows(mut lines: Vec<Line>, scale: Scale) -> Vec<Line> {
 /// Lines crossing the icon's center column that form one contiguous block next to the icon.
 ///
 /// Box text is centered on the icon, but lines cut off by HUD or screen edges are not,
-/// so the test is only that the line spans the center column.
+/// so the test is only that the line spans the center column, or, once the block has
+/// started, that it lies within the block's width.
 pub fn box_lines(lines: Vec<Line>, cx: f32, near_y: f32, upward: bool, scale: Scale) -> Vec<Line> {
     let tolerance = scale.px(CENTER_TOLERANCE as f64) as f32;
     let line_gap = scale.px(LINE_GAP as f64) as f32;
-    let mut centered: Vec<Line> = merge_rows(lines, scale)
-        .into_iter()
-        .filter(|l| l.x0 - tolerance <= cx && cx <= l.x1 + tolerance)
-        .collect();
+    let mut rows = merge_rows(lines, scale);
     if upward {
-        centered.sort_by(|a, b| b.y1.total_cmp(&a.y1));
+        rows.sort_by(|a, b| b.y1.total_cmp(&a.y1));
     } else {
-        centered.sort_by(|a, b| a.y0.total_cmp(&b.y0));
+        rows.sort_by(|a, b| a.y0.total_cmp(&b.y0));
     }
     let mut block: Vec<Line> = Vec::new();
+    let (mut bx0, mut bx1) = (f32::INFINITY, f32::NEG_INFINITY);
     let mut edge = near_y;
-    for line in centered {
+    for line in rows {
+        // A row whose readable part misses the center column (a life bar hides the rest) still
+        // belongs to the box when it lies within the lines taken so far; without it the gap to
+        // the next row would end the box early.
+        let centered = line.x0 - tolerance <= cx && cx <= line.x1 + tolerance;
+        let inside = !block.is_empty() && line.x0 >= bx0 - tolerance && line.x1 <= bx1 + tolerance;
+        if !centered && !inside {
+            continue;
+        }
         let gap = if upward { edge - line.y1 } else { line.y0 - edge };
         if gap > if block.is_empty() { line_gap * 3.0 } else { line_gap } {
             break;
         }
         edge = if upward { line.y0 } else { line.y1 };
+        bx0 = bx0.min(line.x0);
+        bx1 = bx1.max(line.x1);
         block.push(line);
     }
     block.sort_by(|a, b| a.y0.total_cmp(&b.y0));

@@ -22,6 +22,20 @@ fn merge_rows_keeps_far_fragments_apart() {
 }
 
 #[test]
+fn merge_rows_keeps_misaligned_rows_apart() {
+    // Taller HUD text ("Shield 52/152") level with two box rows must not join either of them
+    // (from a real 2560x1353 shot, native px).
+    let lines = vec![
+        line("Shield", 35.0, 98.0, 122.5, 141.3),
+        line("52/152", 206.0, 262.0, 123.5, 147.4),
+        line("HITS HAVE 59% CHANCE TO IGNORE ENEMY PHYSICAL DAMAGE REDUCTION", 322.0, 895.0, 138.5, 153.0),
+        line("+80% TO LIGHTNING RESISTANCE", 482.0, 736.0, 117.4, 131.5),
+    ];
+    let texts: Vec<String> = merge_rows(lines, Scale::REFERENCE).into_iter().map(|l| l.text).collect();
+    assert_eq!(texts, ["Shield 52/152", "HITS HAVE 59% CHANCE TO IGNORE ENEMY PHYSICAL DAMAGE REDUCTION", "+80% TO LIGHTNING RESISTANCE"]);
+}
+
+#[test]
 fn box_lines_takes_the_contiguous_block_next_to_the_icon() {
     let lines = vec![
         line("far", 300.0, 500.0, 280.0, 300.0),
@@ -41,6 +55,20 @@ fn box_lines_first_gap_may_be_three_line_gaps() {
     assert_eq!(ok.len(), 1);
     let far = box_lines(vec![line("a", 300.0, 500.0, 567.0, 590.0)], 400.0, 500.0, false, Scale::REFERENCE);
     assert!(far.is_empty());
+}
+
+#[test]
+fn box_lines_keeps_a_row_whose_center_is_hidden() {
+    // "ALL DAM" lost its right half under a life bar: it misses the center column, but lies
+    // within the box, so the rows above it still belong to the box.
+    let lines = vec![
+        line("GAIN 80% OF PHYSICAL DAMAGE", 250.0, 550.0, 430.0, 445.0),
+        line("ALL DAM", 300.0, 370.0, 449.0, 463.0),
+        line("FINAL BOSS DROPS 6", 230.0, 570.0, 468.0, 482.0),
+    ];
+    let block = box_lines(lines, 400.0, 500.0, true, Scale::REFERENCE);
+    let texts: Vec<&str> = block.iter().map(|l| l.text.as_str()).collect();
+    assert_eq!(texts, ["GAIN 80% OF PHYSICAL DAMAGE", "ALL DAM", "FINAL BOSS DROPS 6"]);
 }
 
 #[test]

@@ -101,7 +101,7 @@ Recommendation:
 - Evaluate a screenshot set: `cargo run -p altar --release --bin evaluate` (`--height <px>` synthetic downscale, `--write <dir>`, `--draft` label draft).
 - Run the app from source: `cargo run -p pov-app --release` (`--replay <dir> --hold <s>` cycles screenshots instead of the game, `--stats`, `--hidden`). Headless: `cargo run -p pov-scan --release`.
 - Installer locally: `cargo tauri build` in `app/` → `target/release/bundle/nsis/`.
-- New screenshots: follow [shot-list.md](shot-list.md); desktop shots are cut with `tools/crop_client.py`.
+- New screenshots: game windowed at the wanted size, altars with both colors and boxes near HUD and screen edges; full-desktop shots are cut with `tools/crop_client.py <folder> --expect WxH`.
 
 ## Release flow
 

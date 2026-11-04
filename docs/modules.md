@@ -17,7 +17,7 @@ Which sizes count as verified is decided in one place, `pov_core::resolution` (`
 ## Fixtures a module needs
 
 1. **Reference-size fixtures:** labeled screenshots at 1440 px height (the altar module uses `tests/fixtures/screens` with `tests/fixtures/labels.json`). These are what the constants are tuned on.
-2. **A few real shots at the smallest verified height** (1080 px today), plus any other size you want to call verified. Capture them with [shot-list.md](shot-list.md). Full-desktop screenshots of a windowed game are fine: `tools/crop_client.py <folder> --expect 1920x1080` cuts the client area out of each `Screenshot (N).png` into `<folder>/client/screen_NN.png` and checks the size.
+2. **A few real shots at the smallest verified height** (1080 px today), plus any other size you want to call verified. Full-desktop screenshots of a windowed game are fine: `tools/crop_client.py <folder> --expect 1920x1080` cuts the client area out of each `Screenshot (N).png` into `<folder>/client/screen_NN.png` and checks the size.
 3. **A synthetic test:** downscale the reference fixtures to a smaller height and run the same accuracy check (the altar module's `evaluate_scaled`, or `evaluate --height <px>`; `--write <dir>` saves the resized frames for `pov-app --replay`). This catches scale bugs cheaply, but it does not replace real shots: the game renders text differently at small sizes than a downscaled 1440 px frame shows it.
 
 Screenshots stay local and git-ignored; label files go into git. Label every box by eye, never from the module's own output alone (`evaluate <screens> --draft <file>` writes a draft to check against the image), and mark unreadable boxes with `"mods": null` and a `note`.

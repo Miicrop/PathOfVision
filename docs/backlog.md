@@ -4,8 +4,8 @@ Open topics and ideas. Nothing here is committed; the project's current state is
 
 ## Next small things
 
-- Nicer "Update now" button on Home.
-- Show the app version on Home.
+- ~~Nicer "Update now" button on Home.~~ Done (version card).
+- ~~Show the app version on Home.~~ Done (version card).
 - Check why the update offer was not shown once on the first start with PoE running (it worked on the next try).
 
 ## Altar module
@@ -17,7 +17,7 @@ Open topics and ideas. Nothing here is committed; the project's current state is
 - **Target from the icon halves:** classify crown/figure/group in the icon to know a box's target when its header is hidden.
 - **Exarch atlas passive** (reportedly a 50 % chance for an additional upside) is untested: collect screenshots with it.
 - **HardMode variants:** when do they spawn? Not Ruthless-only (seen in normal maps).
-- **Profile import/export** as a shareable text code (like PoB codes).
+- ~~**Profile import/export** as a shareable text code (like PoB codes).~~ Done (board Export/Import, `POV1:` codes).
 - **In-app mod data updates:** download the newest `mods.json`; new cards show up as "new" on the board.
 - **Profile hotkey switching** (e.g. per farm strategy).
 - **Roll value scaling:** a high roll scores better than a low one within the same tier (needs the player's atlas scaling).

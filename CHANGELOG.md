@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Home shows the app version next to the status. When an update is waiting, the card offers it with an "Update now" button, shows progress while installing and the error if it fails.
+- Altar profiles can be shared as text codes: Export on the tier board copies the profile as a code, Import adds a profile from a pasted code (with a preview; never overwrites an existing profile, options this version does not know are skipped).
+
 ## 0.1.1
 
 - Update test: no changes to the app itself.

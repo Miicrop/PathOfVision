@@ -31,7 +31,7 @@ Rust workspace (`Cargo.toml`) plus a Tauri 2 app; all UI is HTML/JS.
 | `modules/altar` | The altar module: `detect` (icon ring), `read` (OCR boxes), `matching` (lines → cards), `verdict`, `live` (tracker), `hud`, `board` (board backend), `evaluate` (+ `bin/evaluate`) |
 | `app/` | `pov-app`, the Tauri app "Path of Vision": main window (Home, Altars board), tray, settings window, HUD window, `update.rs` (updater) |
 | `apps/scan` | `pov-scan`, headless console scanner (debugging) |
-| `ui/shell/` | Main window, Home, settings window |
+| `ui/shell/` | Main window, Home (status, version/update card, module switches), settings window |
 | `ui/modules/altar/` | `board/` (tier board), `hud/`, `img/` (icons, card art) |
 | `data/` | `mods.json` (generated), `labels.json`, `keywords.json`, `profiles/default.json`, `profiles/empty.json` |
 | `tools/` | Python dev tools: `gen_mods` (builds `mods.json`), `gen_board_art`, `crop_client.py` (cuts the game client out of desktop screenshots) |
@@ -86,6 +86,7 @@ Recommendation:
 - Cards: altar as frame color (generic = split frame with gold seam), faded target scene, reward icon, short label from `labels.json` plus mod text (card style setting). Downside keywords colored from `keywords.json`.
 - Drag & drop, Ctrl/Shift multi-select, ← / → move the selection, Ctrl+Z / Ctrl+Y.
 - Profiles: read-only **Default**, **Duplicate** for an editable copy; every change is saved and applies to the HUD at once.
+- **Export** copies the profile as a one-line text code (`POV1:` + base64url of deflated compact JSON: name, columns with key flags, top column, Dangerous, Brick; no settings, no `readOnly`/`modsVersion`) to the clipboard, or shows it in a dialog when the clipboard fails. The Default profile is about 1.1k characters. **Import** opens a dialog with a live preview; it always writes a new user profile (a taken name gets " (2)", " (3)" …), drops ids unknown to this `mods.json` and makes the profile active. Invalid codes, codes of a newer format version and codes inflating beyond 1 MB are refused (`BoardApi::export_code` / `import_preview` / `import_code`).
 
 ## Data files
 
@@ -109,7 +110,7 @@ Recommendation:
 2. Commit on `main`, push, push tag `vX.Y.Z`. CI (`.github/workflows/release.yml`) checks tag = version, builds and signs the installer and creates a **draft** release with installer, `.sig` and `latest.json`.
 3. The author checks the draft and clicks Publish. GitHub's "latest" redirect takes ~2 minutes to switch; updaters see the release after that.
 
-Updater: checks `releases/latest/download/latest.json` at start; installs only while PoE is closed, otherwise Home offers "Update now". The signing key's private half is outside the repo (`%USERPROFILE%\.tauri`, backed up by the author; GitHub secrets `TAURI_SIGNING_PRIVATE_KEY(_PASSWORD)`). CI (`ci.yml`) runs `cargo test --workspace` on every push.
+Updater: checks `releases/latest/download/latest.json` at start; installs only while PoE is closed, otherwise Home offers "Update now". Home's version card (next to Status) shows the running version (`app_version`) and "Up to date"; with a pending offer it turns into the update card (`v<old> → v<new>`, gold "Update now", spinner while installing, "Try again" with the error on failure). The signing key's private half is outside the repo (`%USERPROFILE%\.tauri`, backed up by the author; GitHub secrets `TAURI_SIGNING_PRIVATE_KEY(_PASSWORD)`). CI (`ci.yml`) runs `cargo test --workspace` on every push.
 
 ## Working rules
 

@@ -100,7 +100,9 @@ fn show_main(app: &AppHandle) {
 fn create_main_window(app: &AppHandle) -> tauri::Result<WebviewWindow> {
     let mut builder = WebviewWindowBuilder::new(app, MAIN_WINDOW, WebviewUrl::App("shell/home.html".into()))
         .title(TITLE)
-        .min_inner_size(640.0, 480.0);
+        .min_inner_size(640.0, 480.0)
+        // Tauri's native file-drop handler swallows HTML5 drag and drop in WebView2 (the board's cards).
+        .disable_drag_drop_handler();
     builder = match app.primary_monitor()? {
         Some(m) => {
             let (scale, area) = (m.scale_factor(), m.work_area());

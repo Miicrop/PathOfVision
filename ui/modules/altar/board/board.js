@@ -15,6 +15,9 @@ function connectBackend() {
     duplicateProfile: (file, name) => call("altar_duplicate_profile", { file, name }),
     deleteProfile: file => call("altar_delete_profile", { file }).catch(failed),
     setActive: file => call("altar_set_active", { file }),
+    exportCode: file => call("altar_export_code", { file }),
+    importPreview: code => call("altar_import_preview", { code }),
+    importCode: code => call("altar_import_code", { code }),
   });
 }
 
@@ -458,6 +461,76 @@ $("del").addEventListener("click", async () => {
   if (!result.ok) return showError(result.error);
   state.profiles = result.profiles;
   await openProfile(result.active);
+});
+
+// Export: the profile as a text code on the clipboard; if that fails, a dialog to copy it by hand.
+function flash(message) {
+  $("saved").textContent = message;
+  clearTimeout(save.timer);
+  save.timer = setTimeout(() => ($("saved").textContent = ""), 1500);
+}
+$("export").addEventListener("click", async () => {
+  let code;
+  try { code = await api.exportCode(file); } catch (e) { return showError(String(e)); }
+  try {
+    await navigator.clipboard.writeText(code);
+    flash("Code copied");
+  } catch {
+    const box = $("export-code");
+    box.value = code;
+    $("export-dialog").showModal();
+    box.focus();
+    box.select();
+  }
+});
+
+// Import: paste a code, see what it holds, then add it as a new profile.
+const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
+let previewRun = 0;                                    // only the newest preview request counts
+function showPreview(text, kind) {
+  const p = $("import-preview");
+  p.textContent = text;
+  p.className = "preview" + (kind ? " " + kind : "");
+}
+async function updatePreview() {
+  const code = $("import-code").value;
+  const run = ++previewRun;
+  $("import-ok").disabled = true;
+  if (!code.trim()) return showPreview("", "");
+  try {
+    const p = await api.importPreview(code);
+    if (run !== previewRun) return;
+    let text = `Profile '${p.name}' – ${plural(p.columns, "column")}, ${p.upsides} rated upside${p.upsides === 1 ? "" : "s"}, ${p.dangerous} Dangerous, ${p.brick} Brick`;
+    if (p.unknown > 0) text += ` (${plural(p.unknown, "option")} unknown to this version, skipped)`;
+    showPreview(text, "ok");
+    $("import-ok").disabled = false;
+  } catch (e) {
+    if (run === previewRun) showPreview(String(e), "error");
+  }
+}
+$("import").addEventListener("click", () => {
+  $("import-code").value = "";
+  showPreview("", "");
+  $("import-ok").disabled = true;
+  $("import-dialog").showModal();
+  $("import-code").focus();
+});
+$("import-code").addEventListener("input", () => {
+  clearTimeout(updatePreview.timer);
+  updatePreview.timer = setTimeout(updatePreview, 150);
+});
+$("import-cancel").addEventListener("click", () => $("import-dialog").close());
+$("import-form").addEventListener("submit", async e => {
+  e.preventDefault();                                  // the dialog stays open if importing fails
+  const ok = $("import-ok");
+  if (ok.disabled) return;
+  ok.disabled = true;
+  let result;
+  try { result = await api.importCode($("import-code").value); } catch (err) { return showPreview(String(err), "error"); }
+  $("import-dialog").close();
+  state.profiles = result.profiles;
+  await openProfile(result.file);
+  flash(result.skipped ? `Imported, ${plural(result.skipped, "option")} skipped` : "Imported");
 });
 
 // Card style and target tag come from the settings window and follow its changes live.

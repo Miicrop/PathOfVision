@@ -172,3 +172,150 @@ fn old_upsides_are_upgraded() {
     let (_t, api, _p) = setup();
     assert!(api.load_profile("empty.json").unwrap()["downsides"].is_object());
 }
+
+// Profile codes (Export / Import).
+
+/// A code from raw JSON, the way `export_code` packs it.
+fn pack(json: &Value) -> String {
+    use base64::Engine;
+    use std::io::Write;
+    let mut enc = flate2::write::DeflateEncoder::new(Vec::new(), flate2::Compression::default());
+    enc.write_all(json.to_string().as_bytes()).unwrap();
+    format!("POV1:{}", base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(enc.finish().unwrap()))
+}
+
+fn user_files(paths: &AppPaths) -> Vec<String> {
+    let Ok(dir) = std::fs::read_dir(paths.profiles_dir("altar")) else { return vec![] };
+    let mut out: Vec<String> = dir.map(|e| e.unwrap().file_name().into_string().unwrap()).collect();
+    out.sort();
+    out
+}
+
+fn mod_ids(paths: &AppPaths, side: &str) -> Vec<String> {
+    let mods: Value = serde_json::from_str(&std::fs::read_to_string(paths.data.join("mods.json")).unwrap()).unwrap();
+    mods["mods"].as_array().unwrap().iter().filter(|m| m["side"] == side).map(|m| m["id"].as_str().unwrap().to_string()).collect()
+}
+
+#[test]
+fn export_import_round_trip() {
+    let (_t, api, paths) = setup();
+    let up = mod_ids(&paths, "upside");
+    let down = mod_ids(&paths, "downside");
+    let file = api.duplicate_profile("default.json", "Ritual Farm").unwrap()["file"].as_str().unwrap().to_string();
+    let mut profile = api.load_profile(&file).unwrap();
+    profile["upsides"] = json!({
+        "columns": [
+            {"name": "Low", "ids": [up[3], up[1]]},
+            {"name": "Key", "ids": [up[0]], "key": true},
+            {"name": "Mid", "ids": [up[5], up[4], up[2]]},
+        ],
+        "top": {"name": "Best", "ids": [up[7], up[6]]},
+    });
+    profile["downsides"] = json!({"dangerous": [down[2], down[0]], "brick": [down[1]]});
+    api.save_profile(&file, profile.clone()).unwrap();
+
+    let code = api.export_code(&file).unwrap();
+    assert!(code.starts_with("POV1:") && !code.contains(char::is_whitespace));
+    let preview = api.import_preview(&code).unwrap();
+    assert_eq!(preview, json!({"name": "Ritual Farm", "columns": 4, "upsides": 8, "dangerous": 2, "brick": 1, "unknown": 0}));
+
+    // Discord-style wrapping inside and around the code is fine.
+    let wrapped = format!("  {}\n{}\r\n ", &code[..20], &code[20..]);
+    let result = api.import_code(&wrapped).unwrap();
+    assert_eq!(result["file"], "ritual-farm-2.json");
+    assert_eq!(result["skipped"], 0);
+    let imported = api.load_profile("ritual-farm-2.json").unwrap();
+    assert_eq!(imported["name"], "Ritual Farm (2)");
+    assert_eq!(imported["readOnly"], false);
+    assert_eq!(imported["upsides"], profile["upsides"]);
+    assert_eq!(imported["downsides"], profile["downsides"]);
+    assert_eq!(api.get_state().unwrap()["active"], "ritual-farm-2.json");
+}
+
+#[test]
+fn import_never_overwrites_and_dedupes_the_name() {
+    let (_t, api, paths) = setup();
+    let code = api.export_code("default.json").unwrap();
+    let default_before = std::fs::read_to_string(paths.data.join("profiles/default.json")).unwrap();
+    let names: Vec<String> = (0..3)
+        .map(|_| {
+            let f = api.import_code(&code).unwrap()["file"].as_str().unwrap().to_string();
+            api.load_profile(&f).unwrap()["name"].as_str().unwrap().to_string()
+        })
+        .collect();
+    assert_eq!(names, ["Default (2)", "Default (3)", "Default (4)"]);
+    assert_eq!(user_files(&paths), ["default-2.json", "default-3.json", "default-4.json"]);
+    assert_eq!(std::fs::read_to_string(paths.data.join("profiles/default.json")).unwrap(), default_before);
+    // The shipped default is read-only, its copy is not and keeps the tiers.
+    let original = api.load_profile("default.json").unwrap();
+    let copy = api.load_profile("default-2.json").unwrap();
+    assert_eq!(copy["readOnly"], false);
+    assert_eq!(copy["upsides"], original["upsides"]);
+    assert_eq!(copy["downsides"]["dangerous"], original["downsides"]["dangerous"]);
+    assert_eq!(copy["downsides"]["brick"], original["downsides"]["brick"]);
+    assert!(copy.get("modsVersion").is_none());
+}
+
+#[test]
+fn unknown_ids_are_dropped_and_counted() {
+    let (_t, api, paths) = setup();
+    let up = mod_ids(&paths, "upside");
+    let down = mod_ids(&paths, "downside");
+    let code = pack(&json!({
+        "v": 1, "n": "  ",
+        "c": [{"n": "A", "i": [up[0], "GoneUpside", up[1]], "k": true}],
+        "t": {"n": "S", "i": ["GoneTop"]},
+        "d": [down[0], "GoneDown"], "b": ["GoneUpside"],
+    }));
+    let preview = api.import_preview(&code).unwrap();
+    assert_eq!(preview, json!({"name": "Imported profile", "columns": 2, "upsides": 2, "dangerous": 1, "brick": 0, "unknown": 3}));
+    let result = api.import_code(&code).unwrap();
+    assert_eq!(result["skipped"], 3);
+    let p = api.load_profile(result["file"].as_str().unwrap()).unwrap();
+    assert_eq!(p["name"], "Imported profile");
+    assert_eq!(p["upsides"]["columns"][0], json!({"name": "A", "ids": [up[0], up[1]], "key": true}));
+    assert_eq!(p["upsides"]["top"]["ids"], json!([]));
+    assert_eq!(p["downsides"], json!({"dangerous": [down[0]], "brick": []}));
+}
+
+#[test]
+fn invalid_codes_write_nothing() {
+    let (_t, api, paths) = setup();
+    let good = api.export_code("default.json").unwrap();
+    let invalid = "This is not a valid profile code.";
+    let mut cases: Vec<(String, &str)> = vec![
+        ("".into(), invalid),
+        ("hello world".into(), invalid),
+        (good.replacen("POV1:", "POV2:", 1), invalid),
+        (good.replacen("POV1:", "", 1), invalid),
+        (good[..good.len() / 2].to_string(), invalid),
+        ("POV1:!!!not base64!!!".into(), invalid),
+        ("POV1:aGVsbG8".into(), invalid),
+        (pack(&json!([1, 2])), invalid),
+        (pack(&json!({"n": "x"})), invalid),
+        (pack(&json!({"v": 1, "c": "nope"})), invalid),
+        (pack(&json!({"v": 1, "c": [{"i": [1, 2]}]})), invalid),
+        (pack(&json!({"v": 0})), invalid),
+        (pack(&json!({"v": 2, "n": "Future"})), "This code was made by a newer version of Path of Vision."),
+    ];
+    // Inflates far beyond the size cap.
+    let huge = format!("{{\"v\":1,\"n\":\"{}\"}}", "a".repeat(3 << 20));
+    cases.push((pack(&serde_json::from_str(&huge).unwrap()), invalid));
+    for (code, message) in &cases {
+        let err = api.import_preview(code).unwrap_err();
+        assert_eq!(err.to_string(), *message, "preview of {code:.40}");
+        let err = api.import_code(code).unwrap_err();
+        assert_eq!(err.to_string(), *message, "import of {code:.40}");
+    }
+    assert!(user_files(&paths).is_empty());
+    assert_eq!(api.get_state().unwrap()["active"], "default.json");
+}
+
+#[test]
+fn default_profile_code_is_one_short_line() {
+    let (_t, api, _p) = setup();
+    let code = api.export_code("default.json").unwrap();
+    println!("default profile code: {} characters", code.len());
+    assert!(!code.contains(char::is_whitespace));
+    assert!(code.len() < 3000, "code is {} characters", code.len());
+}

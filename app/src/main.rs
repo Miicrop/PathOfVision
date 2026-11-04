@@ -246,6 +246,9 @@ fn main() {
             commands::altar_duplicate_profile,
             commands::altar_delete_profile,
             commands::altar_set_active,
+            commands::altar_export_code,
+            commands::altar_import_preview,
+            commands::altar_import_code,
             update::update_offer,
             update::update_now,
         ])

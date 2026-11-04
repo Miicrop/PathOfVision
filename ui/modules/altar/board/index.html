@@ -19,6 +19,8 @@
       <select id="profile"></select>
       <button class="btn" id="dup" type="button">Duplicate</button>
       <button class="btn" id="del" type="button">Delete</button>
+      <button class="btn" id="export" type="button" title="Copy this profile as a text code to share">Export</button>
+      <button class="btn" id="import" type="button" title="Add a profile from a text code">Import</button>
       <span class="saved" id="saved" aria-live="polite"></span>
     </div>
   </header>
@@ -81,6 +83,30 @@
     <b style="color:var(--v-avoid)">AVOID</b><span>Brick without a top column upside, or Dangerous with an unrated upside</span>
   </section>
 </div>
+
+<dialog class="code-dialog" id="import-dialog" aria-labelledby="import-h">
+  <form method="dialog" id="import-form">
+    <h2 id="import-h">Import profile</h2>
+    <label for="import-code">Paste a profile code</label>
+    <textarea id="import-code" rows="5" spellcheck="false" autocomplete="off" placeholder="POV1:…"></textarea>
+    <p class="preview" id="import-preview" aria-live="polite"></p>
+    <div class="actions">
+      <button class="btn" type="button" id="import-cancel">Cancel</button>
+      <button class="btn primary" type="submit" id="import-ok" disabled>Import</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog class="code-dialog" id="export-dialog" aria-labelledby="export-h">
+  <form method="dialog">
+    <h2 id="export-h">Profile code</h2>
+    <label for="export-code">Copying failed. Select the code and copy it with Ctrl+C.</label>
+    <textarea id="export-code" rows="5" spellcheck="false" readonly></textarea>
+    <div class="actions">
+      <button class="btn" type="submit">Close</button>
+    </div>
+  </form>
+</dialog>
 
 <script src="../../../shell/shell.js"></script>
 <script src="board.js"></script>

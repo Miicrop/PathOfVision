@@ -185,6 +185,26 @@ pub async fn altar_delete_profile(app: AppHandle, state: State<'_, AppState>, fi
     Ok(result)
 }
 
+/// The profile as a shareable text code (also for read-only profiles).
+#[tauri::command]
+pub async fn altar_export_code(state: State<'_, AppState>, file: String) -> Result<String, String> {
+    state.board.export_code(&file).map_err(|e| format!("{e:#}"))
+}
+
+/// What importing a code would bring in; nothing is written.
+#[tauri::command]
+pub async fn altar_import_preview(state: State<'_, AppState>, code: String) -> Result<Value, String> {
+    board_result(state.board.import_preview(&code))
+}
+
+/// Importing writes a new profile and makes it the active one, so the other windows hear about it.
+#[tauri::command]
+pub async fn altar_import_code(app: AppHandle, state: State<'_, AppState>, code: String) -> Result<Value, String> {
+    let result = board_result(state.board.import_code(&code))?;
+    emit_settings(&app, &state);
+    Ok(result)
+}
+
 #[tauri::command]
 pub async fn altar_set_active(app: AppHandle, state: State<'_, AppState>, file: String) -> Result<(), String> {
     state.board.set_active(&file).map_err(|e| format!("{e:#}"))?;

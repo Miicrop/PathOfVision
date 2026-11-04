@@ -37,7 +37,9 @@ name = "altar"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "base64 0.23.1",
  "fancy-regex",
+ "flate2",
  "ocr",
  "pov-core",
  "pov-game",

@@ -167,3 +167,25 @@ body[data-target-tag="false"] .card .meta { display: none; }
 
 .legend { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; font-size: 12px; color: var(--muted); max-width: 640px; }
 .legend b { font-family: var(--font-display); letter-spacing: .06em; }
+
+/* Import / Export dialogs (profile codes). */
+.code-dialog {
+  width: min(560px, calc(100vw - 32px)); padding: 0; color: var(--fg);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
+  box-shadow: 0 10px 40px rgb(0 0 0 / .6);
+}
+.code-dialog::backdrop { background: rgb(0 0 0 / .55); }
+.code-dialog form { display: flex; flex-direction: column; gap: 10px; padding: 16px 18px; }
+.code-dialog h2 { font-family: var(--font-display); font-weight: 700; font-size: 19px; margin: 0; color: var(--gold); font-variant: small-caps; letter-spacing: .04em; }
+.code-dialog label { color: var(--muted); font-size: 13px; }
+.code-dialog textarea {
+  width: 100%; resize: vertical; min-height: 90px; font: 12px/1.4 Consolas, "Cascadia Mono", monospace; color: var(--fg);
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; word-break: break-all;
+}
+.code-dialog textarea:focus { border-color: var(--gold); outline: none; }
+.code-dialog .preview { margin: 0; min-height: 1.4em; font-size: 13px; color: var(--muted); }
+.code-dialog .preview.ok { color: var(--fg); }
+.code-dialog .preview.error { color: var(--fg); border-left: 3px solid var(--t-brick); padding-left: 8px; }
+.code-dialog .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+button.btn.primary { background: var(--gold); border-color: var(--gold); color: var(--bg); font-weight: 600; }
+button.btn.primary:hover:not(:disabled) { background: color-mix(in srgb, var(--gold) 80%, #fff); }

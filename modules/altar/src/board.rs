@@ -2,11 +2,18 @@
 //! `BoardApi`; the app exposes these functions as IPC commands, results keep the board's JSON shapes.
 
 use std::collections::HashSet;
+use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 
 use anyhow::{Context, Result, bail};
+use base64::Engine;
+use base64::engine::general_purpose::URL_SAFE_NO_PAD;
+use flate2::Compression;
+use flate2::read::DeflateDecoder;
+use flate2::write::DeflateEncoder;
 use pov_core::{AppPaths, SettingsStore};
+use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value, json};
 
 use crate::labels::{load_keywords, load_labels};
@@ -130,6 +137,90 @@ fn check_file_name(file: &str) -> Result<()> {
         bail!("not a profile file name: {file:?}");
     }
     Ok(())
+}
+
+// Profile codes: `POV1:` + base64url (no padding) of deflated compact JSON with short keys.
+
+const CODE_PREFIX: &str = "POV1:";
+const CODE_VERSION: u32 = 1;
+/// Upper bound for the inflated JSON, so a crafted code cannot fill the memory.
+const CODE_MAX_JSON: u64 = 1 << 20;
+const INVALID_CODE: &str = "This is not a valid profile code.";
+const NEWER_CODE: &str = "This code was made by a newer version of Path of Vision.";
+const MAX_NAME: usize = 100;
+
+/// `v` format version, `n` name, `c` own columns, `t` top column, `d` dangerous, `b` brick.
+#[derive(Serialize, Deserialize)]
+struct ProfileCode {
+    v: u32,
+    #[serde(default)]
+    n: String,
+    #[serde(default)]
+    c: Vec<CodeColumn>,
+    #[serde(default)]
+    t: CodeColumn,
+    #[serde(default)]
+    d: Vec<String>,
+    #[serde(default)]
+    b: Vec<String>,
+}
+
+/// `n` name, `i` card ids in priority order, `k` key column.
+#[derive(Serialize, Deserialize, Default)]
+struct CodeColumn {
+    #[serde(default)]
+    n: String,
+    #[serde(default)]
+    i: Vec<String>,
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    k: bool,
+}
+
+struct Imported {
+    name: String,
+    columns: usize,
+    upsides: usize,
+    dangerous: usize,
+    brick: usize,
+    unknown: usize,
+    profile: Value,
+}
+
+fn encode_code(code: &ProfileCode) -> Result<String> {
+    let json = serde_json::to_vec(code)?;
+    let mut enc = DeflateEncoder::new(Vec::new(), Compression::best());
+    enc.write_all(&json)?;
+    Ok(format!("{CODE_PREFIX}{}", URL_SAFE_NO_PAD.encode(enc.finish()?)))
+}
+
+/// Whitespace anywhere is ignored (chat clients wrap long lines).
+fn decode_code(text: &str) -> Result<ProfileCode> {
+    let text: String = text.chars().filter(|c| !c.is_whitespace()).collect();
+    let invalid = || anyhow::anyhow!(INVALID_CODE);
+    let body = text.strip_prefix(CODE_PREFIX).ok_or_else(invalid)?;
+    if body.len() as u64 > CODE_MAX_JSON {
+        bail!(INVALID_CODE);
+    }
+    let packed = URL_SAFE_NO_PAD.decode(body).map_err(|_| invalid())?;
+    let mut json = Vec::new();
+    DeflateDecoder::new(packed.as_slice()).take(CODE_MAX_JSON + 1).read_to_end(&mut json).map_err(|_| invalid())?;
+    if json.len() as u64 > CODE_MAX_JSON {
+        bail!(INVALID_CODE);
+    }
+    let value: Value = serde_json::from_slice(&json).map_err(|_| invalid())?;
+    match value.get("v").and_then(Value::as_u64) {
+        Some(v) if v == CODE_VERSION as u64 => {}
+        Some(v) if v > CODE_VERSION as u64 => bail!(NEWER_CODE),
+        _ => bail!(INVALID_CODE),
+    }
+    serde_json::from_value(value).map_err(|_| invalid())
+}
+
+/// A trimmed name without control characters, at most `MAX_NAME` characters; `fallback` if empty.
+fn clean_name(name: &str, fallback: &str) -> String {
+    let name: String = name.chars().filter(|c| !c.is_control()).take(MAX_NAME).collect();
+    let name = name.trim();
+    if name.is_empty() { fallback.to_string() } else { name.to_string() }
 }
 
 impl BoardApi {
@@ -281,6 +372,135 @@ impl BoardApi {
     pub fn set_active(&self, file: &str) -> Result<()> {
         let _guard = self.write_guard();
         self.write_active(file)
+    }
+
+    /// A profile as a shareable one-line text code (`POV1:` + base64url of deflated JSON):
+    /// name, columns and downsides only. Works for read-only profiles too.
+    pub fn export_code(&self, file: &str) -> Result<String> {
+        let profile = self.load_profile(file)?;
+        let strings = |v: Option<&Value>| -> Vec<String> {
+            v.and_then(Value::as_array).map(|a| a.iter().filter_map(|s| s.as_str().map(str::to_string)).collect()).unwrap_or_default()
+        };
+        let up = &profile["upsides"];
+        let code = ProfileCode {
+            v: CODE_VERSION,
+            n: profile.get("name").and_then(Value::as_str).unwrap_or("").to_string(),
+            c: up["columns"]
+                .as_array()
+                .map(|cols| {
+                    cols.iter()
+                        .map(|c| CodeColumn {
+                            n: c.get("name").and_then(Value::as_str).unwrap_or("").to_string(),
+                            i: strings(c.get("ids")),
+                            k: c.get("key").is_some_and(truthy),
+                        })
+                        .collect()
+                })
+                .unwrap_or_default(),
+            t: CodeColumn {
+                n: up["top"].get("name").and_then(Value::as_str).unwrap_or("S").to_string(),
+                i: strings(up["top"].get("ids")),
+                k: false,
+            },
+            d: strings(profile["downsides"].get("dangerous")),
+            b: strings(profile["downsides"].get("brick")),
+        };
+        encode_code(&code)
+    }
+
+    /// What importing `code` would bring in, without writing anything.
+    pub fn import_preview(&self, code: &str) -> Result<Value> {
+        let imported = self.decode_import(code)?;
+        Ok(json!({
+            "name": imported.name,
+            "columns": imported.columns,
+            "upsides": imported.upsides,
+            "dangerous": imported.dangerous,
+            "brick": imported.brick,
+            "unknown": imported.unknown,
+        }))
+    }
+
+    /// Writes the profile in `code` as a new user profile (never over an existing one; the name
+    /// gets " (2)", " (3)" … if taken) and makes it active. Ids this version does not know are dropped.
+    pub fn import_code(&self, code: &str) -> Result<Value> {
+        let imported = self.decode_import(code)?;
+        let _guard = self.write_guard();
+        let names: HashSet<String> =
+            self.profiles().iter().filter_map(|p| p["name"].as_str().map(str::to_lowercase)).collect();
+        let mut name = imported.name.clone();
+        let mut n = 2;
+        while names.contains(&name.to_lowercase()) {
+            name = format!("{} ({n})", imported.name);
+            n += 1;
+        }
+        let mut profile = imported.profile;
+        profile["name"] = json!(name);
+        let new_file = profile_file_name(&name, |f| self.user_path(f).exists() || self.shipped_path(f).exists());
+        write_profile(&self.user_path(&new_file), &profile)?;
+        self.write_active(&new_file)?;
+        Ok(json!({"file": new_file, "profiles": self.profiles(), "skipped": imported.unknown}))
+    }
+
+    /// Decodes a code and checks its ids against `mods.json`.
+    fn decode_import(&self, code: &str) -> Result<Imported> {
+        let code = decode_code(code)?;
+        let mods = read_json(&self.paths.data.join("mods.json"))?;
+        let known: HashSet<&str> = mods
+            .get("mods")
+            .and_then(Value::as_array)
+            .context("mods.json has no mods")?
+            .iter()
+            .filter_map(|m| m.get("id").and_then(Value::as_str))
+            .collect();
+        let mut seen = HashSet::new();
+        let mut unknown = HashSet::new();
+        let mut keep = |ids: &[String]| -> Vec<String> {
+            ids.iter()
+                .filter(|id| {
+                    if !known.contains(id.as_str()) {
+                        unknown.insert(id.to_string());
+                        return false;
+                    }
+                    seen.insert(id.to_string())
+                })
+                .cloned()
+                .collect()
+        };
+        let mut columns = Vec::new();
+        let mut upsides = 0;
+        for c in &code.c {
+            let ids = keep(&c.i);
+            upsides += ids.len();
+            let mut col = Map::new();
+            col.insert("name".into(), json!(clean_name(&c.n, "")));
+            col.insert("ids".into(), json!(ids));
+            if c.k {
+                col.insert("key".into(), json!(true));
+            }
+            columns.push(Value::Object(col));
+        }
+        let top = keep(&code.t.i);
+        upsides += top.len();
+        let dangerous = keep(&code.d);
+        let brick = keep(&code.b);
+        let name = clean_name(&code.n, "Imported profile");
+        let count = (columns.len() + 1, upsides, dangerous.len(), brick.len());
+        let profile = json!({
+            "name": name,
+            "readOnly": false,
+            "upsides": {"columns": columns, "top": {"name": clean_name(&code.t.n, "S"), "ids": top}},
+            "downsides": {"dangerous": dangerous, "brick": brick},
+        });
+        Ok(Imported {
+            name,
+            columns: count.0,
+            upsides: count.1,
+            dangerous: count.2,
+            brick: count.3,
+            unknown: unknown.len(),
+            profile,
+        })
     }
 
     /// `set_active` for callers that hold the write lock already.

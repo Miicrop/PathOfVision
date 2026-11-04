@@ -21,7 +21,7 @@
 - Reference height: **1440 px**. Acceptance per real resolution: all altars found, no false detections, ≥ 95 % of readable options fully correct. 3440×1440 stays at exactly today's golden result (84/85, the one known miss `screen_10.png [856, 1152] bottom`).
 - **1080p is a hard gate:** `v0.1.0` is not published before the real 1080p set passes.
 - Screenshots stay local and git-ignored; label files go into git.
-- No `Co-Authored-By` trailer in commits (user rule).
+- No `Co-Authored-By` trailer in commits (user rule). Claude/Anthropic is not named as author or contributor anywhere (commits, README, LICENSE, `Cargo.toml` `authors`, installer publisher, GitHub release text); the author is Miicrop.
 - Cargo lives at `%USERPROFILE%\.cargo\bin` (not on bash PATH; use PowerShell or the full path).
 - English only in code, data, UI and docs.
 

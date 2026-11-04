@@ -14,6 +14,7 @@
   },
   "bundle": {
     "active": true,
+    "createUpdaterArtifacts": false,
     "targets": ["nsis"],
     "publisher": "miicrop",
     "licenseFile": "../LICENSE",
@@ -31,6 +32,13 @@
         "installMode": "currentUser",
         "installerHooks": "installer/hooks.nsh"
       }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "",
+      "endpoints": ["https://github.com/Miicrop/PathOfVision/releases/latest/download/latest.json"],
+      "windows": { "installMode": "passive" }
     }
   }
 }

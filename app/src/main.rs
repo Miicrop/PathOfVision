@@ -5,6 +5,7 @@
 mod commands;
 mod scanner;
 mod state;
+mod update;
 
 use std::path::PathBuf;
 use std::sync::atomic::Ordering;
@@ -208,6 +209,7 @@ fn main() {
     };
     let stats = args.stats;
     let hidden = args.hidden;
+    let dev = args.dev;
 
     let app = tauri::Builder::default()
         // First, so a second start hands over before anything else is set up.
@@ -216,7 +218,10 @@ fn main() {
             tauri_plugin_autostart::MacosLauncher::LaunchAgent,
             Some(vec![HIDDEN_FLAG]),
         ))
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
         .manage(AppState::new(paths))
+        .manage(update::PendingUpdate::default())
         .manage(ScannerThread::default())
         .invoke_handler(tauri::generate_handler![
             commands::app_status,
@@ -232,6 +237,8 @@ fn main() {
             commands::altar_duplicate_profile,
             commands::altar_delete_profile,
             commands::altar_set_active,
+            update::update_offer,
+            update::update_now,
         ])
         .setup(move |app| {
             let handle = app.handle().clone();
@@ -243,8 +250,19 @@ fn main() {
                 eprintln!("HUD window: {e:#}");
             }
             create_tray(&handle)?;
-            let thread = scanner::spawn(handle.clone(), &app.state::<AppState>(), mode, stats);
-            *lock(&app.state::<ScannerThread>().0) = Some(thread);
+            // The update check (and a possible install + restart) comes first; the scanner starts
+            // once it is done, whatever the outcome.
+            tauri::async_runtime::spawn(async move {
+                if !dev {
+                    update::run_at_start(&handle).await;
+                }
+                let state = handle.state::<AppState>();
+                if state.stop.load(Ordering::SeqCst) {
+                    return;
+                }
+                let thread = scanner::spawn(handle.clone(), &state, mode, stats);
+                *lock(&handle.state::<ScannerThread>().0) = Some(thread);
+            });
             Ok(())
         })
         .build(tauri::generate_context!())

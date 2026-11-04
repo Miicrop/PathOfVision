@@ -63,6 +63,27 @@
       });
   });
 
+  /** The update offer: shown while one is pending (PoE was running at start). */
+  function showUpdate(offer) {
+    $("update-card").hidden = !offer;
+    if (offer) $("update-text").textContent = "Update available: v" + offer.version;
+  }
+
+  $("update-now").addEventListener("click", () => {
+    const btn = $("update-now");
+    btn.disabled = true;
+    $("update-error").hidden = true;
+    $("update-text").textContent = "Installing the update…";
+    window.pov.invoke("update_now").catch((e) => {
+      btn.disabled = false;
+      $("update-error").textContent = "Update failed: " + e;
+      $("update-error").hidden = false;
+    });
+  });
+
+  window.pov.listen("app:update", (e) => showUpdate(e.payload));
+  window.pov.invoke("update_offer").then(showUpdate, () => {});
+
   window.pov.listen("app:status", (e) => showStatus(e.payload));
   window.pov.listen("settings:changed", (e) => showSettings(e.payload));
   window.pov.invoke("app_status").then(showStatus, (e) => ($("status-text").textContent = String(e)));

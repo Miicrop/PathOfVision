@@ -435,5 +435,266 @@
     ]
    }
   }
+ ],
+ "screen_18.png": [
+  {
+   "icon": [
+    396,
+    441
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerScorched",
+     "TangledAltarUpsidePlayerDuplicateDroppedCurrency"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterExposureOnHit",
+     "CleansingAltarUpsideMonsterScarabAnarchy"
+    ]
+   }
+  }
+ ],
+ "screen_19.png": [
+  {
+   "icon": [
+    1307,
+    401
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "CleansingAltarDownsideBossIncreasedArmourAndEvasion",
+     "CleansingAltarUpsideBossDivinationCardsMap"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerIncreasedFlaskChargesUsed",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   }
+  }
+ ],
+ "screen_20.png": [
+  {
+   "icon": [
+    543,
+    323
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "CleansingAltarDownsideBossIncreasedArmourAndEvasion",
+     "CleansingAltarUpsideBossDivinationCardsMap"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerIncreasedFlaskChargesUsed",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   }
+  }
+ ],
+ "screen_21.png": [
+  {
+   "icon": [
+    479,
+    396
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterArmour",
+     "CleansingAltarUpsideMonsterDivinationCardsUniqueCorrupted"
+    ]
+   },
+   "bottom": {
+    "target": "boss",
+    "mods": [
+     "TangledAltarDownsideBossPenetrateElementalResistances",
+     "CleansingAltarUpsideBossOrbOfBinding"
+    ]
+   }
+  }
+ ],
+ "screen_22.png": [
+  {
+   "icon": [
+    1509,
+    479
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerChaosDegenDuringFlaskDuration",
+     "TangledAltarUpsidePlayerDuplicateDroppedMaps"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterFlaskDegenOnHit",
+     "CleansingAltarUpsideMonsterOrbOfRegret"
+    ]
+   }
+  }
+ ],
+ "screen_23.png": [
+  {
+   "icon": [
+    666,
+    243
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterBurningGroundOnDeath",
+     "CleansingAltarUpsideMonsterDivinationCardsUniqueJewellery"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerBurningGroundWhenHit",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   }
+  }
+ ],
+ "screen_24.png": [
+  {
+   "icon": [
+    567,
+    431
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "CleansingAltarDownsideBossArmour",
+     "CleansingAltarDownsideBossRemoveFlaskChargeOnHit",
+     "CleansingAltarUpsideBossLesserEldritchEmber",
+     "TangleAltarUpsideBossOrbOfAlteration"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterExposureOnHit",
+     "CleansingAltarDownsideMonsterBurningGroundOnDeath",
+     "CleansingAltarUpsideMonsterOrbOfUnmaking",
+     "TangleAltarUpsideMonsterJewellersOrb"
+    ]
+   }
+  }
+ ],
+ "screen_25.png": [
+  {
+   "icon": [
+    399,
+    578
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerScorched",
+     "TangledAltarUpsidePlayerIncreasedQuantity"
+    ]
+   },
+   "bottom": {
+    "target": "boss",
+    "mods": [
+     "CleansingAltarDownsideBossIncreasedArmourAndEvasion",
+     "CleansingAltarUpsideBossLesserEldritchEmber"
+    ]
+   }
+  }
+ ],
+ "screen_26.png": [
+  {
+   "icon": [
+    1433,
+    461
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerMeteorOnFlaskUse",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   },
+   "bottom": {
+    "target": "boss",
+    "mods": [
+     "CleansingAltarDownsideBossPhysToAddAsFire",
+     "CleansingAltarUpsideBossDivinationCardsUniqueWeapon"
+    ]
+   }
+  }
+ ],
+ "screen_27.png": [
+  {
+   "icon": [
+    560,
+    209
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterIncreasedEvasion",
+     "CleansingAltarUpsideMonsterOrbOfScouring"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerReducedArmourAndEvasion",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   }
+  }
+ ],
+ "screen_28.png": [
+  {
+   "icon": [
+    1326,
+    344
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerFireMonsterAura",
+     "CleansingAltarDownsidePlayerBurningGroundWhenHit",
+     "TangledAltarUpsidePlayerIncreasedRarity",
+     "TangledAltarUpsidePlayerDuplicateDroppedCurrency"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterFireAndChaosResist",
+     "CleansingAltarDownsideMonsterChaosDamage",
+     "CleansingAltarUpsideMonsterDivinationCardsUniqueWeapon",
+     "TangleAltarUpsideMonsterRegalOrb"
+    ]
+   }
+  }
  ]
 }

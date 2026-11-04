@@ -78,9 +78,11 @@ def find_client(img: np.ndarray, monitor_w: int) -> tuple[int, int, int, int]:
     up = np.abs(seg[1:-1] - seg[:-2]).max(axis=2)
     down = np.abs(seg[1:-1] - seg[2:]).max(axis=2)
     line = np.median(np.minimum(up, down), axis=1)  # line[i] scores row i + 1
+    # Where the border barely stands out from the rows next to it, it is still an even gray row.
+    even = (seg.std(axis=1).max(axis=1) < 8) & (seg.mean(axis=1).min(axis=1) > 40) & (seg.mean(axis=1).max(axis=1) < 140)
     best, best_y = 0.0, None
     for y in range(y0 + MIN_CLIENT_H, h - 33):
-        if line[y - 1] < LINE_MIN:
+        if line[y - 1] < LINE_MIN and not even[y]:
             continue
         drop = float(np.median(side[y - 30 : y]) - np.median(side[y + 2 : y + 32]))
         if drop > best:

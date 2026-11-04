@@ -64,27 +64,47 @@
   });
 
   let pendingOffer = null;
+  let version = "";
 
-  /** The update offer: shown while one is pending (PoE was running at start). */
+  /** The version card: the running version, or the pending update offer (PoE was running at start). */
   function showUpdate(offer) {
     pendingOffer = offer;
-    $("update-card").hidden = !offer;
-    if (offer) $("update-text").textContent = "Update available: v" + offer.version;
+    const card = $("version-card");
+    card.classList.toggle("offer", !!offer);
+    $("version-h").textContent = offer ? "Update" : "Version";
+    $("version-text").textContent = offer
+      ? (version ? `v${version} → ` : "") + "v" + offer.version
+      : version ? "v" + version : "…";
+    $("up-to-date").hidden = !!offer || !version;
+    $("update-box").hidden = !offer;
+  }
+
+  /** Update button states: ready, installing (spinner) or failed (with the error). */
+  function showInstall(installing, error) {
+    const btn = $("update-now");
+    btn.disabled = installing;
+    btn.innerHTML = installing ? '<span class="spinner" aria-hidden="true"></span>Installing…' : error ? "Try again" : "Update now";
+    $("update-ready").hidden = installing || !!error;
+    $("update-restart").hidden = !installing;
+    $("update-error").textContent = error ? "Update failed: " + error : "";
+    $("update-error").hidden = !error;
   }
 
   $("update-now").addEventListener("click", () => {
-    const btn = $("update-now");
-    btn.disabled = true;
-    $("update-error").hidden = true;
-    $("update-text").textContent = "Installing the update…";
+    showInstall(true, null);
     window.pov.invoke("update_now").catch((e) => {
-      btn.disabled = false;
-      if (pendingOffer) $("update-text").textContent = "Update available: v" + pendingOffer.version;
-      $("update-error").textContent = "Update failed: " + e;
-      $("update-error").hidden = false;
+      showInstall(false, String(e));
+      showUpdate(pendingOffer);
     });
   });
 
+  window.pov.invoke("app_version").then(
+    (v) => {
+      version = v;
+      showUpdate(pendingOffer);
+    },
+    () => {}
+  );
   window.pov.listen("app:update", (e) => showUpdate(e.payload));
   window.pov.invoke("update_offer").then(showUpdate, () => {});
 

@@ -11,24 +11,31 @@
   <main class="page">
     <h1>Home</h1>
 
-    <section class="card" id="update-card" aria-labelledby="update-h" hidden>
-      <h2 id="update-h">Update</h2>
-      <p id="update-text"></p>
-      <button class="btn" id="update-now" type="button">Update now</button>
-      <p class="notice error" id="update-error" role="alert" hidden></p>
-    </section>
+    <div class="home-row">
+      <section class="card" aria-labelledby="status-h">
+        <h2 id="status-h">Status</h2>
+        <dl class="facts">
+          <dt>Path of Exile</dt>
+          <dd><span class="dot" id="poe-dot"></span><span id="poe">&hellip;</span></dd>
+          <dt>Area</dt>
+          <dd id="area">&hellip;</dd>
+        </dl>
+        <p class="status-line" id="status-text">&hellip;</p>
+        <p class="status-line" id="resolution" hidden></p>
+      </section>
 
-    <section class="card" aria-labelledby="status-h">
-      <h2 id="status-h">Status</h2>
-      <dl class="facts">
-        <dt>Path of Exile</dt>
-        <dd><span class="dot" id="poe-dot"></span><span id="poe">&hellip;</span></dd>
-        <dt>Area</dt>
-        <dd id="area">&hellip;</dd>
-      </dl>
-      <p class="status-line" id="status-text">&hellip;</p>
-      <p class="status-line" id="resolution" hidden></p>
-    </section>
+      <section class="card version-card" id="version-card" aria-labelledby="version-h">
+        <h2 id="version-h">Version</h2>
+        <p class="version" id="version-text">&hellip;</p>
+        <p class="version-state" id="up-to-date" hidden><span class="dot on"></span>Up to date</p>
+        <div id="update-box" hidden>
+          <p class="update-ready" id="update-ready">A new version is ready.</p>
+          <button class="btn-gold" id="update-now" type="button">Update now</button>
+          <p class="muted small" id="update-restart" hidden>The app restarts by itself.</p>
+          <p class="update-error" id="update-error" role="alert" hidden></p>
+        </div>
+      </section>
+    </div>
 
     <section class="card" aria-labelledby="altar-h">
       <div class="module-head">

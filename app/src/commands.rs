@@ -46,6 +46,12 @@ pub fn hud_fit(app: AppHandle, state: State<'_, AppState>, width: u32, height: u
     .map_err(|e| format!("{e:#}"))
 }
 
+/// The running app's version, shown on Home.
+#[tauri::command]
+pub fn app_version(app: AppHandle) -> String {
+    app.package_info().version.to_string()
+}
+
 #[tauri::command]
 pub fn app_status(state: State<'_, AppState>) -> RunnerStatus {
     lock(&state.status).clone()

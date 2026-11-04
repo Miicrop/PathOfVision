@@ -75,6 +75,38 @@ body { font-family: var(--font-body); font-size: 14px; line-height: 1.4; }
 .module-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
 .module-head h2 { margin-bottom: 6px; }
 
+/* Home: Status and the version card side by side; the version card is always there, so nothing
+   below moves when an update offer appears. */
+.home-row { display: grid; grid-template-columns: 1fr 230px; gap: 16px; align-items: stretch; }
+@media (max-width: 600px) { .home-row { grid-template-columns: 1fr; } }
+.version-card { display: flex; flex-direction: column; gap: 8px; }
+.page .version-card h2 { margin-bottom: 0; }
+.version-card .version { font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: .02em; font-variant-numeric: tabular-nums; }
+.version-card .version-state { color: var(--muted); font-size: 13px; }
+.version-card #update-box { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.version-card.offer {
+  border-color: color-mix(in srgb, var(--gold) 55%, var(--line));
+  background: color-mix(in srgb, var(--gold) 7%, var(--panel));
+}
+.version-card.offer h2 { color: var(--gold); }
+.version-card .update-ready { color: var(--gold); font-size: 13px; }
+.small { font-size: 12px; }
+.update-error { border-left: 3px solid var(--t-brick); padding-left: 8px; font-size: 13px; overflow-wrap: anywhere; }
+.btn-gold {
+  display: inline-flex; align-items: center; gap: 8px; font: 600 14px/1.2 var(--font-body);
+  background: var(--gold); color: var(--bg); border: 1px solid var(--gold); border-radius: 4px;
+  padding: 7px 16px; cursor: pointer; transition: background .12s;
+}
+.btn-gold:hover:not(:disabled) { background: color-mix(in srgb, var(--gold) 80%, #fff); }
+.btn-gold:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+.btn-gold:disabled { opacity: .75; cursor: default; }
+.spinner {
+  width: 12px; height: 12px; border-radius: 50%; border: 2px solid color-mix(in srgb, var(--bg) 35%, transparent);
+  border-top-color: var(--bg); animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation: none; border-color: var(--bg); border-right-color: transparent; } }
+
 /* On/off switch: a checkbox with a track. */
 .switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--muted); user-select: none; }
 .switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }

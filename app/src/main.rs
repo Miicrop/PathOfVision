@@ -234,6 +234,7 @@ fn main() {
         .manage(ScannerThread::default())
         .invoke_handler(tauri::generate_handler![
             commands::app_status,
+            commands::app_version,
             commands::hud_fit,
             commands::open_settings,
             commands::settings_schema,

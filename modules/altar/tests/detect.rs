@@ -1,6 +1,6 @@
 use altar::AltarKind;
 use altar::detect::*;
-use vision::Rgb;
+use vision::{Rgb, Scale};
 
 fn frame(seed: u64) -> Rgb {
     let (w, h) = (1200usize, 700usize);
@@ -38,20 +38,20 @@ fn detector() -> Detector {
 fn finds_a_pasted_icon() {
     let mut f = frame(1);
     paste(&mut f, "icon_eater.png", 400, 250);
-    let icons = detector().find_icons(&f.to_gray());
+    let icons = detector().find_icons(&f.to_gray(), Scale::REFERENCE);
     assert_eq!(icons.len(), 1, "{icons:?}");
     assert!((icons[0].x - 470).abs() <= 2 && (icons[0].y - 320).abs() <= 2, "{icons:?}");
     assert!(icons[0].score >= 0.66, "{icons:?}");
-    assert_eq!(altar_type(&f, &icons[0]), AltarKind::Eater);
+    assert_eq!(altar_type(&f, &icons[0], Scale::REFERENCE), AltarKind::Eater);
 }
 
 #[test]
 fn tells_exarch_from_eater() {
     let mut f = frame(2);
     paste(&mut f, "icon_exarch.png", 400, 250);
-    let icons = detector().find_icons(&f.to_gray());
+    let icons = detector().find_icons(&f.to_gray(), Scale::REFERENCE);
     assert_eq!(icons.len(), 1, "{icons:?}");
-    assert_eq!(altar_type(&f, &icons[0]), AltarKind::Exarch);
+    assert_eq!(altar_type(&f, &icons[0], Scale::REFERENCE), AltarKind::Exarch);
 }
 
 #[test]
@@ -59,27 +59,50 @@ fn finds_two_icons() {
     let mut f = frame(3);
     paste(&mut f, "icon_eater.png", 100, 100);
     paste(&mut f, "icon_exarch.png", 800, 400);
-    let icons = detector().find_icons(&f.to_gray());
+    let icons = detector().find_icons(&f.to_gray(), Scale::REFERENCE);
     assert_eq!(icons.len(), 2, "{icons:?}");
 }
 
 #[test]
 fn noise_alone_finds_nothing() {
     let f = frame(4);
-    assert!(detector().find_icons(&f.to_gray()).is_empty());
+    assert!(detector().find_icons(&f.to_gray(), Scale::REFERENCE).is_empty());
 }
 
 #[test]
 fn icon_cut_off_at_edge_is_skipped() {
     let mut f = frame(5);
     paste(&mut f, "icon_eater.png", -60, 300);
-    assert!(detector().find_icons(&f.to_gray()).is_empty());
+    assert!(detector().find_icons(&f.to_gray(), Scale::REFERENCE).is_empty());
 }
 
 #[test]
 fn tiny_frame_does_not_panic() {
     let f = Rgb { w: 20, h: 20, px: vec![[0; 3]; 400] };
-    assert!(detector().find_icons(&f.to_gray()).is_empty());
+    assert!(detector().find_icons(&f.to_gray(), Scale::REFERENCE).is_empty());
+}
+
+#[test]
+fn icons_found_on_downscaled_screen() {
+    let path = altar::evaluate::fixtures_dir().join("screens/screen_02.png");
+    if !path.exists() {
+        eprintln!("skipped: no local screenshots");
+        return;
+    }
+    let img = Rgb::load(&path).unwrap();
+    let small = img.resize_area(1080.0 / img.h as f64);
+    assert_eq!(small.h, 1080);
+    let icons = detector().find_icons(&small.to_gray(), Scale(0.75));
+    // Labeled icon centers of screen_02 at 1440 px, times 0.75.
+    let tolerance = 40.0 * 0.75;
+    for (lx, ly) in [(956.0, 1134.0), (1106.0, 196.0)] {
+        let (ex, ey) = (lx * 0.75, ly * 0.75);
+        assert!(
+            icons.iter().any(|i| (f64::from(i.x) - ex).abs() <= tolerance && (f64::from(i.y) - ey).abs() <= tolerance),
+            "no icon near ({ex}, {ey}): {icons:?}"
+        );
+    }
+    assert_eq!(icons.len(), 2, "{icons:?}");
 }
 
 #[test]
@@ -96,7 +119,7 @@ fn bench_find_icons_screen_02() {
     let mut icons = Vec::new();
     for _ in 0..20 {
         let t0 = std::time::Instant::now();
-        icons = det.find_icons(&img.to_gray());
+        icons = det.find_icons(&img.to_gray(), Scale::REFERENCE);
         times.push(t0.elapsed());
     }
     times.sort();

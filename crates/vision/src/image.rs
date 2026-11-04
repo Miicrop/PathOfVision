@@ -144,6 +144,14 @@ impl Rgb {
         Rgb { w: x1 - x0, h: y1 - y0, px }
     }
 
+    /// [`Gray::resize_area`] applied to each channel.
+    pub fn resize_area(&self, scale: f64) -> Rgb {
+        let channel = |c: usize| Gray { w: self.w, h: self.h, px: self.px.iter().map(|p| p[c]).collect() }.resize_area(scale);
+        let [r, g, b] = [0, 1, 2].map(channel);
+        let px = r.px.iter().zip(&g.px).zip(&b.px).map(|((&r, &g), &b)| [r, g, b]).collect();
+        Rgb { w: r.w, h: r.h, px }
+    }
+
     /// OpenCV weights: `Y = (R*4899 + G*9617 + B*1868 + 8192) >> 14`.
     pub fn to_gray(&self) -> Gray {
         let px = self
@@ -237,6 +245,26 @@ mod tests {
         // Non-divisible sizes fall back to the general path.
         let odd = g.crop(0, 0, 63, 47);
         assert_eq!(odd.resize_area(0.5), odd.resize_area_general(0.5));
+    }
+
+    #[test]
+    fn rgb_resize_matches_gray_resize() {
+        let mut s = 7u64;
+        let vals: Vec<u8> = (0..64 * 48)
+            .map(|_| {
+                s = s.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+                (s >> 56) as u8
+            })
+            .collect();
+        let g = Gray { w: 64, h: 48, px: vals.clone() };
+        let rgb = Rgb { w: 64, h: 48, px: vals.iter().map(|&v| [v, v, v]).collect() };
+        for scale in [0.25, 0.5, 0.75, 2.0 / 3.0] {
+            let r = rgb.resize_area(scale);
+            let gr = g.resize_area(scale);
+            assert_eq!((r.w, r.h), (gr.w, gr.h), "scale {scale}");
+            assert_eq!(r.px.iter().map(|p| p[0]).collect::<Vec<_>>(), gr.px, "scale {scale}");
+            assert!(r.px.iter().all(|p| p[0] == p[1] && p[1] == p[2]));
+        }
     }
 
     #[test]

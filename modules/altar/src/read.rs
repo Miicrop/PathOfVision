@@ -1,7 +1,9 @@
 //! Stage 2: read both options of every altar on a screenshot.
+//!
+//! All px constants are reference values (1440 px client) converted with the frame's [`Scale`].
 
 use ocr::Ocr;
-use vision::{Gray, Rgb};
+use vision::{Gray, Rgb, Scale};
 
 use crate::data::{AltarKind, Card, Target, load_cards, repo_data_dir};
 use crate::detect::{Detector, Icon, RING, altar_type, assets_dir};
@@ -13,6 +15,7 @@ use crate::verdict::Pos;
 const SEARCH_HALF_WIDTH: i32 = 650;
 /// px above/below the icon to OCR (tallest box is ~250 px).
 const SEARCH_HEIGHT: i32 = 320;
+/// OCR upscale at the reference scale; smaller clients are upscaled more (`UPSCALE / s`).
 const UPSCALE: f32 = 2.0;
 /// max(R, G, B) above this counts as text.
 const TEXT_BRIGHTNESS: u8 = 110;
@@ -20,7 +23,7 @@ const TEXT_BRIGHTNESS: u8 = 110;
 const CENTER_TOLERANCE: f32 = 20.0;
 /// px between pieces of one row split by an icon or life bar.
 const MAX_FRAGMENT_GAP: f32 = 220.0;
-/// Max vertical gap (full-res px) between lines of one box.
+/// Max vertical gap (px) between lines of one box.
 const LINE_GAP: f32 = 22.0;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -113,19 +116,25 @@ fn resize_cubic(img: &Gray, scale: f64) -> Gray {
 
 /// Box text is bright; the semi-transparent background lets dimmer game art through.
 /// Keeps only bright pixels, as dark text on white, upscaled for OCR.
-pub fn preprocess(crop: &Rgb) -> Gray {
+pub fn preprocess(crop: &Rgb, scale: Scale) -> Gray {
     let px = crop.px.iter().map(|p| if p.iter().max().copied().unwrap_or(0) > TEXT_BRIGHTNESS { 0 } else { 255 }).collect();
-    resize_cubic(&Gray { w: crop.w, h: crop.h, px }, UPSCALE as f64)
+    resize_cubic(&Gray { w: crop.w, h: crop.h, px }, upscale(scale))
+}
+
+/// Factor from native crop px to OCR image px.
+fn upscale(scale: Scale) -> f64 {
+    UPSCALE as f64 / scale.0
 }
 
 /// Joins fragments of one text row that an icon or life bar split into pieces.
-pub fn merge_rows(mut lines: Vec<Line>) -> Vec<Line> {
+pub fn merge_rows(mut lines: Vec<Line>, scale: Scale) -> Vec<Line> {
+    let max_gap = scale.px(MAX_FRAGMENT_GAP as f64) as f32;
     lines.sort_by(|a, b| a.x0.total_cmp(&b.x0)); // stable, like Python's sorted()
     let mut merged: Vec<Line> = Vec::new();
     for line in lines {
         let row = merged.iter_mut().find(|row| {
             let overlap = row.y1.min(line.y1) - row.y0.max(line.y0);
-            overlap > 0.5 * (row.y1 - row.y0).min(line.y1 - line.y0) && line.x0 - row.x1 <= MAX_FRAGMENT_GAP
+            overlap > 0.5 * (row.y1 - row.y0).min(line.y1 - line.y0) && line.x0 - row.x1 <= max_gap
         });
         match row {
             Some(row) => {
@@ -144,10 +153,12 @@ pub fn merge_rows(mut lines: Vec<Line>) -> Vec<Line> {
 ///
 /// Box text is centered on the icon, but lines cut off by HUD or screen edges are not,
 /// so the test is only that the line spans the center column.
-pub fn box_lines(lines: Vec<Line>, cx: f32, near_y: f32, upward: bool) -> Vec<Line> {
-    let mut centered: Vec<Line> = merge_rows(lines)
+pub fn box_lines(lines: Vec<Line>, cx: f32, near_y: f32, upward: bool, scale: Scale) -> Vec<Line> {
+    let tolerance = scale.px(CENTER_TOLERANCE as f64) as f32;
+    let line_gap = scale.px(LINE_GAP as f64) as f32;
+    let mut centered: Vec<Line> = merge_rows(lines, scale)
         .into_iter()
-        .filter(|l| l.x0 - CENTER_TOLERANCE <= cx && cx <= l.x1 + CENTER_TOLERANCE)
+        .filter(|l| l.x0 - tolerance <= cx && cx <= l.x1 + tolerance)
         .collect();
     if upward {
         centered.sort_by(|a, b| b.y1.total_cmp(&a.y1));
@@ -158,7 +169,7 @@ pub fn box_lines(lines: Vec<Line>, cx: f32, near_y: f32, upward: bool) -> Vec<Li
     let mut edge = near_y;
     for line in centered {
         let gap = if upward { edge - line.y1 } else { line.y0 - edge };
-        if gap > if block.is_empty() { LINE_GAP * 3.0 } else { LINE_GAP } {
+        if gap > if block.is_empty() { line_gap * 3.0 } else { line_gap } {
             break;
         }
         edge = if upward { line.y0 } else { line.y1 };
@@ -183,32 +194,33 @@ impl Reader {
         Ok(Reader { detector: Detector::new(assets)?, ocr: Ocr::new(language)?, cards: load_cards(mods_json)? })
     }
 
-    /// OCRs the region `[x0, x1) x [y0, y1)` (clamped); returns lines in full-res coords.
-    fn ocr_region(&self, img: &Rgb, x0: i32, y0: i32, x1: i32, y1: i32) -> anyhow::Result<Vec<Line>> {
+    /// OCRs the region `[x0, x1) x [y0, y1)` (clamped); returns lines in native coords.
+    fn ocr_region(&self, img: &Rgb, x0: i32, y0: i32, x1: i32, y1: i32, scale: Scale) -> anyhow::Result<Vec<Line>> {
         let clamp = |v: i32, hi: usize| v.clamp(0, hi as i32);
         let (x0, x1) = (clamp(x0, img.w), clamp(x1, img.w));
         let (y0, y1) = (clamp(y0, img.h), clamp(y1, img.h));
         if x1 <= x0 || y1 <= y0 {
             return Ok(Vec::new());
         }
-        let big = preprocess(&img.crop(x0 as usize, y0 as usize, x1 as usize, y1 as usize));
+        let big = preprocess(&img.crop(x0 as usize, y0 as usize, x1 as usize, y1 as usize), scale);
         let (ox, oy) = (x0 as f32, y0 as f32);
+        let up = upscale(scale) as f32;
         Ok(self
             .ocr
             .read(&big)?
             .into_iter()
             .map(|l| Line {
                 text: l.text,
-                x0: ox + l.x as f32 / UPSCALE,
-                x1: ox + (l.x + l.w) as f32 / UPSCALE,
-                y0: oy + l.y as f32 / UPSCALE,
-                y1: oy + (l.y + l.h) as f32 / UPSCALE,
+                x0: ox + l.x as f32 / up,
+                x1: ox + (l.x + l.w) as f32 / up,
+                y0: oy + l.y as f32 / up,
+                y1: oy + (l.y + l.h) as f32 / up,
             })
             .collect())
     }
 
-    fn read_option(&self, lines: Vec<Line>, position: Pos, cx: f32, edge: f32, upward: bool) -> OptionRead {
-        let mut block: Vec<String> = box_lines(lines, cx, edge, upward).into_iter().map(|l| l.text).collect();
+    fn read_option(&self, lines: Vec<Line>, position: Pos, cx: f32, edge: f32, upward: bool, scale: Scale) -> OptionRead {
+        let mut block: Vec<String> = box_lines(lines, cx, edge, upward, scale).into_iter().map(|l| l.text).collect();
         // The header is the box's first line; centered strays before it (gold labels, timers) go.
         let header = block.iter().enumerate().find_map(|(i, t)| parse_header(t).map(|tg| (i, tg)));
         let mut target = None;
@@ -226,26 +238,30 @@ impl Reader {
     }
 
     /// Reads both boxes of one altar; `None` if no box text matched (not a real altar).
-    pub fn read_altar(&self, img: &Rgb, icon: &Icon) -> anyhow::Result<Option<AltarRead>> {
-        let (x0, x1) = (icon.x - SEARCH_HALF_WIDTH, icon.x + SEARCH_HALF_WIDTH);
-        let (top_edge, bottom_edge) = (icon.y - RING.1, icon.y + RING.1);
-        let top_lines = self.ocr_region(img, x0, top_edge - SEARCH_HEIGHT, x1, top_edge)?;
-        let bottom_lines = self.ocr_region(img, x0, bottom_edge, x1, bottom_edge + SEARCH_HEIGHT)?;
+    /// `img` is a native frame of the given scale; `icon` is in native px.
+    pub fn read_altar(&self, img: &Rgb, icon: &Icon, scale: Scale) -> anyhow::Result<Option<AltarRead>> {
+        let (half_width, height, ring) = (scale.px_i(SEARCH_HALF_WIDTH), scale.px_i(SEARCH_HEIGHT), scale.px_i(RING.1));
+        let (x0, x1) = (icon.x - half_width, icon.x + half_width);
+        let (top_edge, bottom_edge) = (icon.y - ring, icon.y + ring);
+        let top_lines = self.ocr_region(img, x0, top_edge - height, x1, top_edge, scale)?;
+        let bottom_lines = self.ocr_region(img, x0, bottom_edge, x1, bottom_edge + height, scale)?;
         let cx = icon.x as f32;
         let options = [
-            self.read_option(top_lines, Pos::Top, cx, top_edge as f32, true),
-            self.read_option(bottom_lines, Pos::Bottom, cx, bottom_edge as f32, false),
+            self.read_option(top_lines, Pos::Top, cx, top_edge as f32, true, scale),
+            self.read_option(bottom_lines, Pos::Bottom, cx, bottom_edge as f32, false, scale),
         ];
         if options.iter().all(|o| o.matches.is_empty()) {
             return Ok(None);
         }
-        Ok(Some(AltarRead { icon: *icon, altar: altar_type(img, icon), options }))
+        Ok(Some(AltarRead { icon: *icon, altar: altar_type(img, icon, scale), options }))
     }
 
+    /// Reads a whole client frame; the scale follows from its size.
     pub fn read_altars(&self, img: &Rgb) -> anyhow::Result<Vec<AltarRead>> {
+        let scale = Scale::for_client(img.w, img.h);
         let mut altars = Vec::new();
-        for icon in self.detector.find_icons(&img.to_gray()) {
-            if let Some(altar) = self.read_altar(img, &icon)? {
+        for icon in self.detector.find_icons(&img.to_gray(), scale) {
+            if let Some(altar) = self.read_altar(img, &icon, scale)? {
                 altars.push(altar);
             }
         }

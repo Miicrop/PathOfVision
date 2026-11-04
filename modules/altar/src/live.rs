@@ -5,12 +5,14 @@ use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::time::SystemTime;
 
+use vision::Scale;
+
 use crate::data::{Card, Side};
 use crate::detect::Icon;
 use crate::read::AltarRead;
 use crate::verdict::{OptionInput, OptionVerdict, Profile, Recommendation, judge, recommend};
 
-/// px an icon may move between scans (the camera follows the character).
+/// Reference px an icon may move between scans (the camera follows the character).
 const TRACK_DISTANCE: i32 = 250;
 /// s without seeing an icon before its altar is dropped.
 const TRACK_TIMEOUT: f64 = 1.5;
@@ -18,6 +20,8 @@ const TRACK_TIMEOUT: f64 = 1.5;
 const REREAD_INTERVAL: f64 = 0.5;
 /// Share of mods two reads must have in common to be the same altar.
 const SAME_ALTAR_OVERLAP: f64 = 0.6;
+/// Relative scale change that counts as a new client size.
+const SCALE_CHANGE: f64 = 0.01;
 
 struct TrackedAltar {
     altar: AltarRead,
@@ -41,6 +45,8 @@ pub struct Tracker {
     tracks: Vec<TrackedAltar>,
     /// Icon positions whose read failed and was already logged.
     failed: Vec<(i32, i32)>,
+    /// Scale of the previous scan; icon positions are only comparable at the same scale.
+    scale: Option<Scale>,
 }
 
 fn distance(altar: &AltarRead, icon: &Icon) -> i32 {
@@ -87,17 +93,25 @@ impl Tracker {
     pub fn clear(&mut self) {
         self.tracks.clear();
         self.failed.clear();
+        self.scale = None;
     }
 
     /// Matches the icons of one frame to the tracked altars, reads new or incomplete ones,
     /// and returns the altars currently tracked. A failing read skips only that icon.
+    /// Icons are in native px of a frame at `scale`; a scale change (resized client) starts over.
     pub fn scan(
         &mut self,
         now: f64,
         icons: &[Icon],
         _cards: &[Card],
+        scale: Scale,
         read: &mut dyn FnMut(&Icon) -> anyhow::Result<Option<AltarRead>>,
     ) -> Vec<&AltarRead> {
+        if self.scale.is_some_and(|prev| (scale.0 - prev.0).abs() > SCALE_CHANGE * prev.0) {
+            self.clear();
+        }
+        self.scale = Some(scale);
+        let track_distance = scale.px_i(TRACK_DISTANCE);
         let mut unclaimed: Vec<usize> = (0..self.tracks.len()).collect();
         let mut still_failing = Vec::new();
         for icon in icons {
@@ -105,7 +119,7 @@ impl Tracker {
                 .iter()
                 .copied()
                 .min_by_key(|&i| distance(&self.tracks[i].altar, icon))
-                .filter(|&i| distance(&self.tracks[i].altar, icon) <= TRACK_DISTANCE);
+                .filter(|&i| distance(&self.tracks[i].altar, icon) <= track_distance);
             let mut track = nearest;
             if let Some(i) = track {
                 unclaimed.retain(|&u| u != i);
@@ -120,7 +134,7 @@ impl Tracker {
                 Ok(Some(altar)) => altar,
                 Ok(None) => continue,
                 Err(e) => {
-                    let known = self.failed.iter().any(|&(x, y)| (x - icon.x).abs() + (y - icon.y).abs() <= TRACK_DISTANCE);
+                    let known = self.failed.iter().any(|&(x, y)| (x - icon.x).abs() + (y - icon.y).abs() <= track_distance);
                     if !known {
                         eprintln!("altar read failed at ({}, {}): {e:#}", icon.x, icon.y);
                     }

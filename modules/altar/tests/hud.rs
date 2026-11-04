@@ -7,7 +7,7 @@ use altar::live::Tracker;
 use altar::read::Reader;
 use altar::verdict::Profile;
 use altar::repo_data_dir;
-use vision::Rgb;
+use vision::{Rgb, Scale};
 
 const COLORS: [&str; 6] = ["#4fbf6a", "#e0a33a", "#d65db1", "#e05a4f", "#9aa0a6", "#5d6168"];
 
@@ -29,7 +29,7 @@ fn view(with_labels: bool) -> Option<(HudView, Vec<altar::Card>)> {
     let mut tracker = Tracker::new();
     let mut queue = altars.clone();
     let icons: Vec<_> = altars.iter().map(|a| a.icon).collect();
-    tracker.scan(0.0, &icons, &reader.cards, &mut |icon| {
+    tracker.scan(0.0, &icons, &reader.cards, Scale::for_client(img.w, img.h), &mut |icon| {
         let i = queue.iter().position(|a| a.icon.x == icon.x && a.icon.y == icon.y).unwrap();
         Ok(Some(queue.remove(i)))
     });

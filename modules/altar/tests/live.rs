@@ -5,6 +5,7 @@ use altar::read::{AltarRead, OptionRead};
 use altar::verdict::{Pos, Verdict};
 use altar::{AltarKind, Card, Target, load_cards, repo_data_dir};
 use std::cell::{Cell, RefCell};
+use vision::Scale;
 use std::path::PathBuf;
 
 const TOP_ID: &str = "TangleAltarUpsideBossDivineOrb"; // top column of the default profile
@@ -62,7 +63,7 @@ fn new_altar_is_read_once_when_complete() {
     };
     let mut t = Tracker::new();
     for k in 0..3 {
-        let n = t.scan(k as f64 * 0.25, &[icon(500, 500)], &cards, &mut read).len();
+        let n = t.scan(k as f64 * 0.25, &[icon(500, 500)], &cards, Scale::REFERENCE, &mut read).len();
         assert_eq!(n, 1);
     }
     assert_eq!(calls.get(), 1);
@@ -77,11 +78,11 @@ fn incomplete_altar_is_reread_every_half_second() {
         Ok(Some(incomplete(&cards, *i)))
     };
     let mut t = Tracker::new();
-    t.scan(0.0, &[icon(500, 500)], &cards, &mut read);
+    t.scan(0.0, &[icon(500, 500)], &cards, Scale::REFERENCE, &mut read);
     assert_eq!(calls.get(), 1);
-    t.scan(0.25, &[icon(500, 500)], &cards, &mut read);
+    t.scan(0.25, &[icon(500, 500)], &cards, Scale::REFERENCE, &mut read);
     assert_eq!(calls.get(), 1);
-    t.scan(0.5, &[icon(500, 500)], &cards, &mut read);
+    t.scan(0.5, &[icon(500, 500)], &cards, Scale::REFERENCE, &mut read);
     assert_eq!(calls.get(), 2);
 }
 
@@ -94,8 +95,8 @@ fn moving_icon_keeps_its_track() {
         Ok(Some(complete(&cards, *i)))
     };
     let mut t = Tracker::new();
-    t.scan(0.0, &[icon(500, 500)], &cards, &mut read);
-    let tracked = t.scan(0.25, &[icon(700, 500)], &cards, &mut read);
+    t.scan(0.0, &[icon(500, 500)], &cards, Scale::REFERENCE, &mut read);
+    let tracked = t.scan(0.25, &[icon(700, 500)], &cards, Scale::REFERENCE, &mut read);
     assert_eq!(tracked.len(), 1);
     assert_eq!(tracked[0].icon.x, 700);
     assert_eq!(calls.get(), 1);
@@ -106,8 +107,8 @@ fn far_jump_is_matched_by_content() {
     let cards = cards();
     let mut read = |i: &Icon| Ok(Some(complete(&cards, *i)));
     let mut t = Tracker::new();
-    t.scan(0.0, &[icon(500, 500)], &cards, &mut read);
-    let tracked = t.scan(0.25, &[icon(1100, 500)], &cards, &mut read);
+    t.scan(0.0, &[icon(500, 500)], &cards, Scale::REFERENCE, &mut read);
+    let tracked = t.scan(0.25, &[icon(1100, 500)], &cards, Scale::REFERENCE, &mut read);
     assert_eq!(tracked.len(), 1);
     assert_eq!(tracked[0].icon.x, 1100);
 }
@@ -122,10 +123,10 @@ fn better_read_replaces_worse() {
     ]);
     let mut read = |_: &Icon| Ok(Some(reads.borrow_mut().remove(0)));
     let mut t = Tracker::new();
-    t.scan(0.0, &[icon(500, 500)], &cards, &mut read);
-    let tracked = t.scan(0.5, &[icon(510, 500)], &cards, &mut read);
+    t.scan(0.0, &[icon(500, 500)], &cards, Scale::REFERENCE, &mut read);
+    let tracked = t.scan(0.5, &[icon(510, 500)], &cards, Scale::REFERENCE, &mut read);
     assert_eq!(tracked[0].options[0].matches.len(), 2, "better read is kept");
-    let tracked = t.scan(1.0, &[icon(530, 500)], &cards, &mut read);
+    let tracked = t.scan(1.0, &[icon(530, 500)], &cards, Scale::REFERENCE, &mut read);
     assert_eq!(tracked[0].options[0].matches.len(), 2, "worse read is ignored");
     assert_eq!(tracked[0].icon.x, 530, "but the icon position follows");
 }
@@ -135,9 +136,9 @@ fn altar_is_dropped_after_timeout() {
     let cards = cards();
     let mut read = |i: &Icon| Ok(Some(complete(&cards, *i)));
     let mut t = Tracker::new();
-    t.scan(0.0, &[icon(500, 500)], &cards, &mut read);
-    assert_eq!(t.scan(1.4, &[], &cards, &mut read).len(), 1);
-    assert_eq!(t.scan(1.6, &[], &cards, &mut read).len(), 0);
+    t.scan(0.0, &[icon(500, 500)], &cards, Scale::REFERENCE, &mut read);
+    assert_eq!(t.scan(1.4, &[], &cards, Scale::REFERENCE, &mut read).len(), 1);
+    assert_eq!(t.scan(1.6, &[], &cards, Scale::REFERENCE, &mut read).len(), 0);
 }
 
 #[test]
@@ -154,11 +155,31 @@ fn read_error_skips_only_that_altar() {
     };
     let mut t = Tracker::new();
     let icons = [icon(300, 500), icon(2000, 500)];
-    let tracked = t.scan(0.0, &icons, &cards, &mut read);
+    let tracked = t.scan(0.0, &icons, &cards, Scale::REFERENCE, &mut read);
     assert_eq!(tracked.len(), 1);
     assert_eq!(tracked[0].icon.x, 2000);
     fail.set(false);
-    assert_eq!(t.scan(0.25, &icons, &cards, &mut read).len(), 2);
+    assert_eq!(t.scan(0.25, &icons, &cards, Scale::REFERENCE, &mut read).len(), 2);
+}
+
+#[test]
+fn scale_change_clears_tracks() {
+    let cards = cards();
+    let calls = Cell::new(0);
+    let mut read = |i: &Icon| {
+        calls.set(calls.get() + 1);
+        Ok(Some(complete(&cards, *i)))
+    };
+    let mut t = Tracker::new();
+    t.scan(0.0, &[icon(500, 500)], &cards, Scale(1.0), &mut read);
+    assert_eq!(calls.get(), 1);
+    // A tiny drift is not a resolution change.
+    t.scan(0.25, &[icon(500, 500)], &cards, Scale(1.005), &mut read);
+    assert_eq!(calls.get(), 1);
+    // The same icon list at another scale starts without the old track: it is read again.
+    let tracked = t.scan(0.5, &[icon(500, 500)], &cards, Scale(0.75), &mut read).len();
+    assert_eq!(calls.get(), 2, "old track survived the scale change");
+    assert_eq!(tracked, 1);
 }
 
 fn temp_dir(name: &str) -> PathBuf {
@@ -172,7 +193,7 @@ fn views_apply_the_profile() {
     let cards = cards();
     let mut read = |i: &Icon| Ok(Some(altar(&cards, *i, &[TOP_ID], &[DOWN], false)));
     let mut t = Tracker::new();
-    t.scan(0.0, &[icon(500, 500)], &cards, &mut read);
+    t.scan(0.0, &[icon(500, 500)], &cards, Scale::REFERENCE, &mut read);
     let default = repo_data_dir().join("profiles/default.json");
     let mut profiles = ProfileCache::new(default.clone());
     let profile = profiles.get(&default).clone();

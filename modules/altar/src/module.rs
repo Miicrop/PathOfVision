@@ -8,7 +8,7 @@ use std::time::{Duration, Instant};
 
 use pov_core::{AppPaths, Module, ModuleOutput, SettingsStore, active_profile_path};
 use pov_game::GameContext;
-use vision::Rgb;
+use vision::{Rgb, Scale};
 
 use crate::data::AltarKind;
 use crate::hud::{HudStyle, hud_view};
@@ -114,9 +114,10 @@ impl Module for AltarModule {
         self.labels.refresh();
         self.keywords.refresh();
         let now = self.start.elapsed().as_secs_f64();
-        let icons = self.reader.detector.find_icons(&frame.to_gray());
+        let scale = Scale::for_client(frame.w, frame.h);
+        let icons = self.reader.detector.find_icons(&frame.to_gray(), scale);
         let reader = &self.reader;
-        self.tracker.scan(now, &icons, &reader.cards, &mut |icon| reader.read_altar(frame, icon));
+        self.tracker.scan(now, &icons, &reader.cards, scale, &mut |icon| reader.read_altar(frame, icon, scale));
         let profile = self.profiles.get(&profile_path);
         let views = self.tracker.views(&self.reader.cards, profile);
         let center = ((frame.w / 2) as i32, (frame.h / 2) as i32);

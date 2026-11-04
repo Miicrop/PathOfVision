@@ -2,6 +2,8 @@
 //!
 //! An option counts as correct when the target and the multiset of card ids match exactly;
 //! `"mods": null` marks an unreadable box and is skipped.
+//!
+//! [`evaluate_scaled`] downscales the fixtures first (synthetic lower resolutions).
 
 use std::collections::BTreeMap;
 use std::fmt;
@@ -16,7 +18,7 @@ use crate::data::Target;
 use crate::read::{AltarRead, Reader};
 use crate::verdict::Pos;
 
-/// px between labeled and detected icon centers.
+/// Reference px between labeled and detected icon centers.
 const ICON_TOLERANCE: i32 = 40;
 
 pub fn fixtures_dir() -> PathBuf {
@@ -82,6 +84,12 @@ fn py_list(items: &[String]) -> String {
 }
 
 pub fn evaluate(screens: &Path, labels: &Path) -> anyhow::Result<Report> {
+    evaluate_scaled(screens, labels, None)
+}
+
+/// Like [`evaluate`], but with `Some(h)` every screen is first resized to height `h`, and the
+/// labeled icon positions and the icon tolerance are scaled by the same factor.
+pub fn evaluate_scaled(screens: &Path, labels: &Path, height: Option<u32>) -> anyhow::Result<Report> {
     let text = std::fs::read_to_string(labels).with_context(|| format!("reading {}", labels.display()))?;
     let labels: Value = serde_json::from_str(&text).context("parsing labels")?;
     let reader = Reader::new()?;
@@ -102,7 +110,16 @@ pub fn evaluate(screens: &Path, labels: &Path) -> anyhow::Result<Report> {
 
     for path in &paths {
         let name = path.file_name().and_then(|n| n.to_str()).unwrap_or("").to_string();
-        let img = Rgb::load(path)?;
+        let mut img = Rgb::load(path)?;
+        let factor = match height {
+            Some(h) if h as usize != img.h => {
+                let f = f64::from(h) / img.h as f64;
+                img = img.resize_area(f);
+                f
+            }
+            _ => 1.0,
+        };
+        let tolerance = (f64::from(ICON_TOLERANCE) * factor).round() as i32;
         let t = Instant::now();
         let altars = reader.read_altars(&img)?;
         timings.push(t.elapsed().as_secs_f64() * 1000.0);
@@ -112,7 +129,8 @@ pub fn evaluate(screens: &Path, labels: &Path) -> anyhow::Result<Report> {
         for exp in &expected {
             altars_total += 1;
             let (ex, ey) = (exp["icon"][0].as_i64().unwrap_or(0) as i32, exp["icon"][1].as_i64().unwrap_or(0) as i32);
-            let hit_idx = unmatched.iter().position(|a| (a.icon.x - ex).abs() <= ICON_TOLERANCE && (a.icon.y - ey).abs() <= ICON_TOLERANCE);
+            let (sx, sy) = ((f64::from(ex) * factor).round() as i32, (f64::from(ey) * factor).round() as i32);
+            let hit_idx = unmatched.iter().position(|a| (a.icon.x - sx).abs() <= tolerance && (a.icon.y - sy).abs() <= tolerance);
             let hit = hit_idx.map(|i| unmatched.remove(i));
             if hit.is_some() {
                 altars_found += 1;

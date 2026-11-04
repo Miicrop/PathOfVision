@@ -3,22 +3,23 @@
 use std::path::{Path, PathBuf};
 
 use vision::template::{Template, match_masked};
-use vision::{Gray, Rgb, hsv};
+use vision::{Gray, Rgb, Scale, hsv};
 
 use crate::data::AltarKind;
 
+/// Detection resolution relative to the 1440 px reference (the templates' size).
 const COARSE_SCALE: f64 = 0.25;
 const FINE_SCALE: f64 = 0.5;
 const COARSE_THRESHOLD: f32 = 0.35;
 const THRESHOLD: f32 = 0.55;
-/// Ring radius band (px, full resolution) that both altar types share.
+/// Ring radius band (reference px) that both altar types share.
 pub const RING: (i32, i32) = (52, 63);
 const FINE_WINDOW: i32 = 12;
 const MAX_ICONS: usize = 6;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Icon {
-    /// Ring center, full-resolution pixels.
+    /// Ring center, native pixels.
     pub x: i32,
     pub y: i32,
     pub score: f32,
@@ -68,14 +69,23 @@ impl Detector {
         Ok(Detector { radius, coarse: build(COARSE_SCALE), fine: build(FINE_SCALE) })
     }
 
-    pub fn find_icons(&self, gray: &Gray) -> Vec<Icon> {
+    /// Icons on a native-resolution frame of the given scale; centers in native px.
+    ///
+    /// The frame is resized so the icons have the templates' size: coarse and fine search run
+    /// at `COARSE_SCALE / s` and `FINE_SCALE / s` of the native frame.
+    pub fn find_icons(&self, gray: &Gray, scale: Scale) -> Vec<Icon> {
         let (w, h) = (gray.w as i32, gray.h as i32);
-        let small = gray.resize_area(COARSE_SCALE);
+        let (coarse_f, fine_f) = (COARSE_SCALE / scale.0, FINE_SCALE / scale.0);
+        let radius = scale.px_i(self.radius);
+        let fine_window = scale.px_i(FINE_WINDOW);
+        let min_gap = scale.px_i(RING.1);
+        let small = gray.resize_area(coarse_f);
         let ct = &self.coarse[0].px;
         if small.w < ct.w || small.h < ct.h {
             return Vec::new();
         }
         let mut coarse = match_masked(&small, &self.coarse);
+        // Coarse map pixels are reference px times COARSE_SCALE at any scale.
         let suppress_r = (f64::from(RING.1) * COARSE_SCALE * 1.5) as usize;
         let ft = &self.fine[0].px;
 
@@ -87,13 +97,13 @@ impl Detector {
             }
             coarse.clear_disk(mx, my, suppress_r);
 
-            let bx = (mx as f64 / COARSE_SCALE) as i32;
-            let by = (my as f64 / COARSE_SCALE) as i32;
-            let x0 = (bx - FINE_WINDOW).max(0);
-            let y0 = (by - FINE_WINDOW).max(0);
-            let x1 = (bx + 2 * self.radius + FINE_WINDOW + 1).min(w);
-            let y1 = (by + 2 * self.radius + FINE_WINDOW + 1).min(h);
-            let window = gray.crop(x0 as usize, y0 as usize, x1 as usize, y1 as usize).resize_area(FINE_SCALE);
+            let bx = (mx as f64 / coarse_f) as i32;
+            let by = (my as f64 / coarse_f) as i32;
+            let x0 = (bx - fine_window).max(0);
+            let y0 = (by - fine_window).max(0);
+            let x1 = (bx + 2 * radius + fine_window + 1).min(w);
+            let y1 = (by + 2 * radius + fine_window + 1).min(h);
+            let window = gray.crop(x0 as usize, y0 as usize, x1 as usize, y1 as usize).resize_area(fine_f);
             if window.w < ft.w || window.h < ft.h {
                 continue; // icon cut off by the screen edge
             }
@@ -102,9 +112,9 @@ impl Detector {
             if fscore < THRESHOLD {
                 continue;
             }
-            let cx = x0 + (fx as f64 / FINE_SCALE) as i32 + self.radius;
-            let cy = y0 + (fy as f64 / FINE_SCALE) as i32 + self.radius;
-            if icons.iter().all(|i| (cx - i.x).abs() > RING.1 || (cy - i.y).abs() > RING.1) {
+            let cx = x0 + (fx as f64 / fine_f) as i32 + radius;
+            let cy = y0 + (fy as f64 / fine_f) as i32 + radius;
+            if icons.iter().all(|i| (cx - i.x).abs() > min_gap || (cy - i.y).abs() > min_gap) {
                 icons.push(Icon { x: cx, y: cy, score: (fscore * 1000.0).round() / 1000.0 });
             }
         }
@@ -113,8 +123,8 @@ impl Detector {
 }
 
 /// Eater icons are blue/teal inside the ring, Exarch icons are red/orange.
-pub fn altar_type(img: &Rgb, icon: &Icon) -> AltarKind {
-    let r = RING.0 - 4;
+pub fn altar_type(img: &Rgb, icon: &Icon, scale: Scale) -> AltarKind {
+    let r = scale.px_i(RING.0 - 4);
     let (x0, y0) = ((icon.x - r).max(0) as usize, (icon.y - r).max(0) as usize);
     let patch = img.crop(x0, y0, (icon.x + r).max(0) as usize, (icon.y + r).max(0) as usize);
     let (mut red, mut blue) = (0usize, 0usize);

@@ -193,6 +193,37 @@ function stepSelection(step) {
   save();
 }
 
+/**
+ * The app's own question dialog instead of prompt()/confirm(). With `value` it asks for a name and
+ * resolves to the trimmed text (null on cancel or empty); without, it confirms and resolves to true/false.
+ */
+function ask({ title, text, value, ok = "OK", danger = false }) {
+  const dialog = $("ask-dialog"), input = $("ask-input"), okBtn = $("ask-ok");
+  const naming = value !== undefined;
+  $("ask-h").textContent = title;
+  $("ask-text").textContent = text;
+  input.hidden = !naming;
+  input.value = naming ? value : "";
+  okBtn.textContent = ok;
+  okBtn.classList.toggle("danger", danger);
+  const sync = () => (okBtn.disabled = naming && !input.value.trim());
+  input.oninput = sync;
+  sync();
+  return new Promise(resolve => {
+    let answer = naming ? null : false;
+    $("ask-cancel").onclick = () => dialog.close();
+    $("ask-form").onsubmit = e => {
+      e.preventDefault();
+      if (okBtn.disabled) return;
+      answer = naming ? input.value.trim() : true;
+      dialog.close();
+    };
+    dialog.onclose = () => resolve(answer);
+    dialog.showModal();
+    if (naming) { input.focus(); input.select(); } else okBtn.focus();
+  });
+}
+
 // Column management (upsides only): add, rename, move, delete.
 function editColumns(change) {
   if (profile.readOnly) return;
@@ -201,14 +232,14 @@ function editColumns(change) {
   render();
   save();
 }
-function addColumn() {
-  const name = prompt("Name of the new column:", "New column");
-  if (name && name.trim()) editColumns(up => up.columns.push({ name: name.trim(), ids: [] }));
+async function addColumn() {
+  const name = await ask({ title: "New column", text: "Name of the new column", value: "New column", ok: "Add" });
+  if (name) editColumns(up => up.columns.push({ name, ids: [] }));
 }
-function renameColumn(col) {
-  const name = prompt("Column name:", col.name);
-  if (!name || !name.trim()) return;
-  editColumns(up => { (col.kind === "top" ? up.top : up.columns[col.index]).name = name.trim(); });
+async function renameColumn(col) {
+  const name = await ask({ title: "Rename column", text: "Column name", value: col.name, ok: "Rename" });
+  if (!name) return;
+  editColumns(up => { (col.kind === "top" ? up.top : up.columns[col.index]).name = name; });
 }
 function toggleKey(col) {
   editColumns(up => {
@@ -223,9 +254,9 @@ function moveColumn(col, step) {
     [up.columns[col.index], up.columns[to]] = [up.columns[to], up.columns[col.index]];
   });
 }
-function deleteColumn(col) {
+async function deleteColumn(col) {
   const count = profile.upsides.columns[col.index].ids.length;
-  if (count && !confirm(`Delete "${col.name}"? Its ${count} cards go back to Unrated.`)) return;
+  if (count && !(await ask({ title: "Delete column", text: `Delete "${col.name}"? Its ${count} cards go back to Unrated.`, ok: "Delete", danger: true }))) return;
   editColumns(up => up.columns.splice(col.index, 1));
 }
 
@@ -432,6 +463,7 @@ document.querySelectorAll(".seg[data-filter]").forEach(seg => seg.addEventListen
 }));
 document.addEventListener("keydown", e => {
   if (e.target.closest("input, select, textarea")) return;   // the search box keeps its own undo
+  if (document.querySelector("dialog[open]")) return;        // keys belong to the open dialog
   const key = e.key.toLowerCase();
   if (e.ctrlKey && !e.altKey && (key === "z" || key === "y")) {
     e.preventDefault();
@@ -448,15 +480,16 @@ document.addEventListener("click", e => {
 $("q").addEventListener("input", e => { filter.q = e.target.value.trim().toLowerCase(); render(); });
 $("profile").addEventListener("change", e => openProfile(e.target.value));
 $("dup").addEventListener("click", async () => {
-  const name = prompt("Name of the new profile:", `${profile.name} (copy)`);
-  if (!name || !name.trim()) return;
+  const name = await ask({ title: "Duplicate profile", text: "Name of the new profile", value: `${profile.name} (copy)`, ok: "Duplicate" });
+  if (!name) return;
   let result;
-  try { result = await api.duplicateProfile(file, name.trim()); } catch (e) { return showError(String(e)); }
+  try { result = await api.duplicateProfile(file, name); } catch (e) { return showError(String(e)); }
   state.profiles = result.profiles;
   await openProfile(result.file);
 });
 $("del").addEventListener("click", async () => {
-  if (profile.readOnly || !confirm(`Delete the profile "${profile.name}"?`)) return;
+  if (profile.readOnly) return;
+  if (!(await ask({ title: "Delete profile", text: `Delete the profile "${profile.name}"? This cannot be undone; export it first if you want to keep a copy.`, ok: "Delete", danger: true }))) return;
   const result = await api.deleteProfile(file);
   if (!result.ok) return showError(result.error);
   state.profiles = result.profiles;

@@ -187,5 +187,14 @@ body[data-target-tag="false"] .card .meta { display: none; }
 .code-dialog .preview.ok { color: var(--fg); }
 .code-dialog .preview.error { color: var(--fg); border-left: 3px solid var(--t-brick); padding-left: 8px; }
 .code-dialog .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+.ask-dialog { width: min(420px, calc(100vw - 32px)); }
+.ask-dialog label { color: var(--fg); font-size: 14px; }
+.ask-dialog input {
+  width: 100%; font: 14px var(--font-body); color: var(--fg);
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 7px 10px;
+}
+.ask-dialog input:focus { border-color: var(--gold); outline: none; }
 button.btn.primary { background: var(--gold); border-color: var(--gold); color: var(--bg); font-weight: 600; }
+button.btn.primary.danger { background: var(--t-brick); border-color: var(--t-brick); color: #fff; }
+button.btn.primary.danger:hover:not(:disabled) { background: color-mix(in srgb, var(--t-brick) 80%, #fff); }
 button.btn.primary:hover:not(:disabled) { background: color-mix(in srgb, var(--gold) 80%, #fff); }

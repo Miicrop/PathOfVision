@@ -108,6 +108,18 @@
   </form>
 </dialog>
 
+<dialog class="code-dialog ask-dialog" id="ask-dialog" aria-labelledby="ask-h">
+  <form method="dialog" id="ask-form">
+    <h2 id="ask-h"></h2>
+    <label for="ask-input" id="ask-text"></label>
+    <input type="text" id="ask-input" maxlength="100" autocomplete="off" spellcheck="false">
+    <div class="actions">
+      <button class="btn" type="button" id="ask-cancel">Cancel</button>
+      <button class="btn primary" type="submit" id="ask-ok">OK</button>
+    </div>
+  </form>
+</dialog>
+
 <script src="../../../shell/shell.js"></script>
 <script src="board.js"></script>
 </body>

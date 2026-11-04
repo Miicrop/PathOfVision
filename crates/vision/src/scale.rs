@@ -36,7 +36,8 @@ impl Scale {
         w > 0 && h >= MIN_CLIENT_HEIGHT
     }
 
-    /// Narrower than 16:9 (e.g. 16:10); PoE may limit the UI by width there.
+    /// Narrower than 16:9 (e.g. 16:10). At 16:10 the UI still scales with the height
+    /// (measured on 1920x1200); narrower aspects are unmeasured.
     pub fn is_narrow(w: usize, h: usize) -> bool {
         w * 9 < h * 16
     }
@@ -69,6 +70,12 @@ mod tests {
         assert!(!Scale::is_scannable(3440, 10));
         assert!(!Scale::is_scannable(3440, 0));
         assert!(!Scale::is_scannable(0, 1440));
+    }
+
+    /// Measured on real 1920x1200 shots: icons and text scale with 1200 / 1440, not 1920 / 2560.
+    #[test]
+    fn narrow_is_height_limited() {
+        assert_eq!(Scale::for_client(1920, 1200), Scale(1200.0 / REFERENCE_HEIGHT));
     }
 
     #[test]

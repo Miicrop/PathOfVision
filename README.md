@@ -19,15 +19,13 @@ It only looks at the picture on your screen, like a screenshot would.
 ## Supported setups
 
 - Windows 10 or 11, English game client, windowed or borderless.
-- Resolution support (client height, 16:9 or wider):
+- Resolution support (by client height, 16:10 or wider):
 
 | Resolution | Status |
 | --- | --- |
-| 3440x1440 / 1440 px height | Verified (also windowed clients down to 90 % of that height) |
-| 1920x1080 | Being verified |
-| 16:10 (e.g. 1920x1200) | Being verified |
+| 1080 to 1440 px height (verified on 1920x1080, 1920x1200, 2560x1353 and 3440x1440) | Verified (also windowed clients down to 90 % of 1080 px) |
 | 4K and heights up to 2160 px | Runs, with an "untested resolution" note in the HUD |
-| Narrower than 16:9 | Untested |
+| Narrower than 16:10 (e.g. 4:3) | Runs, with an "untested resolution" note in the HUD |
 | Smaller than the verified range | Unsupported, unless "Try unsupported resolutions" is enabled in Settings |
 
 ## Install
@@ -62,7 +60,7 @@ cargo build --workspace
 cargo test --workspace
 ```
 
-Tests that need real game screenshots read them from `tests/fixtures/screens`, which is git-ignored and exists only on the author's machine. Those tests skip themselves when the screenshots are missing; the slow accuracy tests are `#[ignore]` and run locally with:
+Tests that need real game screenshots read them from `tests/fixtures/screens` (3440x1440) and `tests/fixtures/screens_<size>/client` (other resolutions, cut out of desktop screenshots with `tools/crop_client.py`), which are git-ignored and exist only on the author's machine. Those tests skip themselves when the screenshots are missing; the slow accuracy tests are `#[ignore]` and run locally with:
 
 ```
 cargo test -p altar --release --test golden -- --ignored

@@ -1,10 +1,13 @@
 //! Whether a game client size is one the scanner was verified at.
 use serde::Serialize;
-use vision::Scale;
 
-/// Client heights (px) with a real-screenshot acceptance run. Widened as sets are verified.
-pub const VERIFIED_MIN_H: u32 = 1440;
+/// Client heights (px) with a real-screenshot acceptance run (1920x1080, 1920x1200,
+/// 2560x1353 and 3440x1440). Widened as sets are verified.
+pub const VERIFIED_MIN_H: u32 = 1080;
 pub const VERIFIED_MAX_H: u32 = 1440;
+/// Narrowest verified aspect ratio, as width:height (16:10, from 1920x1200). Narrower clients
+/// (4:3, 5:4) are untested.
+pub const VERIFIED_MIN_ASPECT: (u32, u32) = (16, 10);
 /// Above this height (or below the slack-reduced minimum) a size is unsupported.
 pub const UNTESTED_MAX_H: u32 = 2160;
 /// A windowed client is shorter than its monitor (title bar, taskbar); heights down to this
@@ -21,7 +24,7 @@ pub enum Support {
 
 /// Support level of a `w x h` client; `try_anyway` turns `Unsupported` into `Untested`.
 pub fn support(w: u32, h: u32, try_anyway: bool) -> Support {
-    let narrow = Scale::is_narrow(w as usize, h as usize);
+    let narrow = u64::from(w) * u64::from(VERIFIED_MIN_ASPECT.1) < u64::from(h) * u64::from(VERIFIED_MIN_ASPECT.0);
     let level = if f64::from(h) >= f64::from(VERIFIED_MIN_H) * WINDOWED_SLACK && h <= UNTESTED_MAX_H {
         if !narrow && h <= VERIFIED_MAX_H { Support::Verified } else { Support::Untested }
     } else {
@@ -59,9 +62,27 @@ mod tests {
     }
 
     #[test]
-    fn narrow_is_untested() {
+    fn verified_heights() {
+        assert_eq!(support(1920, 1080, false), Support::Verified);
+        assert_eq!(support(2560, 1353, false), Support::Verified);
+        assert_eq!(support(3440, 1440, false), Support::Verified);
+        // A windowed client on a 1080 monitor (title bar and taskbar take ~10 %).
+        assert_eq!(support(1920, 972, false), Support::Verified);
+        assert_eq!(support(1920, 971, false), Support::Unsupported);
+    }
+
+    #[test]
+    fn sixteen_by_ten_is_verified() {
+        assert_eq!(support(1920, 1200, false), Support::Verified);
+        assert_eq!(support(1728, 1080, false), Support::Verified);
+        // Above the verified heights it is untested like any other aspect.
         assert_eq!(support(2560, 1600, false), Support::Untested);
-        // 16:10 at a verified height is still untested.
-        assert_eq!(support(VERIFIED_MIN_H * 16 / 10, VERIFIED_MIN_H, false), Support::Untested);
+    }
+
+    #[test]
+    fn narrower_than_16_by_10_is_untested() {
+        assert_eq!(support(1440, 1080, false), Support::Untested);
+        assert_eq!(support(1280, 1024, false), Support::Untested);
+        assert_eq!(support(1727, 1080, false), Support::Untested);
     }
 }

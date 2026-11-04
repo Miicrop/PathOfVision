@@ -75,9 +75,11 @@ fn mod_without_alias_shows_full_text() {
 #[test]
 fn hud_style_carries_scale_and_untested() {
     let s = pov_core::AltarSettings::default();
-    let v = serde_json::to_value(HudStyle::from_settings(&s, 1920, 1080, true)).unwrap();
-    assert_eq!(v["scale"], 0.75);
+    let v = serde_json::to_value(HudStyle::from_settings(&s, 3840, 2160, true)).unwrap();
+    assert_eq!(v["scale"], 1.5);
     assert_eq!(v["untested"], true);
+    let v = serde_json::to_value(HudStyle::from_settings(&s, 1920, 1080, false)).unwrap();
+    assert_eq!((v["scale"].as_f64(), v["untested"].as_bool()), (Some(0.75), Some(false)));
     let v = serde_json::to_value(HudStyle::from_settings(&s, 3440, 1440, false)).unwrap();
     assert_eq!((v["scale"].as_f64(), v["untested"].as_bool()), (Some(1.0), Some(false)));
     // Unsupported sizes are untested once the user opts in.

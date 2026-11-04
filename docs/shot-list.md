@@ -21,6 +21,8 @@ Your screenshots stay on your computer. They are git-ignored, so they are never 
 
 Name the files `screen_01.png`, `screen_02.png`, and so on, inside each folder. Create the folder if it does not exist.
 
+Full-desktop screenshots (Windows' own `Screenshot (N).png`) work too: `tools/crop_client.py <folder> --expect <W>x<H>` finds the game window by its title bar and border and writes the client area to `<folder>/client/screen_NN.png`.
+
 ## What to capture in each set
 
 Mix it up. Try to include:

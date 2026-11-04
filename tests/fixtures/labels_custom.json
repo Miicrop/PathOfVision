@@ -1,0 +1,115 @@
+{
+ "_note": "Client 3435x1132 (window stretched over the ultrawide, reduced height); PoE pillarboxes the game to 2717x1132 in the middle.",
+ "screen_01.png": [
+  {
+   "icon": [
+    1391,
+    850
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerReducedPhysicalDamageReduction",
+     "TangledAltarDownsidePlayerChilledGroundWhenHit",
+     "TangledAltarDownsidePlayerLightningMonsterAura",
+     "TangledAltarUpsidePlayerIncreasedQuantity",
+     "TangledAltarUpsidePlayerIncreasedQuantity"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterChilledGroundOnDeath",
+     "TangledAltarDownsideMonsterColdDamage",
+     "TangledAltarDownsideMonsterRemoveChargeOnHit",
+     "TangleAltarUpsideMonsterLesserEldritchIchor",
+     "CleansingAltarUpsideMonsterDivinationCardsCorrupted"
+    ]
+   }
+  }
+ ],
+ "screen_02.png": [
+  {
+   "icon": [
+    2245,
+    295
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterLightningDamage",
+     "TangledAltarDownsideMonsterOverwhelm",
+     "TangledAltarDownsideMonsterSupressSpells",
+     "TangleAltarUpsideMonsterFusingOrb",
+     "CleansingAltarUpsideMonsterDivinationCardsUniqueJewellery"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerReducedColdAndLightningResist",
+     "TangledAltarDownsidePlayerTaintedPower",
+     "TangledAltarDownsidePlayerColdMonsterAura",
+     "TangledAltarUpsidePlayerDuplicateDroppedDivinationCards",
+     "TangledAltarUpsidePlayerDuplicateDroppedUniques"
+    ]
+   }
+  }
+ ],
+ "screen_03.png": [
+  {
+   "icon": [
+    2320,
+    402
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerShockedGroundWhenHit",
+     "TangledAltarDownsidePlayerNonDamagingAilmentsReflectedToSelf",
+     "TangledAltarDownsidePlayerRandomProjectileDirection",
+     "TangledAltarUpsidePlayerIncreasedRarity",
+     "TangledAltarUpsidePlayerDuplicateDroppedMaps"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterExtraProjectiles",
+     "TangledAltarDownsideMonsterSpeed",
+     "TangledAltarDownsideMonsterColdAndLightningResist",
+     "TangledAltarUpsideMonsterScarabExpedition",
+     "CleansingAltarUpsideMonsterGemcuttersPrism"
+    ]
+   }
+  }
+ ],
+ "screen_04.png": [
+  {
+   "icon": [
+    1220,
+    534
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterPhysicalDamageReduction",
+     "TangledAltarDownsideMonsterGraspingVineStackOnHit",
+     "TangledAltarUpsideMonsterDivinationCardsGemsQuality"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerSapped",
+     "TangledAltarDownsidePlayerTaintedEndurance",
+     "TangledAltarUpsidePlayerDuplicateDroppedMaps"
+    ]
+   }
+  }
+ ]
+}

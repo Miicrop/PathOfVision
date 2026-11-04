@@ -1,0 +1,107 @@
+{
+ "screen_01.png": [
+  {
+   "icon": [
+    609,
+    834
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "TangledAltarDownsideBossPhysicalDamageReduction",
+     "TangledAltarDownsideBossMaxLifeAsEnergyShield",
+     "TangledAltarDownsideBossBlindOnHit",
+     "TangleAltarUpsideBossOrbOfAlteration",
+     "CleansingAltarUpsideBossDivinationCardsCorrupted"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterColdAndLightningResist",
+     "TangledAltarDownsideMonsterOverwhelm",
+     "TangledAltarDownsideMonsterShockedGroundOnDeath",
+     "TangledAltarUpsideMonsterScarabUltimatum",
+     "CleansingAltarUpsideMonsterOrbOfUnmaking"
+    ]
+   }
+  }
+ ],
+ "screen_02.png": [
+  {
+   "icon": [
+    1804,
+    276
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "TangledAltarDownsideBossPhysToAddAsLightning",
+     "TangledAltarDownsideBossPhysToAddAsCold",
+     "TangleAltarUpsideBossJewellersOrb"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterExtraProjectiles",
+     "TangledAltarDownsideMonsterGraspingVineStackOnHit",
+     "TangleAltarUpsideMonsterGreaterEldritchIchor"
+    ]
+   }
+  }
+ ],
+ "screen_03.png": [],
+ "screen_04.png": [
+  {
+   "icon": [
+    1992,
+    719
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerShockedGroundWhenHit",
+     "TangledAltarDownsidePlayerTaintedEndurance",
+     "TangledAltarUpsidePlayerIncreasedRarity"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterRemoveChargeOnHit",
+     "TangledAltarDownsideMonsterColdDamage",
+     "TangledAltarUpsideMonsterDivinationCardsCurrencyBasic"
+    ]
+   }
+  }
+ ],
+ "screen_05.png": [
+  {
+   "icon": [
+    704,
+    344
+   ],
+   "altar": "eater",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "TangledAltarDownsideMonsterGraspingVineStackOnHit",
+     "TangledAltarDownsideMonsterSupressSpells",
+     "TangleAltarUpsideMonsterOrbOfAlteration"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "TangledAltarDownsidePlayerSapped",
+     "TangledAltarDownsidePlayerReducedPhysicalDamageReduction",
+     "TangledAltarUpsidePlayerDuplicateDroppedUniques"
+    ]
+   }
+  }
+ ]
+}

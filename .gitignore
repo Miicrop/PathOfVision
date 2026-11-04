@@ -3,6 +3,7 @@ __pycache__/
 tools/gen_mods/.cache/
 .remember/
 tests/fixtures/screens/*.png
+tests/fixtures/screens_*/
 tests/fixtures/screens/_raw/
 .venv/
 settings.json

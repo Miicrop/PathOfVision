@@ -24,6 +24,26 @@
     return k in pending ? pending[k] : sectionValues(section)[key];
   }
 
+  // The schema carries no defaults, so an unset value falls back to a neutral one per kind.
+  function fallbackOf(field) {
+    const k = field.kind;
+    switch (k.type) {
+      case "toggle":
+        return false;
+      case "choice":
+        return k.options.length ? k.options[0][0] : "";
+      case "slider":
+      case "number":
+        return k.min;
+      default:
+        return null;
+    }
+  }
+
+  function shownValue(section, field) {
+    return valueOf(section, field.key) ?? fallbackOf(field);
+  }
+
   function showError(e) {
     $("error").textContent = e ? String(e) : "";
     $("error").hidden = !e;
@@ -51,19 +71,27 @@
     change.timer = setTimeout(flush, SAVE_DELAY);
   }
 
+  // Writes everything pending now. All IPC calls are issued synchronously (so this also works
+  // from `pagehide`); only the results are awaited.
   async function flush() {
-    const writes = Object.entries(pending);
+    clearTimeout(change.timer);
+    const writes = Object.entries(pending).filter(([, value]) => value !== undefined);
     pending = {};
+    if (!writes.length) return;
     let ok = true;
-    for (const [k, value] of writes) {
+    const calls = writes.map(([k, value]) => {
       const [section, key] = k.split("\u0000");
-      try {
-        settings = await window.pov.invoke("settings_set", { section, key, value });
-      } catch (e) {
-        ok = false;
-        showError(e);
-      }
-    }
+      return window.pov.invoke("settings_set", { section, key, value }).then(
+        (result) => {
+          settings = result;
+        },
+        (e) => {
+          ok = false;
+          showError(e);
+        }
+      );
+    });
+    await Promise.all(calls);
     if (ok) {
       showError(null);
       showSaved();
@@ -102,7 +130,7 @@
       return [value, b];
     });
     renderers.push(() => {
-      const v = String(valueOf(section, field.key));
+      const v = String(shownValue(section, field));
       buttons.forEach(([value, b]) => b.setAttribute("aria-pressed", String(String(value) === v)));
     });
     return seg;
@@ -116,7 +144,7 @@
     const out = el("output");
     input.addEventListener("input", () => change(section, field.key, Number(input.value) / scale));
     renderers.push(() => {
-      const v = shown(Number(valueOf(section, field.key)));
+      const v = shown(Number(shownValue(section, field)));
       input.value = v;
       out.textContent = kind.unit ? `${v} ${kind.unit}` : String(v);
     });
@@ -129,9 +157,16 @@
     input.addEventListener("change", () => {
       if (input.value.trim() === "" || !Number.isFinite(Number(input.value))) return render();
       change(section, field.key, Number(input.value));
+      flush();
+    });
+    input.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter") return;
+      if (input.value.trim() === "" || !Number.isFinite(Number(input.value))) return render();
+      change(section, field.key, Number(input.value));
+      flush();
     });
     renderers.push(() => {
-      input.value = valueOf(section, field.key);
+      input.value = shownValue(section, field);
     });
     const parts = [input];
     if (kind.unit) parts.push(document.createTextNode(kind.unit));
@@ -144,9 +179,16 @@
     input.addEventListener("change", () => {
       const v = input.value.trim();
       change(section, field.key, v === "" ? null : v);
+      flush();
+    });
+    input.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter") return;
+      const v = input.value.trim();
+      change(section, field.key, v === "" ? null : v);
+      flush();
     });
     renderers.push(() => {
-      input.value = valueOf(section, field.key) ?? "";
+      input.value = shownValue(section, field) ?? "";
     });
     return el("div", { className: "ctl" }, [input]);
   }
@@ -223,6 +265,9 @@
       showError(e);
     }
   })();
+  window.addEventListener("pagehide", () => {
+    flush();
+  });
   window.pov.listen("settings:changed", (e) => applied(e.payload));
   window.pov.listen("settings:section", (e) => show(e.payload));
 })();

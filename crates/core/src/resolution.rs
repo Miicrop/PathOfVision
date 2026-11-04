@@ -53,7 +53,7 @@ mod tests {
 
     #[test]
     fn the_slack_floor_is_exact() {
-        let floor = (f64::from(VERIFIED_MIN_H) * WINDOWED_SLACK) as u32;
+        let floor = (f64::from(VERIFIED_MIN_H) * WINDOWED_SLACK).ceil() as u32;
         assert_eq!(support(3440, floor, false), Support::Verified);
         assert_eq!(support(3440, floor - 1, false), Support::Unsupported);
     }

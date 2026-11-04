@@ -8,7 +8,7 @@ use serde::Serialize;
 use vision::Scale;
 
 use crate::data::{AltarKind, Card, Side, Target};
-use crate::labels::{Label, RolledValue, Segment, KeywordMatcher, render_alias, rolled_values};
+use crate::labels::{KeywordMatcher, Label, RolledValue, Segment, render_alias, rolled_values};
 use crate::live::AltarView;
 use crate::verdict::{Pos, Tier, Verdict};
 

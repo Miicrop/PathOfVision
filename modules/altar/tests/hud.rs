@@ -85,27 +85,70 @@ fn hud_style_carries_scale_and_untested() {
     assert_eq!(v["untested"], true);
 }
 
+use altar::AltarKind;
+use altar::detect::Icon;
+use altar::live::AltarView;
+use altar::read::{AltarRead, OptionRead};
+use altar::verdict::{OptionInput, OptionVerdict, Pos, Recommendation, Verdict};
+
+fn synthetic(verdicts: [Verdict; 2], choice: Option<Pos>) -> AltarView {
+    let option = |position| OptionRead {
+        position,
+        target: None,
+        lines: vec![],
+        matches: vec![],
+        unexplained: vec![],
+        has_header: true,
+    };
+    let verdict = |verdict| OptionVerdict {
+        verdict,
+        up_tier: None,
+        up_pos: 0,
+        down_tier: None,
+        tiers: HashMap::new(),
+        up_rank: 0,
+    };
+    let input = || OptionInput { target: None, upsides: vec![], downsides: vec![] };
+    AltarView {
+        altar: AltarRead {
+            icon: Icon { x: 0, y: 0, score: 1.0 },
+            altar: AltarKind::Eater,
+            options: [option(Pos::Top), option(Pos::Bottom)],
+        },
+        complete: true,
+        options: [input(), input()],
+        verdicts: [verdict(verdicts[0]), verdict(verdicts[1])],
+        recommendation: Recommendation { choice, text: "pick".into(), about: None },
+    }
+}
+
+fn hud_of(view: AltarView) -> HudView {
+    let style = HudStyle { font_size: 15, tiers: true, other_opacity: 0.35, values: true, scale: 1.0, untested: false };
+    hud_view(&[view], &[], &HashMap::new(), &KeywordMatcher::new(&[]), style, (0, 0))
+}
+
 #[test]
 fn hud_altar_recommendation_and_dimming() {
-    let Some((hud, _)) = view(true) else { return };
-    assert_eq!(hud.style.other_opacity, 0.35, "dimmed options are drawn at hud_other_opacity");
-    let mut picks = 0;
-    for a in &hud.altars {
-        let leave_alone = a.options.iter().all(|o| o.verdict == "AVOID");
-        let chosen: Vec<_> = a.options.iter().filter(|o| o.chosen).collect();
-        assert!(chosen.len() <= 1);
-        picks += chosen.len();
-        for o in &a.options {
-            if leave_alone {
-                assert!(o.dimmed, "both options of an AVOID altar are dimmed");
-            } else if o.chosen {
-                assert!(!o.dimmed, "the pick gets the glow, not the dimming");
-            } else if !chosen.is_empty() {
-                assert_eq!(o.dimmed, o.verdict != "ADAPT - BRICK", "{}", o.verdict);
-            } else {
-                assert!(!o.dimmed);
-            }
-        }
-    }
-    assert!(picks > 0, "the screenshot has a recommendation");
+    // A firm pick: it is chosen (glow) and bright, the other one is dimmed at hud_other_opacity.
+    let hud = hud_of(synthetic([Verdict::Take, Verdict::Neutral], Some(Pos::Top)));
+    let a = &hud.altars[0];
+    let (top, bottom) = (&a.options[0], &a.options[1]);
+    assert_eq!((top.position, bottom.position), ("top", "bottom"));
+    assert!(top.chosen && !top.dimmed);
+    assert!(!bottom.chosen && bottom.dimmed);
+    assert_eq!(a.recommendation.arrow, "\u{25B2}");
+    let json = serde_json::to_value(&hud).unwrap();
+    assert_eq!(json["style"]["other_opacity"], 0.35);
+    assert_eq!(json["altars"][0]["options"][1]["dimmed"], true);
+
+    // ADAPT - BRICK is never dimmed, even when it is not the pick.
+    let hud = hud_of(synthetic([Verdict::Take, Verdict::Adapt], Some(Pos::Top)));
+    let (top, bottom) = (&hud.altars[0].options[0], &hud.altars[0].options[1]);
+    assert_eq!(bottom.verdict, "ADAPT - BRICK");
+    assert!(top.chosen && !top.dimmed);
+    assert!(!bottom.chosen && !bottom.dimmed);
+
+    // Both AVOID: leave it alone, both dimmed.
+    let hud = hud_of(synthetic([Verdict::Avoid, Verdict::Avoid], None));
+    assert!(hud.altars[0].options.iter().all(|o| o.dimmed && !o.chosen));
 }

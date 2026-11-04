@@ -16,6 +16,14 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
 
+      - name: Check the tag matches the app version
+        shell: pwsh
+        run: |
+          $tag = '${{ github.ref_name }}'.TrimStart('v')
+          $conf = (Get-Content app/tauri.conf.json -Raw | ConvertFrom-Json).version
+          $cargo = ((Select-String -Path app/Cargo.toml -Pattern '^version\s*=\s*"([^"]+)"' | Select-Object -First 1).Matches[0].Groups[1].Value)
+          if ($tag -ne $conf -or $tag -ne $cargo) { throw "Tag $tag, tauri.conf.json $conf, Cargo.toml $cargo must all match" }
+
       - name: Extract release notes from CHANGELOG.md
         id: notes
         shell: pwsh

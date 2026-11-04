@@ -12,7 +12,7 @@ Path of Exile lays its UI out relative to the client height. A module therefore 
 - OCR upscales each native crop once by `UPSCALE / scale` (see `modules/altar/src/read.rs`), so the text reaches the OCR at the same size at every resolution.
 - Frames below `vision::MIN_CLIENT_HEIGHT` (480 px) are not scanned.
 
-Which sizes count as verified is decided in one place, `pov_core::resolution` (`VERIFIED_MIN_H`, `VERIFIED_MAX_H`, `VERIFIED_MIN_ASPECT`, `WINDOWED_SLACK`). Widen it only after a real-shot acceptance run at the new size.
+Which sizes count as verified is decided in one place, `pov_core::resolution` (`VERIFIED_MIN_H`, `VERIFIED_MAX_H`, `VERIFIED_MIN_ASPECT`, `VERIFIED_MAX_ASPECT`, `WINDOWED_SLACK`). Widen it only after a real-shot acceptance run at the new size.
 
 ## Fixtures a module needs
 

@@ -73,7 +73,7 @@
     const btn = $("update-now");
     btn.disabled = true;
     $("update-error").hidden = true;
-    $("update-text").textContent = "Installing the update…";
+    $("update-text").textContent = "Installing the updateâ€¦";
     window.pov.invoke("update_now").catch((e) => {
       btn.disabled = false;
       $("update-error").textContent = "Update failed: " + e;

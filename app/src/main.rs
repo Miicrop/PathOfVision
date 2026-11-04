@@ -188,6 +188,15 @@ fn create_tray(app: &AppHandle) -> tauri::Result<()> {
     Ok(())
 }
 
+fn start_scanner(handle: &AppHandle, mode: Mode, stats: bool) {
+    let state = handle.state::<AppState>();
+    if state.stop.load(Ordering::SeqCst) {
+        return;
+    }
+    let thread = scanner::spawn(handle.clone(), &state, mode, stats);
+    *lock(&handle.state::<ScannerThread>().0) = Some(thread);
+}
+
 fn main() {
     let args = match parse_args() {
         Ok(a) => a,
@@ -250,18 +259,20 @@ fn main() {
                 eprintln!("HUD window: {e:#}");
             }
             create_tray(&handle)?;
-            // The update check (and a possible install + restart) comes first; the scanner starts
-            // once it is done, whatever the outcome.
+            // PoE running (or dev): the scanner starts at once and the check can only offer.
+            // PoE closed: the check (and a possible install + restart) comes first, bounded by
+            // its timeouts; the scanner starts after it, whatever the outcome.
             tauri::async_runtime::spawn(async move {
-                if !dev {
-                    update::run_at_start(&handle).await;
+                let poe_running = pov_game::find_poe_window().is_some();
+                if dev {
+                    start_scanner(&handle, mode, stats);
+                } else if poe_running {
+                    start_scanner(&handle, mode, stats);
+                    update::run_at_start(&handle, true).await;
+                } else {
+                    update::run_at_start(&handle, false).await;
+                    start_scanner(&handle, mode, stats);
                 }
-                let state = handle.state::<AppState>();
-                if state.stop.load(Ordering::SeqCst) {
-                    return;
-                }
-                let thread = scanner::spawn(handle.clone(), &state, mode, stats);
-                *lock(&handle.state::<ScannerThread>().0) = Some(thread);
             });
             Ok(())
         })

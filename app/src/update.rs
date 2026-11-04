@@ -40,36 +40,59 @@ async fn check(app: &AppHandle) -> tauri_plugin_updater::Result<Option<tauri_plu
     app.updater_builder().timeout(CHECK_TIMEOUT).build()?.check().await
 }
 
-async fn install(update: &tauri_plugin_updater::Update) -> tauri_plugin_updater::Result<()> {
-    update.download_and_install(|_, _| {}, || {}).await
+/// Longest a download may take before the install is given up (the app stays on its version).
+const DOWNLOAD_TIMEOUT: Duration = Duration::from_secs(120);
+
+/// A download that finished is installed only if PoE is still closed.
+pub fn install_after_download(poe_running: bool) -> bool {
+    !poe_running
 }
 
-/// Checks once at start. Install: download, install and restart (never returns on success).
-/// Errors only go to stderr. Runs before the scanner starts; the caller starts it afterwards.
-pub async fn run_at_start(app: &AppHandle) {
+fn poe_running() -> bool {
+    pov_game::find_poe_window().is_some()
+}
+
+/// Downloads within `DOWNLOAD_TIMEOUT`; returns the installer bytes.
+async fn download(update: &tauri_plugin_updater::Update) -> Result<Vec<u8>, String> {
+    match tokio::time::timeout(DOWNLOAD_TIMEOUT, update.download(|_, _| {}, || {})).await {
+        Ok(r) => r.map_err(|e| e.to_string()),
+        Err(_) => Err("download timed out".into()),
+    }
+}
+
+fn offer(app: &AppHandle, update: &tauri_plugin_updater::Update) {
+    let offer = UpdateOffer { version: update.version.clone(), notes: update.body.clone().unwrap_or_default() };
+    if let Some(pending) = tauri::Manager::try_state::<PendingUpdate>(app) {
+        *crate::state::lock(&pending.0) = Some(offer.clone());
+    }
+    if let Err(e) = app.emit("app:update", offer) {
+        eprintln!("update offer: {e}");
+    }
+}
+
+/// Checks once at start; errors only go to stderr. `poe_running` is the state at app start:
+/// if PoE is closed, the update is downloaded and, if PoE is still closed afterwards, installed
+/// with a restart (never returns on success); otherwise Home gets an offer. With PoE closed the
+/// caller starts the scanner only after this returns (bounded by check + download timeouts).
+pub async fn run_at_start(app: &AppHandle, poe_running_at_start: bool) {
     let update = match check(app).await {
-        Ok(u) => u,
+        Ok(Some(u)) => u,
+        Ok(None) => return,
         Err(e) => {
             eprintln!("update check: {e}");
             return;
         }
     };
-    let poe_running = pov_game::find_poe_window().is_some();
-    let Some(update) = update else { return };
-    match start_action(true, poe_running) {
-        StartAction::Install => {
-            match install(&update).await {
+    match start_action(true, poe_running_at_start) {
+        StartAction::Install => match download(&update).await {
+            Ok(bytes) if install_after_download(poe_running()) => match update.install(bytes) {
                 Ok(()) => app.restart(),
                 Err(e) => eprintln!("update install: {e}"),
-            }
-        }
-        StartAction::Offer => {
-            let offer = UpdateOffer { version: update.version.clone(), notes: update.body.clone().unwrap_or_default() };
-            if let Some(pending) = tauri::Manager::try_state::<PendingUpdate>(app) {
-                *crate::state::lock(&pending.0) = Some(offer.clone());
-            }
-            let _ = app.emit("app:update", offer);
-        }
+            },
+            Ok(_) => offer(app, &update),
+            Err(e) => eprintln!("update download: {e}"),
+        },
+        StartAction::Offer => offer(app, &update),
         StartAction::Nothing => {}
     }
 }
@@ -84,7 +107,8 @@ pub fn update_offer(pending: State<'_, PendingUpdate>) -> Option<UpdateOffer> {
 #[tauri::command]
 pub async fn update_now(app: AppHandle) -> Result<(), String> {
     let update = check(&app).await.map_err(|e| e.to_string())?.ok_or("no update available")?;
-    install(&update).await.map_err(|e| e.to_string())?;
+    let bytes = update.download(|_, _| {}, || {}).await.map_err(|e| e.to_string())?;
+    update.install(bytes).map_err(|e| e.to_string())?;
     app.restart()
 }
 
@@ -98,5 +122,11 @@ mod tests {
         assert_eq!(start_action(true, true), StartAction::Offer);
         assert_eq!(start_action(false, false), StartAction::Nothing);
         assert_eq!(start_action(false, true), StartAction::Nothing);
+    }
+
+    #[test]
+    fn install_is_dropped_when_poe_started_during_the_download() {
+        assert!(install_after_download(false));
+        assert!(!install_after_download(true));
     }
 }

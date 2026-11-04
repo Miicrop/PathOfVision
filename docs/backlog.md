@@ -18,6 +18,7 @@ Open topics and ideas. Nothing here is committed; the project's current state is
 - **Exarch atlas passive** (reportedly a 50 % chance for an additional upside) is untested: collect screenshots with it.
 - **HardMode variants:** when do they spawn? Not Ruthless-only (seen in normal maps).
 - ~~**Profile import/export** as a shareable text code (like PoB codes).~~ Done (board Export/Import, `POV1:` codes).
+- **Short links for profile codes** (like pobb.in for PoB): needs a hosting service and network traffic beyond the update check; only if players ask for it.
 - **In-app mod data updates:** download the newest `mods.json`; new cards show up as "new" on the board.
 - **Profile hotkey switching** (e.g. per farm strategy).
 - **Roll value scaling:** a high roll scores better than a low one within the same tier (needs the player's atlas scaling).

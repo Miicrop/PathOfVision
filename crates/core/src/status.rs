@@ -4,6 +4,9 @@ use serde::Serialize;
 
 use crate::resolution::{Support, support};
 
+/// Same as `vision::MIN_CLIENT_HEIGHT` (core does not depend on vision).
+const MIN_SCAN_HEIGHT: i32 = 480;
+
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum PoeState {
@@ -45,7 +48,12 @@ impl RunnerStatus {
             }
             .to_string()
         });
-        let client_size = ctx.poe.as_ref().map(|w| (w.client.w.max(0) as u32, w.client.h.max(0) as u32));
+        // A minimized window reports 0x0 and a tiny one cannot be scanned: no size, no note.
+        let client_size = ctx
+            .poe
+            .as_ref()
+            .filter(|w| !w.minimized && w.client.h >= MIN_SCAN_HEIGHT)
+            .map(|w| (w.client.w.max(0) as u32, w.client.h.max(0) as u32));
         let resolution = client_size.map(|(w, h)| support(w, h, try_anyway));
         let mut s = RunnerStatus {
             poe,
@@ -155,6 +163,14 @@ mod tests {
         assert_eq!(level(1280, 720, false)["resolution"], "unsupported");
         let none = serde_json::to_value(RunnerStatus::from_context(&ctx(None, None), vec![], false)).unwrap();
         assert!(none["resolution"].is_null() && none["client_size"].is_null());
+    }
+
+    #[test]
+    fn minimized_or_tiny_window_has_no_size_or_resolution() {
+        for w in [PoeWindow { minimized: true, ..sized(0, 0) }, sized(800, 479)] {
+            let s = RunnerStatus::from_context(&ctx(Some(w), Some(AreaKind::Map)), vec![], false);
+            assert_eq!((s.client_size, s.resolution), (None, None));
+        }
     }
 
     #[test]

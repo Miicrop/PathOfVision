@@ -107,7 +107,7 @@ pub fn update_offer(pending: State<'_, PendingUpdate>) -> Option<UpdateOffer> {
 #[tauri::command]
 pub async fn update_now(app: AppHandle) -> Result<(), String> {
     let update = check(&app).await.map_err(|e| e.to_string())?.ok_or("no update available")?;
-    let bytes = update.download(|_, _| {}, || {}).await.map_err(|e| e.to_string())?;
+    let bytes = download(&update).await?;
     update.install(bytes).map_err(|e| e.to_string())?;
     app.restart()
 }

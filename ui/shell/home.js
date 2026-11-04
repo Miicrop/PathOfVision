@@ -63,8 +63,11 @@
       });
   });
 
+  let pendingOffer = null;
+
   /** The update offer: shown while one is pending (PoE was running at start). */
   function showUpdate(offer) {
+    pendingOffer = offer;
     $("update-card").hidden = !offer;
     if (offer) $("update-text").textContent = "Update available: v" + offer.version;
   }
@@ -76,6 +79,7 @@
     $("update-text").textContent = "Installing the update…";
     window.pov.invoke("update_now").catch((e) => {
       btn.disabled = false;
+      if (pendingOffer) $("update-text").textContent = "Update available: v" + pendingOffer.version;
       $("update-error").textContent = "Update failed: " + e;
       $("update-error").hidden = false;
     });

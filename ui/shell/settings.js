@@ -266,6 +266,11 @@
     }
   })();
   window.addEventListener("pagehide", () => {
+    // Text typed into a Number/Path field but not yet committed is committed first.
+    const a = document.activeElement;
+    if (a && a.tagName === "INPUT" && (a.type === "number" || a.type === "text")) {
+      a.dispatchEvent(new Event("change"));
+    }
     flush();
   });
   window.pov.listen("settings:changed", (e) => applied(e.payload));

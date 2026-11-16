@@ -103,6 +103,7 @@ Recommendation:
 - Golden tests (need the local screenshots): `cargo test -p altar --release --test golden -- --ignored`.
 - Evaluate a screenshot set: `cargo run -p altar --release --bin evaluate` (`--mods <file>` game data to match against, default the 3.29 fixture data; `--height <px>` synthetic downscale, `--write <dir>`, `--draft` label draft with the current `data/mods.json`).
 - Run the app from source: `cargo run -p pov-app --release` (`--replay <dir> --hold <s>` cycles screenshots instead of the game, `--stats`, `--hidden`). Headless: `cargo run -p pov-scan --release`.
+- App icon: `python tools/gen_icons.py` builds `app/icons/icon.ico` (16-256 px, window/taskbar/installer) and `icon.png` (32 px, tray) from `app/icons/source/emblem.png` (square, transparent); sizes up to 48 px are sharpened.
 - Installer locally: `cargo tauri build` in `app/` → `target/release/bundle/nsis/`.
 - New screenshots: game windowed at the wanted size, altars with both colors and boxes near HUD and screen edges; full-desktop shots are cut with `tools/crop_client.py <folder> --expect WxH`.
 

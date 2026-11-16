@@ -94,7 +94,7 @@ mod tests {
     #[test]
     fn loads_all_cards() {
         let cards = load_cards(&repo_data_dir().join("mods.json")).unwrap();
-        assert_eq!(cards.len(), 201);
+        assert_eq!(cards.len(), 166);
         assert_eq!(cards[0].id, "CleansingAltarUpsideBossChaosOrb");
         assert_eq!(cards[0].ranges[0], vec![[2.0, 4.0]]);
         assert_eq!(cards[0].templates[0], vec!["FINAL BOSS DROPS # ADDITIONAL CHAOS ORBS"]);

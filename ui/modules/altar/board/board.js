@@ -56,7 +56,7 @@ function colorKeywords(s) {
 // Reward group of an upside, from its icon name in labels.json.
 function rewardOf(m) {
   const icon = m.icon || "";
-  if (icon.endsWith("-scarab")) return "scarab";
+  if (icon.endsWith("-thread")) return "thread";
   if (icon.startsWith("div-card-")) return "divcard";
   if (icon.startsWith("dup-")) return "dup";
   if (icon.startsWith("stat-")) return "stat";

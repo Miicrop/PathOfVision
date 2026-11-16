@@ -1,5 +1,5 @@
 {
-  "gameVersion": "3.29.3.3",
+  "gameVersion": "3.30.0.2",
   "source": "https://repoe-fork.github.io/mods.min.json",
   "mods": [
     {
@@ -601,40 +601,6 @@
       ]
     },
     {
-      "id": "CleansingAltarUpsideBossOrbOfBinding",
-      "altars": [
-        "exarch"
-      ],
-      "side": "upside",
-      "target": "boss",
-      "lines": [
-        "Final Boss drops (2-4) additional Orbs of Binding"
-      ],
-      "weights": {
-        "exarch": 20000
-      },
-      "variants": [
-        {
-          "id": "CleansingAltarUpsideBossOrbOfBinding",
-          "altar": "exarch",
-          "hardMode": false,
-          "lines": [
-            "Final Boss drops (2-4) additional Orbs of Binding"
-          ],
-          "templates": [
-            "Final Boss drops # additional Orbs of Binding"
-          ],
-          "ranges": [
-            [
-              2,
-              4
-            ]
-          ],
-          "weight": 20000
-        }
-      ]
-    },
-    {
       "id": "CleansingAltarUpsideBossOrbOfRegret",
       "altars": [
         "exarch"
@@ -737,28 +703,28 @@
       ]
     },
     {
-      "id": "CleansingAltarUpsideBossScarabAnarchy",
+      "id": "CleansingAltarUpsideBossThreadAbyss",
       "altars": [
         "exarch"
       ],
       "side": "upside",
       "target": "boss",
       "lines": [
-        "Final Boss drops (2-4) additional Anarchy Scarabs"
+        "Final Boss drops (2-4) additional Abyss Threads"
       ],
       "weights": {
-        "exarch": 1584
+        "exarch": 7000
       },
       "variants": [
         {
-          "id": "CleansingAltarUpsideBossScarabAnarchy",
+          "id": "CleansingAltarUpsideBossThreadAbyss",
           "altar": "exarch",
           "hardMode": false,
           "lines": [
-            "Final Boss drops (2-4) additional Anarchy Scarabs"
+            "Final Boss drops (2-4) additional Abyss Threads"
           ],
           "templates": [
-            "Final Boss drops # additional Anarchy Scarabs"
+            "Final Boss drops # additional Abyss Threads"
           ],
           "ranges": [
             [
@@ -766,33 +732,33 @@
               4
             ]
           ],
-          "weight": 1584
+          "weight": 7000
         }
       ]
     },
     {
-      "id": "CleansingAltarUpsideBossScarabBeyond",
+      "id": "CleansingAltarUpsideBossThreadBeasts",
       "altars": [
         "exarch"
       ],
       "side": "upside",
       "target": "boss",
       "lines": [
-        "Final Boss drops (2-4) additional Beyond Scarabs"
+        "Final Boss drops (2-4) additional Bestiary Threads"
       ],
       "weights": {
-        "exarch": 1584
+        "exarch": 7000
       },
       "variants": [
         {
-          "id": "CleansingAltarUpsideBossScarabBeyond",
+          "id": "CleansingAltarUpsideBossThreadBeasts",
           "altar": "exarch",
           "hardMode": false,
           "lines": [
-            "Final Boss drops (2-4) additional Beyond Scarabs"
+            "Final Boss drops (2-4) additional Bestiary Threads"
           ],
           "templates": [
-            "Final Boss drops # additional Beyond Scarabs"
+            "Final Boss drops # additional Bestiary Threads"
           ],
           "ranges": [
             [
@@ -800,33 +766,33 @@
               4
             ]
           ],
-          "weight": 1584
+          "weight": 7000
         }
       ]
     },
     {
-      "id": "CleansingAltarUpsideBossScarabDivination",
+      "id": "CleansingAltarUpsideBossThreadBetrayal",
       "altars": [
         "exarch"
       ],
       "side": "upside",
       "target": "boss",
       "lines": [
-        "Final Boss drops (2-4) additional Divination Scarabs"
+        "Final Boss drops (2-4) additional Betrayal Threads"
       ],
       "weights": {
-        "exarch": 1584
+        "exarch": 7000
       },
       "variants": [
         {
-          "id": "CleansingAltarUpsideBossScarabDivination",
+          "id": "CleansingAltarUpsideBossThreadBetrayal",
           "altar": "exarch",
           "hardMode": false,
           "lines": [
-            "Final Boss drops (2-4) additional Divination Scarabs"
+            "Final Boss drops (2-4) additional Betrayal Threads"
           ],
           "templates": [
-            "Final Boss drops # additional Divination Scarabs"
+            "Final Boss drops # additional Betrayal Threads"
           ],
           "ranges": [
             [
@@ -834,33 +800,33 @@
               4
             ]
           ],
-          "weight": 1584
+          "weight": 7000
         }
       ]
     },
     {
-      "id": "CleansingAltarUpsideBossScarabDomination",
+      "id": "CleansingAltarUpsideBossThreadExpedition",
       "altars": [
         "exarch"
       ],
       "side": "upside",
       "target": "boss",
       "lines": [
-        "Final Boss drops (2-4) additional Domination Scarabs"
+        "Final Boss drops (2-4) additional Expedition Threads"
       ],
       "weights": {
-        "exarch": 1584
+        "exarch": 7000
       },
       "variants": [
         {
-          "id": "CleansingAltarUpsideBossScarabDomination",
+          "id": "CleansingAltarUpsideBossThreadExpedition",
           "altar": "exarch",
           "hardMode": false,
           "lines": [
-            "Final Boss drops (2-4) additional Domination Scarabs"
+            "Final Boss drops (2-4) additional Expedition Threads"
           ],
           "templates": [
-            "Final Boss drops # additional Domination Scarabs"
+            "Final Boss drops # additional Expedition Threads"
           ],
           "ranges": [
             [
@@ -868,33 +834,33 @@
               4
             ]
           ],
-          "weight": 1584
+          "weight": 7000
         }
       ]
     },
     {
-      "id": "CleansingAltarUpsideBossScarabEssence",
+      "id": "CleansingAltarUpsideBossThreadUltimatum",
       "altars": [
         "exarch"
       ],
       "side": "upside",
       "target": "boss",
       "lines": [
-        "Final Boss drops (2-4) additional Essence Scarabs"
+        "Final Boss drops (2-4) additional Ultimatum Threads"
       ],
       "weights": {
-        "exarch": 1584
+        "exarch": 7000
       },
       "variants": [
         {
-          "id": "CleansingAltarUpsideBossScarabEssence",
+          "id": "CleansingAltarUpsideBossThreadUltimatum",
           "altar": "exarch",
           "hardMode": false,
           "lines": [
-            "Final Boss drops (2-4) additional Essence Scarabs"
+            "Final Boss drops (2-4) additional Ultimatum Threads"
           ],
           "templates": [
-            "Final Boss drops # additional Essence Scarabs"
+            "Final Boss drops # additional Ultimatum Threads"
           ],
           "ranges": [
             [
@@ -902,245 +868,7 @@
               4
             ]
           ],
-          "weight": 1584
-        }
-      ]
-    },
-    {
-      "id": "CleansingAltarUpsideBossScarabInfluence",
-      "altars": [
-        "exarch"
-      ],
-      "side": "upside",
-      "target": "boss",
-      "lines": [
-        "Final Boss drops (2-4) additional Influence Scarabs"
-      ],
-      "weights": {
-        "exarch": 1584
-      },
-      "variants": [
-        {
-          "id": "CleansingAltarUpsideBossScarabInfluence",
-          "altar": "exarch",
-          "hardMode": false,
-          "lines": [
-            "Final Boss drops (2-4) additional Influence Scarabs"
-          ],
-          "templates": [
-            "Final Boss drops # additional Influence Scarabs"
-          ],
-          "ranges": [
-            [
-              2,
-              4
-            ]
-          ],
-          "weight": 1584
-        }
-      ]
-    },
-    {
-      "id": "CleansingAltarUpsideBossScarabMaps",
-      "altars": [
-        "exarch"
-      ],
-      "side": "upside",
-      "target": "boss",
-      "lines": [
-        "Final Boss drops (2-4) additional Cartography Scarabs"
-      ],
-      "weights": {
-        "exarch": 1584
-      },
-      "variants": [
-        {
-          "id": "CleansingAltarUpsideBossScarabMaps",
-          "altar": "exarch",
-          "hardMode": false,
-          "lines": [
-            "Final Boss drops (2-4) additional Cartography Scarabs"
-          ],
-          "templates": [
-            "Final Boss drops # additional Cartography Scarabs"
-          ],
-          "ranges": [
-            [
-              2,
-              4
-            ]
-          ],
-          "weight": 1584
-        }
-      ]
-    },
-    {
-      "id": "CleansingAltarUpsideBossScarabMercenaries",
-      "altars": [
-        "exarch"
-      ],
-      "side": "upside",
-      "target": "boss",
-      "lines": [
-        "Final Boss drops (2-4) additional Trarthan Scarabs"
-      ],
-      "weights": {
-        "exarch": 1584
-      },
-      "variants": [
-        {
-          "id": "CleansingAltarUpsideBossScarabMercenaries",
-          "altar": "exarch",
-          "hardMode": false,
-          "lines": [
-            "Final Boss drops (2-4) additional Trarthan Scarabs"
-          ],
-          "templates": [
-            "Final Boss drops # additional Trarthan Scarabs"
-          ],
-          "ranges": [
-            [
-              2,
-              4
-            ]
-          ],
-          "weight": 1584
-        }
-      ]
-    },
-    {
-      "id": "CleansingAltarUpsideBossScarabMisc",
-      "altars": [
-        "exarch"
-      ],
-      "side": "upside",
-      "target": "boss",
-      "lines": [
-        "Final Boss drops (2-4) additional Miscellaneous Scarabs"
-      ],
-      "weights": {
-        "exarch": 1584
-      },
-      "variants": [
-        {
-          "id": "CleansingAltarUpsideBossScarabMisc",
-          "altar": "exarch",
-          "hardMode": false,
-          "lines": [
-            "Final Boss drops (2-4) additional Miscellaneous Scarabs"
-          ],
-          "templates": [
-            "Final Boss drops # additional Miscellaneous Scarabs"
-          ],
-          "ranges": [
-            [
-              2,
-              4
-            ]
-          ],
-          "weight": 1584
-        }
-      ]
-    },
-    {
-      "id": "CleansingAltarUpsideBossScarabStrongbox",
-      "altars": [
-        "exarch"
-      ],
-      "side": "upside",
-      "target": "boss",
-      "lines": [
-        "Final Boss drops (2-4) additional Ambush Scarabs"
-      ],
-      "weights": {
-        "exarch": 1584
-      },
-      "variants": [
-        {
-          "id": "CleansingAltarUpsideBossScarabStrongbox",
-          "altar": "exarch",
-          "hardMode": false,
-          "lines": [
-            "Final Boss drops (2-4) additional Ambush Scarabs"
-          ],
-          "templates": [
-            "Final Boss drops # additional Ambush Scarabs"
-          ],
-          "ranges": [
-            [
-              2,
-              4
-            ]
-          ],
-          "weight": 1584
-        }
-      ]
-    },
-    {
-      "id": "CleansingAltarUpsideBossScarabTorment",
-      "altars": [
-        "exarch"
-      ],
-      "side": "upside",
-      "target": "boss",
-      "lines": [
-        "Final Boss drops (2-4) additional Torment Scarabs"
-      ],
-      "weights": {
-        "exarch": 1584
-      },
-      "variants": [
-        {
-          "id": "CleansingAltarUpsideBossScarabTorment",
-          "altar": "exarch",
-          "hardMode": false,
-          "lines": [
-            "Final Boss drops (2-4) additional Torment Scarabs"
-          ],
-          "templates": [
-            "Final Boss drops # additional Torment Scarabs"
-          ],
-          "ranges": [
-            [
-              2,
-              4
-            ]
-          ],
-          "weight": 1584
-        }
-      ]
-    },
-    {
-      "id": "CleansingAltarUpsideBossScarabUniques",
-      "altars": [
-        "exarch"
-      ],
-      "side": "upside",
-      "target": "boss",
-      "lines": [
-        "Final Boss drops (2-4) additional Titanic Scarabs"
-      ],
-      "weights": {
-        "exarch": 1584
-      },
-      "variants": [
-        {
-          "id": "CleansingAltarUpsideBossScarabUniques",
-          "altar": "exarch",
-          "hardMode": false,
-          "lines": [
-            "Final Boss drops (2-4) additional Titanic Scarabs"
-          ],
-          "templates": [
-            "Final Boss drops # additional Titanic Scarabs"
-          ],
-          "ranges": [
-            [
-              2,
-              4
-            ]
-          ],
-          "weight": 1584
+          "weight": 7000
         }
       ]
     },
@@ -1845,28 +1573,28 @@
       ]
     },
     {
-      "id": "TangledAltarUpsideBossScarabAbyss",
+      "id": "TangledAltarUpsideBossThreadBlight",
       "altars": [
         "eater"
       ],
       "side": "upside",
       "target": "boss",
       "lines": [
-        "Final Boss drops (2-4) additional Abyss Scarabs"
+        "Final Boss drops (2-4) additional Blight Threads"
       ],
       "weights": {
-        "eater": 3187
+        "eater": 12000
       },
       "variants": [
         {
-          "id": "TangledAltarUpsideBossScarabAbyss",
+          "id": "TangledAltarUpsideBossThreadBlight",
           "altar": "eater",
           "hardMode": false,
           "lines": [
-            "Final Boss drops (2-4) additional Abyss Scarabs"
+            "Final Boss drops (2-4) additional Blight Threads"
           ],
           "templates": [
-            "Final Boss drops # additional Abyss Scarabs"
+            "Final Boss drops # additional Blight Threads"
           ],
           "ranges": [
             [
@@ -1874,33 +1602,33 @@
               4
             ]
           ],
-          "weight": 3187
+          "weight": 12000
         }
       ]
     },
     {
-      "id": "TangledAltarUpsideBossScarabBeasts",
+      "id": "TangledAltarUpsideBossThreadBreach",
       "altars": [
         "eater"
       ],
       "side": "upside",
       "target": "boss",
       "lines": [
-        "Final Boss drops (2-4) additional Bestiary Scarabs"
+        "Final Boss drops (2-4) additional Breach Threads"
       ],
       "weights": {
-        "eater": 3187
+        "eater": 12000
       },
       "variants": [
         {
-          "id": "TangledAltarUpsideBossScarabBeasts",
+          "id": "TangledAltarUpsideBossThreadBreach",
           "altar": "eater",
           "hardMode": false,
           "lines": [
-            "Final Boss drops (2-4) additional Bestiary Scarabs"
+            "Final Boss drops (2-4) additional Breach Threads"
           ],
           "templates": [
-            "Final Boss drops # additional Bestiary Scarabs"
+            "Final Boss drops # additional Breach Threads"
           ],
           "ranges": [
             [
@@ -1908,33 +1636,33 @@
               4
             ]
           ],
-          "weight": 3187
+          "weight": 12000
         }
       ]
     },
     {
-      "id": "TangledAltarUpsideBossScarabBetrayal",
+      "id": "TangledAltarUpsideBossThreadIncursion",
       "altars": [
         "eater"
       ],
       "side": "upside",
       "target": "boss",
       "lines": [
-        "Final Boss drops (2-4) additional Betrayal Scarabs"
+        "Final Boss drops (2-4) additional Incursion Threads"
       ],
       "weights": {
-        "eater": 3187
+        "eater": 12000
       },
       "variants": [
         {
-          "id": "TangledAltarUpsideBossScarabBetrayal",
+          "id": "TangledAltarUpsideBossThreadIncursion",
           "altar": "eater",
           "hardMode": false,
           "lines": [
-            "Final Boss drops (2-4) additional Betrayal Scarabs"
+            "Final Boss drops (2-4) additional Incursion Threads"
           ],
           "templates": [
-            "Final Boss drops # additional Betrayal Scarabs"
+            "Final Boss drops # additional Incursion Threads"
           ],
           "ranges": [
             [
@@ -1942,33 +1670,33 @@
               4
             ]
           ],
-          "weight": 3187
+          "weight": 12000
         }
       ]
     },
     {
-      "id": "TangledAltarUpsideBossScarabBlight",
+      "id": "TangledAltarUpsideBossThreadLegion",
       "altars": [
         "eater"
       ],
       "side": "upside",
       "target": "boss",
       "lines": [
-        "Final Boss drops (2-4) additional Blight Scarabs"
+        "Final Boss drops (2-4) additional Legion Threads"
       ],
       "weights": {
-        "eater": 3187
+        "eater": 12000
       },
       "variants": [
         {
-          "id": "TangledAltarUpsideBossScarabBlight",
+          "id": "TangledAltarUpsideBossThreadLegion",
           "altar": "eater",
           "hardMode": false,
           "lines": [
-            "Final Boss drops (2-4) additional Blight Scarabs"
+            "Final Boss drops (2-4) additional Legion Threads"
           ],
           "templates": [
-            "Final Boss drops # additional Blight Scarabs"
+            "Final Boss drops # additional Legion Threads"
           ],
           "ranges": [
             [
@@ -1976,33 +1704,33 @@
               4
             ]
           ],
-          "weight": 3187
+          "weight": 12000
         }
       ]
     },
     {
-      "id": "TangledAltarUpsideBossScarabBreach",
+      "id": "TangledAltarUpsideBossThreadRitual",
       "altars": [
         "eater"
       ],
       "side": "upside",
       "target": "boss",
       "lines": [
-        "Final Boss drops (2-4) additional Breach Scarabs"
+        "Final Boss drops (2-4) additional Ritual Threads"
       ],
       "weights": {
-        "eater": 3187
+        "eater": 12000
       },
       "variants": [
         {
-          "id": "TangledAltarUpsideBossScarabBreach",
+          "id": "TangledAltarUpsideBossThreadRitual",
           "altar": "eater",
           "hardMode": false,
           "lines": [
-            "Final Boss drops (2-4) additional Breach Scarabs"
+            "Final Boss drops (2-4) additional Ritual Threads"
           ],
           "templates": [
-            "Final Boss drops # additional Breach Scarabs"
+            "Final Boss drops # additional Ritual Threads"
           ],
           "ranges": [
             [
@@ -2010,313 +1738,7 @@
               4
             ]
           ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsideBossScarabDelirium",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "boss",
-      "lines": [
-        "Final Boss drops (2-4) additional Delirium Scarabs"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsideBossScarabDelirium",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "Final Boss drops (2-4) additional Delirium Scarabs"
-          ],
-          "templates": [
-            "Final Boss drops # additional Delirium Scarabs"
-          ],
-          "ranges": [
-            [
-              2,
-              4
-            ]
-          ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsideBossScarabExpedition",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "boss",
-      "lines": [
-        "Final Boss drops (2-4) additional Expedition Scarabs"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsideBossScarabExpedition",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "Final Boss drops (2-4) additional Expedition Scarabs"
-          ],
-          "templates": [
-            "Final Boss drops # additional Expedition Scarabs"
-          ],
-          "ranges": [
-            [
-              2,
-              4
-            ]
-          ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsideBossScarabHarvest",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "boss",
-      "lines": [
-        "Final Boss drops (2-4) additional Harvest Scarabs"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsideBossScarabHarvest",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "Final Boss drops (2-4) additional Harvest Scarabs"
-          ],
-          "templates": [
-            "Final Boss drops # additional Harvest Scarabs"
-          ],
-          "ranges": [
-            [
-              2,
-              4
-            ]
-          ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsideBossScarabIncursion",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "boss",
-      "lines": [
-        "Final Boss drops (2-4) additional Incursion Scarabs"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsideBossScarabIncursion",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "Final Boss drops (2-4) additional Incursion Scarabs"
-          ],
-          "templates": [
-            "Final Boss drops # additional Incursion Scarabs"
-          ],
-          "ranges": [
-            [
-              2,
-              4
-            ]
-          ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsideBossScarabLegion",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "boss",
-      "lines": [
-        "Final Boss drops (2-4) additional Legion Scarabs"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsideBossScarabLegion",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "Final Boss drops (2-4) additional Legion Scarabs"
-          ],
-          "templates": [
-            "Final Boss drops # additional Legion Scarabs"
-          ],
-          "ranges": [
-            [
-              2,
-              4
-            ]
-          ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsideBossScarabRitual",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "boss",
-      "lines": [
-        "Final Boss drops (2-4) additional Ritual Scarabs"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsideBossScarabRitual",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "Final Boss drops (2-4) additional Ritual Scarabs"
-          ],
-          "templates": [
-            "Final Boss drops # additional Ritual Scarabs"
-          ],
-          "ranges": [
-            [
-              2,
-              4
-            ]
-          ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsideBossScarabSettlers",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "boss",
-      "lines": [
-        "Final Boss drops (2-4) additional Kalguuran Scarabs"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsideBossScarabSettlers",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "Final Boss drops (2-4) additional Kalguuran Scarabs"
-          ],
-          "templates": [
-            "Final Boss drops # additional Kalguuran Scarabs"
-          ],
-          "ranges": [
-            [
-              2,
-              4
-            ]
-          ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsideBossScarabUltimatum",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "boss",
-      "lines": [
-        "Final Boss drops (2-4) additional Ultimatum Scarabs"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsideBossScarabUltimatum",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "Final Boss drops (2-4) additional Ultimatum Scarabs"
-          ],
-          "templates": [
-            "Final Boss drops # additional Ultimatum Scarabs"
-          ],
-          "ranges": [
-            [
-              2,
-              4
-            ]
-          ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAtlarUpsideBossScarabSulphite",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "boss",
-      "lines": [
-        "Final Boss drops (2-4) additional Sulphite Scarabs"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAtlarUpsideBossScarabSulphite",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "Final Boss drops (2-4) additional Sulphite Scarabs"
-          ],
-          "templates": [
-            "Final Boss drops # additional Sulphite Scarabs"
-          ],
-          "ranges": [
-            [
-              2,
-              4
-            ]
-          ],
-          "weight": 3187
+          "weight": 12000
         }
       ]
     },
@@ -2919,40 +2341,6 @@
       ]
     },
     {
-      "id": "CleansingAltarUpsideMonsterOrbOfBinding",
-      "altars": [
-        "exarch"
-      ],
-      "side": "upside",
-      "target": "minions",
-      "lines": [
-        "(1.6-3.2)% chance to drop an additional Orb of Binding"
-      ],
-      "weights": {
-        "exarch": 20000
-      },
-      "variants": [
-        {
-          "id": "CleansingAltarUpsideMonsterOrbOfBinding",
-          "altar": "exarch",
-          "hardMode": false,
-          "lines": [
-            "(1.6-3.2)% chance to drop an additional Orb of Binding"
-          ],
-          "templates": [
-            "#% chance to drop an additional Orb of Binding"
-          ],
-          "ranges": [
-            [
-              1.6,
-              3.2
-            ]
-          ],
-          "weight": 20000
-        }
-      ]
-    },
-    {
       "id": "CleansingAltarUpsideMonsterOrbOfRegret",
       "altars": [
         "exarch"
@@ -3055,28 +2443,28 @@
       ]
     },
     {
-      "id": "CleansingAltarUpsideMonsterScarabAnarchy",
+      "id": "CleansingAltarUpsideMonsterThreadAbyss",
       "altars": [
         "exarch"
       ],
       "side": "upside",
       "target": "minions",
       "lines": [
-        "(1.6-3.2)% chance to drop an additional Anarchy Scarab"
+        "(1.6-3.2)% chance to drop an additional Abyss Thread"
       ],
       "weights": {
-        "exarch": 1584
+        "exarch": 7000
       },
       "variants": [
         {
-          "id": "CleansingAltarUpsideMonsterScarabAnarchy",
+          "id": "CleansingAltarUpsideMonsterThreadAbyss",
           "altar": "exarch",
           "hardMode": false,
           "lines": [
-            "(1.6-3.2)% chance to drop an additional Anarchy Scarab"
+            "(1.6-3.2)% chance to drop an additional Abyss Thread"
           ],
           "templates": [
-            "#% chance to drop an additional Anarchy Scarab"
+            "#% chance to drop an additional Abyss Thread"
           ],
           "ranges": [
             [
@@ -3084,33 +2472,33 @@
               3.2
             ]
           ],
-          "weight": 1584
+          "weight": 7000
         }
       ]
     },
     {
-      "id": "CleansingAltarUpsideMonsterScarabBeyond",
+      "id": "CleansingAltarUpsideMonsterThreadBeasts",
       "altars": [
         "exarch"
       ],
       "side": "upside",
       "target": "minions",
       "lines": [
-        "(1.6-3.2)% chance to drop an additional Beyond Scarab"
+        "(1.6-3.2)% chance to drop an additional Bestiary Thread"
       ],
       "weights": {
-        "exarch": 1584
+        "exarch": 7000
       },
       "variants": [
         {
-          "id": "CleansingAltarUpsideMonsterScarabBeyond",
+          "id": "CleansingAltarUpsideMonsterThreadBeasts",
           "altar": "exarch",
           "hardMode": false,
           "lines": [
-            "(1.6-3.2)% chance to drop an additional Beyond Scarab"
+            "(1.6-3.2)% chance to drop an additional Bestiary Thread"
           ],
           "templates": [
-            "#% chance to drop an additional Beyond Scarab"
+            "#% chance to drop an additional Bestiary Thread"
           ],
           "ranges": [
             [
@@ -3118,33 +2506,33 @@
               3.2
             ]
           ],
-          "weight": 1584
+          "weight": 7000
         }
       ]
     },
     {
-      "id": "CleansingAltarUpsideMonsterScarabDivination",
+      "id": "CleansingAltarUpsideMonsterThreadBetrayal",
       "altars": [
         "exarch"
       ],
       "side": "upside",
       "target": "minions",
       "lines": [
-        "(1.6-3.2)% chance to drop an additional Divination Scarab"
+        "(1.6-3.2)% chance to drop an additional Betrayal Thread"
       ],
       "weights": {
-        "exarch": 1584
+        "exarch": 7000
       },
       "variants": [
         {
-          "id": "CleansingAltarUpsideMonsterScarabDivination",
+          "id": "CleansingAltarUpsideMonsterThreadBetrayal",
           "altar": "exarch",
           "hardMode": false,
           "lines": [
-            "(1.6-3.2)% chance to drop an additional Divination Scarab"
+            "(1.6-3.2)% chance to drop an additional Betrayal Thread"
           ],
           "templates": [
-            "#% chance to drop an additional Divination Scarab"
+            "#% chance to drop an additional Betrayal Thread"
           ],
           "ranges": [
             [
@@ -3152,33 +2540,33 @@
               3.2
             ]
           ],
-          "weight": 1584
+          "weight": 7000
         }
       ]
     },
     {
-      "id": "CleansingAltarUpsideMonsterScarabDomination",
+      "id": "CleansingAltarUpsideMonsterThreadExpedition",
       "altars": [
         "exarch"
       ],
       "side": "upside",
       "target": "minions",
       "lines": [
-        "(1.6-3.2)% chance to drop an additional Domination Scarab"
+        "(1.6-3.2)% chance to drop an additional Expedition Thread"
       ],
       "weights": {
-        "exarch": 1584
+        "exarch": 7000
       },
       "variants": [
         {
-          "id": "CleansingAltarUpsideMonsterScarabDomination",
+          "id": "CleansingAltarUpsideMonsterThreadExpedition",
           "altar": "exarch",
           "hardMode": false,
           "lines": [
-            "(1.6-3.2)% chance to drop an additional Domination Scarab"
+            "(1.6-3.2)% chance to drop an additional Expedition Thread"
           ],
           "templates": [
-            "#% chance to drop an additional Domination Scarab"
+            "#% chance to drop an additional Expedition Thread"
           ],
           "ranges": [
             [
@@ -3186,33 +2574,33 @@
               3.2
             ]
           ],
-          "weight": 1584
+          "weight": 7000
         }
       ]
     },
     {
-      "id": "CleansingAltarUpsideMonsterScarabEssence",
+      "id": "CleansingAltarUpsideMonsterThreadUltimatum",
       "altars": [
         "exarch"
       ],
       "side": "upside",
       "target": "minions",
       "lines": [
-        "(1.6-3.2)% chance to drop an additional Essence Scarab"
+        "(1.6-3.2)% chance to drop an additional Ultimatum Thread"
       ],
       "weights": {
-        "exarch": 1584
+        "exarch": 7000
       },
       "variants": [
         {
-          "id": "CleansingAltarUpsideMonsterScarabEssence",
+          "id": "CleansingAltarUpsideMonsterThreadUltimatum",
           "altar": "exarch",
           "hardMode": false,
           "lines": [
-            "(1.6-3.2)% chance to drop an additional Essence Scarab"
+            "(1.6-3.2)% chance to drop an additional Ultimatum Thread"
           ],
           "templates": [
-            "#% chance to drop an additional Essence Scarab"
+            "#% chance to drop an additional Ultimatum Thread"
           ],
           "ranges": [
             [
@@ -3220,245 +2608,7 @@
               3.2
             ]
           ],
-          "weight": 1584
-        }
-      ]
-    },
-    {
-      "id": "CleansingAltarUpsideMonsterScarabInfluence",
-      "altars": [
-        "exarch"
-      ],
-      "side": "upside",
-      "target": "minions",
-      "lines": [
-        "(1.6-3.2)% chance to drop an additional Influence Scarab"
-      ],
-      "weights": {
-        "exarch": 1584
-      },
-      "variants": [
-        {
-          "id": "CleansingAltarUpsideMonsterScarabInfluence",
-          "altar": "exarch",
-          "hardMode": false,
-          "lines": [
-            "(1.6-3.2)% chance to drop an additional Influence Scarab"
-          ],
-          "templates": [
-            "#% chance to drop an additional Influence Scarab"
-          ],
-          "ranges": [
-            [
-              1.6,
-              3.2
-            ]
-          ],
-          "weight": 1584
-        }
-      ]
-    },
-    {
-      "id": "CleansingAltarUpsideMonsterScarabMaps",
-      "altars": [
-        "exarch"
-      ],
-      "side": "upside",
-      "target": "minions",
-      "lines": [
-        "(1.6-3.2)% chance to drop an additional Cartography Scarab"
-      ],
-      "weights": {
-        "exarch": 1584
-      },
-      "variants": [
-        {
-          "id": "CleansingAltarUpsideMonsterScarabMaps",
-          "altar": "exarch",
-          "hardMode": false,
-          "lines": [
-            "(1.6-3.2)% chance to drop an additional Cartography Scarab"
-          ],
-          "templates": [
-            "#% chance to drop an additional Cartography Scarab"
-          ],
-          "ranges": [
-            [
-              1.6,
-              3.2
-            ]
-          ],
-          "weight": 1584
-        }
-      ]
-    },
-    {
-      "id": "CleansingAltarUpsideMonsterScarabMercenaries",
-      "altars": [
-        "exarch"
-      ],
-      "side": "upside",
-      "target": "minions",
-      "lines": [
-        "(1.6-3.2)% chance to drop an additional Trarthan Scarab"
-      ],
-      "weights": {
-        "exarch": 1584
-      },
-      "variants": [
-        {
-          "id": "CleansingAltarUpsideMonsterScarabMercenaries",
-          "altar": "exarch",
-          "hardMode": false,
-          "lines": [
-            "(1.6-3.2)% chance to drop an additional Trarthan Scarab"
-          ],
-          "templates": [
-            "#% chance to drop an additional Trarthan Scarab"
-          ],
-          "ranges": [
-            [
-              1.6,
-              3.2
-            ]
-          ],
-          "weight": 1584
-        }
-      ]
-    },
-    {
-      "id": "CleansingAltarUpsideMonsterScarabMisc",
-      "altars": [
-        "exarch"
-      ],
-      "side": "upside",
-      "target": "minions",
-      "lines": [
-        "(1.6-3.2)% chance to drop an additional Miscellaneous Scarab"
-      ],
-      "weights": {
-        "exarch": 1584
-      },
-      "variants": [
-        {
-          "id": "CleansingAltarUpsideMonsterScarabMisc",
-          "altar": "exarch",
-          "hardMode": false,
-          "lines": [
-            "(1.6-3.2)% chance to drop an additional Miscellaneous Scarab"
-          ],
-          "templates": [
-            "#% chance to drop an additional Miscellaneous Scarab"
-          ],
-          "ranges": [
-            [
-              1.6,
-              3.2
-            ]
-          ],
-          "weight": 1584
-        }
-      ]
-    },
-    {
-      "id": "CleansingAltarUpsideMonsterScarabStrongbox",
-      "altars": [
-        "exarch"
-      ],
-      "side": "upside",
-      "target": "minions",
-      "lines": [
-        "(1.6-3.2)% chance to drop an additional Ambush Scarab"
-      ],
-      "weights": {
-        "exarch": 1584
-      },
-      "variants": [
-        {
-          "id": "CleansingAltarUpsideMonsterScarabStrongbox",
-          "altar": "exarch",
-          "hardMode": false,
-          "lines": [
-            "(1.6-3.2)% chance to drop an additional Ambush Scarab"
-          ],
-          "templates": [
-            "#% chance to drop an additional Ambush Scarab"
-          ],
-          "ranges": [
-            [
-              1.6,
-              3.2
-            ]
-          ],
-          "weight": 1584
-        }
-      ]
-    },
-    {
-      "id": "CleansingAltarUpsideMonsterScarabTorment",
-      "altars": [
-        "exarch"
-      ],
-      "side": "upside",
-      "target": "minions",
-      "lines": [
-        "(1.6-3.2)% chance to drop an additional Torment Scarab"
-      ],
-      "weights": {
-        "exarch": 1584
-      },
-      "variants": [
-        {
-          "id": "CleansingAltarUpsideMonsterScarabTorment",
-          "altar": "exarch",
-          "hardMode": false,
-          "lines": [
-            "(1.6-3.2)% chance to drop an additional Torment Scarab"
-          ],
-          "templates": [
-            "#% chance to drop an additional Torment Scarab"
-          ],
-          "ranges": [
-            [
-              1.6,
-              3.2
-            ]
-          ],
-          "weight": 1584
-        }
-      ]
-    },
-    {
-      "id": "CleansingAltarUpsideMonsterScarabUniques",
-      "altars": [
-        "exarch"
-      ],
-      "side": "upside",
-      "target": "minions",
-      "lines": [
-        "(1.6-3.2)% chance to drop an additional Titanic Scarab"
-      ],
-      "weights": {
-        "exarch": 1584
-      },
-      "variants": [
-        {
-          "id": "CleansingAltarUpsideMonsterScarabUniques",
-          "altar": "exarch",
-          "hardMode": false,
-          "lines": [
-            "(1.6-3.2)% chance to drop an additional Titanic Scarab"
-          ],
-          "templates": [
-            "#% chance to drop an additional Titanic Scarab"
-          ],
-          "ranges": [
-            [
-              1.6,
-              3.2
-            ]
-          ],
-          "weight": 1584
+          "weight": 7000
         }
       ]
     },
@@ -4163,28 +3313,28 @@
       ]
     },
     {
-      "id": "TangledAltarUpsideMonsterScarabAbyss",
+      "id": "TangledAltarUpsideMonsterThreadBlight",
       "altars": [
         "eater"
       ],
       "side": "upside",
       "target": "minions",
       "lines": [
-        "(1.6-3.2)% chance to drop an additional Abyss Scarab"
+        "(1.6-3.2)% chance to drop an additional Blight Thread"
       ],
       "weights": {
-        "eater": 3187
+        "eater": 12000
       },
       "variants": [
         {
-          "id": "TangledAltarUpsideMonsterScarabAbyss",
+          "id": "TangledAltarUpsideMonsterThreadBlight",
           "altar": "eater",
           "hardMode": false,
           "lines": [
-            "(1.6-3.2)% chance to drop an additional Abyss Scarab"
+            "(1.6-3.2)% chance to drop an additional Blight Thread"
           ],
           "templates": [
-            "#% chance to drop an additional Abyss Scarab"
+            "#% chance to drop an additional Blight Thread"
           ],
           "ranges": [
             [
@@ -4192,33 +3342,33 @@
               3.2
             ]
           ],
-          "weight": 3187
+          "weight": 12000
         }
       ]
     },
     {
-      "id": "TangledAltarUpsideMonsterScarabBeasts",
+      "id": "TangledAltarUpsideMonsterThreadBreach",
       "altars": [
         "eater"
       ],
       "side": "upside",
       "target": "minions",
       "lines": [
-        "(1.6-3.2)% chance to drop an additional Bestiary Scarab"
+        "(1.6-3.2)% chance to drop an additional Breach Thread"
       ],
       "weights": {
-        "eater": 3187
+        "eater": 12000
       },
       "variants": [
         {
-          "id": "TangledAltarUpsideMonsterScarabBeasts",
+          "id": "TangledAltarUpsideMonsterThreadBreach",
           "altar": "eater",
           "hardMode": false,
           "lines": [
-            "(1.6-3.2)% chance to drop an additional Bestiary Scarab"
+            "(1.6-3.2)% chance to drop an additional Breach Thread"
           ],
           "templates": [
-            "#% chance to drop an additional Bestiary Scarab"
+            "#% chance to drop an additional Breach Thread"
           ],
           "ranges": [
             [
@@ -4226,33 +3376,33 @@
               3.2
             ]
           ],
-          "weight": 3187
+          "weight": 12000
         }
       ]
     },
     {
-      "id": "TangledAltarUpsideMonsterScarabBetrayal",
+      "id": "TangledAltarUpsideMonsterThreadIncursion",
       "altars": [
         "eater"
       ],
       "side": "upside",
       "target": "minions",
       "lines": [
-        "(1.6-3.2)% chance to drop an additional Betrayal Scarab"
+        "(1.6-3.2)% chance to drop an additional Incursion Thread"
       ],
       "weights": {
-        "eater": 3187
+        "eater": 12000
       },
       "variants": [
         {
-          "id": "TangledAltarUpsideMonsterScarabBetrayal",
+          "id": "TangledAltarUpsideMonsterThreadIncursion",
           "altar": "eater",
           "hardMode": false,
           "lines": [
-            "(1.6-3.2)% chance to drop an additional Betrayal Scarab"
+            "(1.6-3.2)% chance to drop an additional Incursion Thread"
           ],
           "templates": [
-            "#% chance to drop an additional Betrayal Scarab"
+            "#% chance to drop an additional Incursion Thread"
           ],
           "ranges": [
             [
@@ -4260,33 +3410,33 @@
               3.2
             ]
           ],
-          "weight": 3187
+          "weight": 12000
         }
       ]
     },
     {
-      "id": "TangledAltarUpsideMonsterScarabBlight",
+      "id": "TangledAltarUpsideMonsterThreadLegion",
       "altars": [
         "eater"
       ],
       "side": "upside",
       "target": "minions",
       "lines": [
-        "(1.6-3.2)% chance to drop an additional Blight Scarab"
+        "(1.6-3.2)% chance to drop an additional Legion Thread"
       ],
       "weights": {
-        "eater": 3187
+        "eater": 12000
       },
       "variants": [
         {
-          "id": "TangledAltarUpsideMonsterScarabBlight",
+          "id": "TangledAltarUpsideMonsterThreadLegion",
           "altar": "eater",
           "hardMode": false,
           "lines": [
-            "(1.6-3.2)% chance to drop an additional Blight Scarab"
+            "(1.6-3.2)% chance to drop an additional Legion Thread"
           ],
           "templates": [
-            "#% chance to drop an additional Blight Scarab"
+            "#% chance to drop an additional Legion Thread"
           ],
           "ranges": [
             [
@@ -4294,33 +3444,33 @@
               3.2
             ]
           ],
-          "weight": 3187
+          "weight": 12000
         }
       ]
     },
     {
-      "id": "TangledAltarUpsideMonsterScarabBreach",
+      "id": "TangledAltarUpsideMonsterThreadRitual",
       "altars": [
         "eater"
       ],
       "side": "upside",
       "target": "minions",
       "lines": [
-        "(1.6-3.2)% chance to drop an additional Breach Scarab"
+        "(1.6-3.2)% chance to drop an additional Ritual Thread"
       ],
       "weights": {
-        "eater": 3187
+        "eater": 12000
       },
       "variants": [
         {
-          "id": "TangledAltarUpsideMonsterScarabBreach",
+          "id": "TangledAltarUpsideMonsterThreadRitual",
           "altar": "eater",
           "hardMode": false,
           "lines": [
-            "(1.6-3.2)% chance to drop an additional Breach Scarab"
+            "(1.6-3.2)% chance to drop an additional Ritual Thread"
           ],
           "templates": [
-            "#% chance to drop an additional Breach Scarab"
+            "#% chance to drop an additional Ritual Thread"
           ],
           "ranges": [
             [
@@ -4328,313 +3478,7 @@
               3.2
             ]
           ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsideMonsterScarabDelirium",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "minions",
-      "lines": [
-        "(1.6-3.2)% chance to drop an additional Delirium Scarab"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsideMonsterScarabDelirium",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "(1.6-3.2)% chance to drop an additional Delirium Scarab"
-          ],
-          "templates": [
-            "#% chance to drop an additional Delirium Scarab"
-          ],
-          "ranges": [
-            [
-              1.6,
-              3.2
-            ]
-          ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsideMonsterScarabExpedition",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "minions",
-      "lines": [
-        "(1.6-3.2)% chance to drop an additional Expedition Scarab"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsideMonsterScarabExpedition",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "(1.6-3.2)% chance to drop an additional Expedition Scarab"
-          ],
-          "templates": [
-            "#% chance to drop an additional Expedition Scarab"
-          ],
-          "ranges": [
-            [
-              1.6,
-              3.2
-            ]
-          ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsideMonsterScarabHarvest",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "minions",
-      "lines": [
-        "(1.6-3.2)% chance to drop an additional Harvest Scarab"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsideMonsterScarabHarvest",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "(1.6-3.2)% chance to drop an additional Harvest Scarab"
-          ],
-          "templates": [
-            "#% chance to drop an additional Harvest Scarab"
-          ],
-          "ranges": [
-            [
-              1.6,
-              3.2
-            ]
-          ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsideMonsterScarabIncursion",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "minions",
-      "lines": [
-        "(1.6-3.2)% chance to drop an additional Incursion Scarab"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsideMonsterScarabIncursion",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "(1.6-3.2)% chance to drop an additional Incursion Scarab"
-          ],
-          "templates": [
-            "#% chance to drop an additional Incursion Scarab"
-          ],
-          "ranges": [
-            [
-              1.6,
-              3.2
-            ]
-          ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsideMonsterScarabLegion",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "minions",
-      "lines": [
-        "(1.6-3.2)% chance to drop an additional Legion Scarab"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsideMonsterScarabLegion",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "(1.6-3.2)% chance to drop an additional Legion Scarab"
-          ],
-          "templates": [
-            "#% chance to drop an additional Legion Scarab"
-          ],
-          "ranges": [
-            [
-              1.6,
-              3.2
-            ]
-          ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsideMonsterScarabRitual",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "minions",
-      "lines": [
-        "(1.6-3.2)% chance to drop an additional Ritual Scarab"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsideMonsterScarabRitual",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "(1.6-3.2)% chance to drop an additional Ritual Scarab"
-          ],
-          "templates": [
-            "#% chance to drop an additional Ritual Scarab"
-          ],
-          "ranges": [
-            [
-              1.6,
-              3.2
-            ]
-          ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsideMonsterScarabSettlers",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "minions",
-      "lines": [
-        "(1.6-3.2)% chance to drop an additional Kalguuran Scarab"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsideMonsterScarabSettlers",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "(1.6-3.2)% chance to drop an additional Kalguuran Scarab"
-          ],
-          "templates": [
-            "#% chance to drop an additional Kalguuran Scarab"
-          ],
-          "ranges": [
-            [
-              1.6,
-              3.2
-            ]
-          ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsideMonsterScarabSulphite",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "minions",
-      "lines": [
-        "(1.6-3.2)% chance to drop an additional Sulphite Scarab"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsideMonsterScarabSulphite",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "(1.6-3.2)% chance to drop an additional Sulphite Scarab"
-          ],
-          "templates": [
-            "#% chance to drop an additional Sulphite Scarab"
-          ],
-          "ranges": [
-            [
-              1.6,
-              3.2
-            ]
-          ],
-          "weight": 3187
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsideMonsterScarabUltimatum",
-      "altars": [
-        "eater"
-      ],
-      "side": "upside",
-      "target": "minions",
-      "lines": [
-        "(1.6-3.2)% chance to drop an additional Ultimatum Scarab"
-      ],
-      "weights": {
-        "eater": 3187
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsideMonsterScarabUltimatum",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "(1.6-3.2)% chance to drop an additional Ultimatum Scarab"
-          ],
-          "templates": [
-            "#% chance to drop an additional Ultimatum Scarab"
-          ],
-          "ranges": [
-            [
-              1.6,
-              3.2
-            ]
-          ],
-          "weight": 3187
+          "weight": 12000
         }
       ]
     },
@@ -4758,8 +3602,8 @@
         "Basic Currency Items dropped by slain Enemies have (15-30)% chance to be Duplicated"
       ],
       "weights": {
-        "eater": 33660,
-        "exarch": 15723
+        "eater": 50220,
+        "exarch": 23246
       },
       "variants": [
         {
@@ -4778,7 +3622,7 @@
               30
             ]
           ],
-          "weight": 33160
+          "weight": 49720
         },
         {
           "id": "CleansingAltarUpsidePlayerDuplicateDroppedCurrency",
@@ -4796,7 +3640,7 @@
               30
             ]
           ],
-          "weight": 15223
+          "weight": 22746
         },
         {
           "id": "HardModeTangledAltarUpsidePlayerDuplicateDroppedCurrency",
@@ -4848,8 +3692,8 @@
         "Divination Cards dropped by slain Enemies have (15-30)% chance to be Duplicated"
       ],
       "weights": {
-        "eater": 33160,
-        "exarch": 15223
+        "eater": 49720,
+        "exarch": 22746
       },
       "variants": [
         {
@@ -4868,7 +3712,7 @@
               30
             ]
           ],
-          "weight": 33160
+          "weight": 49720
         },
         {
           "id": "CleansingAltarUpsidePlayerDuplicateDroppedDivinationCards",
@@ -4886,7 +3730,7 @@
               30
             ]
           ],
-          "weight": 15223
+          "weight": 22746
         }
       ]
     },
@@ -4902,8 +3746,8 @@
         "Maps dropped by slain Enemies have (15-30)% chance to be Duplicated"
       ],
       "weights": {
-        "eater": 33660,
-        "exarch": 15723
+        "eater": 50220,
+        "exarch": 23246
       },
       "variants": [
         {
@@ -4922,7 +3766,7 @@
               30
             ]
           ],
-          "weight": 33160
+          "weight": 49720
         },
         {
           "id": "CleansingAltarUpsidePlayerDuplicateDroppedMaps",
@@ -4940,7 +3784,7 @@
               30
             ]
           ],
-          "weight": 15223
+          "weight": 22746
         },
         {
           "id": "HardModeTangledAltarUpsidePlayerDuplicateDroppedMaps",
@@ -4981,7 +3825,7 @@
       ]
     },
     {
-      "id": "TangledAltarUpsidePlayerDuplicateDroppedScarabs",
+      "id": "TangledAltarUpsidePlayerDuplicateDroppedThreads",
       "altars": [
         "eater",
         "exarch"
@@ -4989,22 +3833,22 @@
       "side": "upside",
       "target": "player",
       "lines": [
-        "Scarabs dropped by slain Enemies have (15-30)% chance to be Duplicated"
+        "Threads dropped by slain Enemies have (15-30)% chance to be Duplicated"
       ],
       "weights": {
-        "eater": 33160,
-        "exarch": 15223
+        "eater": 49720,
+        "exarch": 22746
       },
       "variants": [
         {
-          "id": "TangledAltarUpsidePlayerDuplicateDroppedScarabs",
+          "id": "TangledAltarUpsidePlayerDuplicateDroppedThreads",
           "altar": "eater",
           "hardMode": false,
           "lines": [
-            "Scarabs dropped by slain Enemies have (15-30)% chance to be Duplicated"
+            "Threads dropped by slain Enemies have (15-30)% chance to be Duplicated"
           ],
           "templates": [
-            "Scarabs dropped by slain Enemies have #% chance to be Duplicated"
+            "Threads dropped by slain Enemies have #% chance to be Duplicated"
           ],
           "ranges": [
             [
@@ -5012,17 +3856,17 @@
               30
             ]
           ],
-          "weight": 33160
+          "weight": 49720
         },
         {
-          "id": "CleansingAltarUpsidePlayerDuplicateDroppedScarabs",
+          "id": "CleansingAltarUpsidePlayerDuplicateDroppedThreads",
           "altar": "exarch",
           "hardMode": false,
           "lines": [
-            "Scarabs dropped by slain Enemies have (15-30)% chance to be Duplicated"
+            "Threads dropped by slain Enemies have (15-30)% chance to be Duplicated"
           ],
           "templates": [
-            "Scarabs dropped by slain Enemies have #% chance to be Duplicated"
+            "Threads dropped by slain Enemies have #% chance to be Duplicated"
           ],
           "ranges": [
             [
@@ -5030,7 +3874,7 @@
               30
             ]
           ],
-          "weight": 15223
+          "weight": 22746
         }
       ]
     },
@@ -5046,8 +3890,8 @@
         "Unique Items dropped by slain Enemies have (15-30)% chance to be Duplicated"
       ],
       "weights": {
-        "eater": 33160,
-        "exarch": 15223
+        "eater": 49720,
+        "exarch": 22746
       },
       "variants": [
         {
@@ -5066,7 +3910,7 @@
               30
             ]
           ],
-          "weight": 33160
+          "weight": 49720
         },
         {
           "id": "CleansingAltarUpsidePlayerDuplicateDroppedUniques",
@@ -5084,97 +3928,7 @@
               30
             ]
           ],
-          "weight": 15223
-        }
-      ]
-    },
-    {
-      "id": "TangledAltarUpsidePlayerIncreasedQuantity",
-      "altars": [
-        "eater",
-        "exarch"
-      ],
-      "side": "upside",
-      "target": "player",
-      "lines": [
-        "(10-20)% increased Quantity of Items found in this Area"
-      ],
-      "weights": {
-        "eater": 166100,
-        "exarch": 75725
-      },
-      "variants": [
-        {
-          "id": "TangledAltarUpsidePlayerIncreasedQuantity",
-          "altar": "eater",
-          "hardMode": false,
-          "lines": [
-            "(10-20)% increased Quantity of Items found in this Area"
-          ],
-          "templates": [
-            "#% increased Quantity of Items found in this Area"
-          ],
-          "ranges": [
-            [
-              10,
-              20
-            ]
-          ],
-          "weight": 165600
-        },
-        {
-          "id": "CleansingAltarUpsidePlayerIncreasedQuantity",
-          "altar": "exarch",
-          "hardMode": false,
-          "lines": [
-            "(10-20)% increased Quantity of Items found in this Area"
-          ],
-          "templates": [
-            "#% increased Quantity of Items found in this Area"
-          ],
-          "ranges": [
-            [
-              10,
-              20
-            ]
-          ],
-          "weight": 75225
-        },
-        {
-          "id": "HardModeTangledAltarUpsidePlayerIncreasedQuantity",
-          "altar": "eater",
-          "hardMode": true,
-          "lines": [
-            "(10-15)% increased Quantity of Items found in this Area"
-          ],
-          "templates": [
-            "#% increased Quantity of Items found in this Area"
-          ],
-          "ranges": [
-            [
-              10,
-              15
-            ]
-          ],
-          "weight": 500
-        },
-        {
-          "id": "HardModeCleansingAltarUpsidePlayerIncreasedQuantity",
-          "altar": "exarch",
-          "hardMode": true,
-          "lines": [
-            "(10-15)% increased Quantity of Items found in this Area"
-          ],
-          "templates": [
-            "#% increased Quantity of Items found in this Area"
-          ],
-          "ranges": [
-            [
-              10,
-              15
-            ]
-          ],
-          "weight": 500
+          "weight": 22746
         }
       ]
     },
@@ -5187,11 +3941,11 @@
       "side": "upside",
       "target": "player",
       "lines": [
-        "(15-30)% increased Rarity of Items found in this Area"
+        "(10-20)% increased Rarity of Items found in this Area"
       ],
       "weights": {
-        "eater": 166100,
-        "exarch": 75725
+        "eater": 249400,
+        "exarch": 113840
       },
       "variants": [
         {
@@ -5199,36 +3953,36 @@
           "altar": "eater",
           "hardMode": false,
           "lines": [
-            "(15-30)% increased Rarity of Items found in this Area"
+            "(10-20)% increased Rarity of Items found in this Area"
           ],
           "templates": [
             "#% increased Rarity of Items found in this Area"
           ],
           "ranges": [
             [
-              15,
-              30
+              10,
+              20
             ]
           ],
-          "weight": 165600
+          "weight": 248400
         },
         {
           "id": "CleansingAltarUpsidePlayerIncreasedRarity",
           "altar": "exarch",
           "hardMode": false,
           "lines": [
-            "(15-30)% increased Rarity of Items found in this Area"
+            "(10-20)% increased Rarity of Items found in this Area"
           ],
           "templates": [
             "#% increased Rarity of Items found in this Area"
           ],
           "ranges": [
             [
-              15,
-              30
+              10,
+              20
             ]
           ],
-          "weight": 75225
+          "weight": 112840
         },
         {
           "id": "HardModeTangledAltarUpsidePlayerIncreasedRarity",
@@ -5246,7 +4000,7 @@
               10
             ]
           ],
-          "weight": 500
+          "weight": 1000
         },
         {
           "id": "HardModeCleansingAltarUpsidePlayerIncreasedRarity",
@@ -5264,7 +4018,7 @@
               10
             ]
           ],
-          "weight": 500
+          "weight": 1000
         }
       ]
     },
@@ -5436,7 +4190,7 @@
       "side": "downside",
       "target": "boss",
       "lines": [
-        "Nearby Enemies are Hindered, with 40% reduced Movement Speed"
+        "Enemies within 3.5 metres are Hindered, with 40% reduced Movement Speed"
       ],
       "weights": {
         "exarch": 1000
@@ -5447,12 +4201,16 @@
           "altar": "exarch",
           "hardMode": false,
           "lines": [
-            "Nearby Enemies are Hindered, with 40% reduced Movement Speed"
+            "Enemies within 3.5 metres are Hindered, with 40% reduced Movement Speed"
           ],
           "templates": [
-            "Nearby Enemies are Hindered, with #% reduced Movement Speed"
+            "Enemies within # metres are Hindered, with #% reduced Movement Speed"
           ],
           "ranges": [
+            [
+              3.5,
+              3.5
+            ],
             [
               40,
               40
@@ -6913,7 +5671,7 @@
       "side": "downside",
       "target": "player",
       "lines": [
-        "Nearby Enemies Gain 100% of their Physical Damage as Extra Chaos Damage"
+        "Enemies within 4 metres Gain 100% of their Physical Damage as Extra Chaos Damage"
       ],
       "weights": {
         "exarch": 1000
@@ -6924,12 +5682,16 @@
           "altar": "exarch",
           "hardMode": false,
           "lines": [
-            "Nearby Enemies Gain 100% of their Physical Damage as Extra Chaos Damage"
+            "Enemies within 4 metres Gain 100% of their Physical Damage as Extra Chaos Damage"
           ],
           "templates": [
-            "Nearby Enemies Gain #% of their Physical Damage as Extra Chaos Damage"
+            "Enemies within # metres Gain #% of their Physical Damage as Extra Chaos Damage"
           ],
           "ranges": [
+            [
+              4,
+              4
+            ],
             [
               100,
               100
@@ -6976,7 +5738,7 @@
       "side": "downside",
       "target": "player",
       "lines": [
-        "Nearby Enemies Gain 100% of their Physical Damage as Extra Fire Damage"
+        "Enemies within 4 metres Gain 100% of their Physical Damage as Extra Fire Damage"
       ],
       "weights": {
         "exarch": 1000
@@ -6987,12 +5749,16 @@
           "altar": "exarch",
           "hardMode": false,
           "lines": [
-            "Nearby Enemies Gain 100% of their Physical Damage as Extra Fire Damage"
+            "Enemies within 4 metres Gain 100% of their Physical Damage as Extra Fire Damage"
           ],
           "templates": [
-            "Nearby Enemies Gain #% of their Physical Damage as Extra Fire Damage"
+            "Enemies within # metres Gain #% of their Physical Damage as Extra Fire Damage"
           ],
           "ranges": [
+            [
+              4,
+              4
+            ],
             [
               100,
               100
@@ -7242,7 +6008,7 @@
       "side": "downside",
       "target": "player",
       "lines": [
-        "Nearby Enemies Gain 100% of their Physical Damage as Extra Cold Damage"
+        "Enemies within 4 metres Gain 100% of their Physical Damage as Extra Cold Damage"
       ],
       "weights": {
         "eater": 1000
@@ -7253,12 +6019,16 @@
           "altar": "eater",
           "hardMode": false,
           "lines": [
-            "Nearby Enemies Gain 100% of their Physical Damage as Extra Cold Damage"
+            "Enemies within 4 metres Gain 100% of their Physical Damage as Extra Cold Damage"
           ],
           "templates": [
-            "Nearby Enemies Gain #% of their Physical Damage as Extra Cold Damage"
+            "Enemies within # metres Gain #% of their Physical Damage as Extra Cold Damage"
           ],
           "ranges": [
+            [
+              4,
+              4
+            ],
             [
               100,
               100
@@ -7276,7 +6046,7 @@
       "side": "downside",
       "target": "player",
       "lines": [
-        "Nearby Enemies Gain 100% of their Physical Damage as Extra Lightning Damage"
+        "Enemies within 4 metres Gain 100% of their Physical Damage as Extra Lightning Damage"
       ],
       "weights": {
         "eater": 1000
@@ -7287,12 +6057,16 @@
           "altar": "eater",
           "hardMode": false,
           "lines": [
-            "Nearby Enemies Gain 100% of their Physical Damage as Extra Lightning Damage"
+            "Enemies within 4 metres Gain 100% of their Physical Damage as Extra Lightning Damage"
           ],
           "templates": [
-            "Nearby Enemies Gain #% of their Physical Damage as Extra Lightning Damage"
+            "Enemies within # metres Gain #% of their Physical Damage as Extra Lightning Damage"
           ],
           "ranges": [
+            [
+              4,
+              4
+            ],
             [
               100,
               100

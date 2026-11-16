@@ -1,4 +1,5 @@
-use altar::evaluate::{Report, evaluate, evaluate_scaled, fixtures_dir};
+use altar::evaluate::{Report, evaluate, evaluate_scaled, fixture_mods, fixtures_dir};
+use altar::repo_data_dir;
 
 #[test]
 #[ignore = "slow: run with cargo test -p altar --release --test golden -- --ignored"]
@@ -8,7 +9,7 @@ fn recognition_matches_the_prototype() {
         eprintln!("skipped: no local screenshots");
         return;
     }
-    let r = evaluate(&screens, &fixtures_dir().join("labels.json")).unwrap();
+    let r = evaluate(&screens, &fixtures_dir().join("labels.json"), &fixture_mods()).unwrap();
     assert_eq!((r.altars_found, r.false_altars), (r.altars_total, 0), "{r}");
     // Python: 84/85, the single known miss.
     assert_eq!(r.failures.len(), 1, "{r}");
@@ -23,7 +24,7 @@ fn synthetic_1080_reads_well() {
         eprintln!("skipped: no local screenshots");
         return;
     }
-    let r = evaluate_scaled(&screens, &fixtures_dir().join("labels.json"), Some(1080)).unwrap();
+    let r = evaluate_scaled(&screens, &fixtures_dir().join("labels.json"), &fixture_mods(), Some(1080)).unwrap();
     println!("synthetic 1080:\n{r}");
     assert_eq!((r.altars_found, r.false_altars), (r.altars_total, 0), "{r}");
     let share = r.options_ok as f64 / r.options_total as f64;
@@ -41,12 +42,16 @@ fn real_set_passes(set: &str, labels: &str) {
 
 /// Report for a real set, with detection checked strictly; `None` when the shots are missing.
 fn real_set(set: &str, labels: &str) -> Option<Report> {
+    real_set_with(set, labels, &fixture_mods())
+}
+
+fn real_set_with(set: &str, labels: &str, mods: &std::path::Path) -> Option<Report> {
     let screens = fixtures_dir().join(set).join("client");
     if !screens.join("screen_01.png").exists() {
         eprintln!("skipped: no local screenshots in {}", screens.display());
         return None;
     }
-    let r = evaluate(&screens, &fixtures_dir().join(labels)).unwrap();
+    let r = evaluate(&screens, &fixtures_dir().join(labels), mods).unwrap();
     println!("{set}:\n{r}");
     assert_eq!((r.altars_found, r.false_altars), (r.altars_total, 0), "{r}");
     Some(r)
@@ -83,4 +88,13 @@ fn real_custom() {
     let share = r.options_ok as f64 / r.options_total as f64;
     println!("custom: {:.1} % of options correct (release bar 95 %, not applied)", share * 100.0);
     assert!(r.options_ok >= 7, "{r}");
+}
+
+/// 3.30 (Threads instead of Scarabs), fullscreen 3440x1440, read with the current game data.
+/// Six exarch altars so far; the underlined "Threads" link and "within 3.5 metres" both read.
+#[test]
+#[ignore = "slow: run with cargo test -p altar --release --test golden -- --ignored"]
+fn real_3_30() {
+    let Some(r) = real_set_with("screens_3.30", "labels_3.30.json", &repo_data_dir().join("mods.json")) else { return };
+    assert_eq!(r.options_ok, r.options_total, "{r}");
 }

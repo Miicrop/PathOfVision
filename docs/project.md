@@ -33,9 +33,9 @@ Rust workspace (`Cargo.toml`) plus a Tauri 2 app; all UI is HTML/JS.
 | `apps/scan` | `pov-scan`, headless console scanner (debugging) |
 | `ui/shell/` | Main window, Home (status, version/update card, module switches), settings window |
 | `ui/modules/altar/` | `board/` (tier board), `hud/`, `img/` (icons, card art) |
-| `data/` | `mods.json` (generated), `labels.json`, `keywords.json`, `profiles/default.json`, `profiles/empty.json` |
+| `data/` | `mods.json` (generated), `labels.json`, `keywords.json`, `profiles/empty.json` (the only shipped profile) |
 | `tools/` | Python dev tools: `gen_mods` (builds `mods.json`), `gen_board_art`, `crop_client.py` (cuts the game client out of desktop screenshots) |
-| `tests/fixtures/` | Label files (in git) and screenshots (`screens*/`, local only, git-ignored) |
+| `tests/fixtures/` | Label files (in git), `mods_3.29.json` (game data the screenshots were taken with) and screenshots (`screens*/`, local only, git-ignored) |
 
 Scan pipeline: capture (4 Hz, only while PoE is in front and in a map or unknown area) → altar detection on a downscaled frame → on a hit: locate the boxes, OCR, numbers → `#`, match against `mods.json` → verdict per option → HUD. Altars are tracked across scans so they are read once.
 
@@ -49,7 +49,7 @@ All pixel constants are reference values at **1440 px** client height; modules c
 - **Untested** (runs, HUD shows a note): up to 2160 px (4K), narrower than 16:10, wider than 2.6:1.
 - **Unsupported:** smaller; the setting "Try unsupported resolutions" opts in.
 
-Golden results (real screenshots): 1920x1080 28 altars, 55/56 options (98.2 %); 1920x1200 18/18; 2560x1353 8/8; 3440x1440 84/85 (known miss `screen_10.png [856, 1152] bottom`); synthetic 1080 84/85; hard test 3435x1132 (pillarboxed ultrawide window) 7/8. Acceptance bar per resolution: all altars found, no false detections, ≥ 95 % of readable options fully correct.
+Golden results (real screenshots): 1920x1080 28 altars, 55/56 options (98.2 %); 1920x1200 18/18; 2560x1353 8/8; 3440x1440 84/85 (known miss `screen_10.png [856, 1152] bottom`); synthetic 1080 84/85; hard test 3435x1132 (pillarboxed ultrawide window) 7/8. Acceptance bar per resolution: all altars found, no false detections, ≥ 95 % of readable options fully correct. All sets above are 3.29 screenshots (scarab era), so `evaluate` and the golden tests match them against the frozen `tests/fixtures/mods_3.29.json` (`fixture_mods()`), not the current `data/mods.json`. 3.30 set (`screens_3.30`, fullscreen 3440x1440 cut from 5360x1440 desktop shots, `labels_3.30.json`): 6 exarch altars, 12/12 with the current data; the underlined "Threads" link reads fine, OCR drops the "3.5" in "within 3.5 metres" but the card still matches.
 
 ## Domain model
 
@@ -85,13 +85,15 @@ Recommendation:
 - Upsides: `Unrated | own columns … | top column` (further right = higher priority; order inside a column = priority). Own columns can be key columns (★). Downsides: `Fine | Dangerous | Brick`; unrated downsides count as Fine.
 - Cards: altar as frame color (generic = split frame with gold seam), faded target scene, reward icon, short label from `labels.json` plus mod text (card style setting). Downside keywords colored from `keywords.json`.
 - Drag & drop, Ctrl/Shift multi-select, ← / → move the selection, Ctrl+Z / Ctrl+Y.
-- Profiles: read-only **Default**, **Duplicate** for an editable copy; every change is saved and applies to the HUD at once.
-- **Export** copies the profile as a one-line text code (`POV1:` + base64url of deflated compact JSON: name, columns with key flags, top column, Dangerous, Brick; no settings, no `readOnly`/`modsVersion`) to the clipboard, or shows it in a dialog when the clipboard fails. The Default profile is about 1.1k characters. **Import** opens a dialog with a live preview; it always writes a new user profile (a taken name gets " (2)", " (3)" …), drops ids unknown to this `mods.json` and makes the profile active. Invalid codes, codes of a newer format version and codes inflating beyond 1 MB are refused (`BoardApi::export_code` / `import_preview` / `import_code`).
+- Profiles: read-only **Empty** (only the Divine Orb cards in the top column; also the fallback when the chosen profile is missing), **Duplicate** for an editable copy; every change is saved and applies to the HUD at once.
+- **Export** copies the profile as a one-line text code (`POV1:` + base64url of deflated compact JSON: name, columns with key flags, top column, Dangerous, Brick; no settings, no `readOnly`/`modsVersion`) to the clipboard, or shows it in a dialog when the clipboard fails. A well-filled profile (60 upsides, 20 downsides) stays well below 3k characters. **Import** opens a dialog with a live preview; it always writes a new user profile (a taken name gets " (2)", " (3)" …), drops ids unknown to this `mods.json` and makes the profile active. Invalid codes, codes of a newer format version and codes inflating beyond 1 MB are refused (`BoardApi::export_code` / `import_preview` / `import_code`).
 
 ## Data files
 
 - `data/mods.json`: generated by `python -m tools.gen_mods` from the RePoE export (domain `primordial_altar`), never edited by hand. Prints a diff (added/removed/changed cards). `templates` = text with values as `#` (the same normalization is applied to OCR text); `ranges` are base values (atlas passives raise in-game values above them).
-- `data/labels.json`: hand-made per card: `alias` (HUD short label, `#`/`#2` = read values), `icon`. `gen_mods` adds empty entries for new cards and never touches aliases or icons.
+- `gen_mods` strips the game's help-link markup from mod text (`[AbyssThread|Abyss Threads]` → `Abyss Threads`, `[Blind]` → `Blind`), since only the shown text is on screen.
+- `data/labels.json`: hand-made per card: `alias` (HUD short label, `#`/`#2` = read values), `icon`. `gen_mods` adds empty entries for new cards, never touches aliases or icons of existing cards and drops the labels of removed cards.
+- Reward icons (`ui/modules/altar/img/mods/<icon>.png`) are game art: the item's DDS path comes from RePoE `base_items.min.json` (`visual_identity.dds_file`, e.g. `Art/2DItems/Currency/Threads/AbyssThread.dds`), the file is read from the local Steam install with the `pathofexile-dat` npm package (`FileLoader` + `SteamBundleLoader`, `getFileContents`; its CLI needs ImageMagick for DDS, the library does not), converted with Pillow and cropped to the alpha bounding box. `dup-*` icons are a generic item (scaled to 66 px, at 6,1 on an 80x80 canvas) with a `×2` in Segoe UI Bold 34 px, fill `#FFE278`, 3 px outline `#0A0A0C`, bottom right. `dup-threads` uses the Frayed Thread.
 - `data/keywords.json`: keyword colors for downsides.
 - `data/profiles/<name>.json`: `upsides.columns[] {name, ids, key?}`, `upsides.top`, `downsides.dangerous`, `downsides.brick`. Missing mods count as Unrated/Fine. Saving keeps unknown keys and order.
 
@@ -99,7 +101,7 @@ Recommendation:
 
 - Tests: `cargo test --workspace` (Rust; cargo is in `%USERPROFILE%\.cargo\bin`, on PATH in PowerShell). Python tools: `.venv\Scripts\python -m pytest tests`.
 - Golden tests (need the local screenshots): `cargo test -p altar --release --test golden -- --ignored`.
-- Evaluate a screenshot set: `cargo run -p altar --release --bin evaluate` (`--height <px>` synthetic downscale, `--write <dir>`, `--draft` label draft).
+- Evaluate a screenshot set: `cargo run -p altar --release --bin evaluate` (`--mods <file>` game data to match against, default the 3.29 fixture data; `--height <px>` synthetic downscale, `--write <dir>`, `--draft` label draft with the current `data/mods.json`).
 - Run the app from source: `cargo run -p pov-app --release` (`--replay <dir> --hold <s>` cycles screenshots instead of the game, `--stats`, `--hidden`). Headless: `cargo run -p pov-scan --release`.
 - Installer locally: `cargo tauri build` in `app/` → `target/release/bundle/nsis/`.
 - New screenshots: game windowed at the wanted size, altars with both colors and boxes near HUD and screen edges; full-desktop shots are cut with `tools/crop_client.py <folder> --expect WxH`.

@@ -1,0 +1,156 @@
+{
+ "screen_01.png": [
+  {
+   "icon": [
+    1430,
+    364
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerChaosDegenDuringFlaskDuration",
+     "CleansingAltarDownsidePlayerScorched",
+     "TangledAltarUpsidePlayerDuplicateDroppedUniques",
+     "TangledAltarUpsidePlayerDuplicateDroppedThreads"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterConsecratedGroundOnDeath",
+     "CleansingAltarDownsideMonsterArmour",
+     "CleansingAltarUpsideMonsterLesserEldritchEmber",
+     "TangleAltarUpsideMonsterJewellersOrb"
+    ]
+   }
+  }
+ ],
+ "screen_02.png": [
+  {
+   "icon": [
+    1454,
+    554
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerMeteorOnFlaskUse",
+     "CleansingAltarDownsidePlayerCurseReflect",
+     "TangledAltarUpsidePlayerDuplicateDroppedThreads",
+     "TangledAltarUpsidePlayerDuplicateDroppedThreads"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterFireAndChaosResist",
+     "CleansingAltarDownsideMonsterArmour",
+     "CleansingAltarUpsideMonsterGreaterEldritchEmber",
+     "TangledAltarUpsideMonsterDivinationCardsCurrencyLeague"
+    ]
+   }
+  }
+ ],
+ "screen_03.png": [
+  {
+   "icon": [
+    2426,
+    420
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerBurningGroundWhenHit",
+     "TangledAltarUpsidePlayerDuplicateDroppedThreads"
+    ]
+   },
+   "bottom": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterFlaskDegenOnHit",
+     "CleansingAltarUpsideMonsterVaalOrb"
+    ]
+   }
+  }
+ ],
+ "screen_04.png": [
+  {
+   "icon": [
+    2526,
+    630
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterFireAndChaosResist",
+     "CleansingAltarUpsideMonsterGreaterEldritchEmber"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerCurseReflect",
+     "TangledAltarUpsidePlayerDuplicateDroppedThreads"
+    ]
+   }
+  }
+ ],
+ "screen_05.png": [
+  {
+   "icon": [
+    2250,
+    516
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "boss",
+    "mods": [
+     "CleansingAltarDownsideBossHinderAura",
+     "CleansingAltarDownsideBossConsecrateOnHit",
+     "CleansingAltarUpsideBossChaosOrb",
+     "TangledAltarUpsideBossDivinationCardsCurrencyBasic"
+    ]
+   },
+   "bottom": {
+    "target": "player",
+    "mods": [
+     "CleansingAltarDownsidePlayerReducedArmourAndEvasion",
+     "CleansingAltarDownsidePlayerMeteorOnFlaskUse",
+     "TangledAltarUpsidePlayerIncreasedRarity",
+     "TangledAltarUpsidePlayerDuplicateDroppedThreads"
+    ]
+   }
+  }
+ ],
+ "screen_06.png": [
+  {
+   "icon": [
+    1470,
+    354
+   ],
+   "altar": "exarch",
+   "top": {
+    "target": "minions",
+    "mods": [
+     "CleansingAltarDownsideMonsterIncreasedArea",
+     "CleansingAltarDownsideMonsterChaosDamage",
+     "CleansingAltarUpsideMonsterThreadAbyss",
+     "TangledAltarUpsideMonsterDivinationCardsCurrencyBasic"
+    ]
+   },
+   "bottom": {
+    "target": "boss",
+    "mods": [
+     "CleansingAltarDownsideBossIncreasedArmourAndEvasion",
+     "CleansingAltarDownsideBossPhysToAddAsChaos",
+     "CleansingAltarUpsideBossOrbOfScouring",
+     "TangledAltarUpsideBossDivinationCardsCurrencyBasic"
+    ]
+   }
+  }
+ ]
+}

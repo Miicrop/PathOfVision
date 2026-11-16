@@ -1,25 +1,31 @@
-//! `evaluate [<screens> <labels>] [--height <px>] [--write <dir>] [--draft <file>]`: accuracy
-//! report against labeled screenshots.
-//! Defaults to the repo fixtures; `--height` downscales every screen first (synthetic resolution);
+//! `evaluate [<screens> <labels>] [--mods <file>] [--height <px>] [--write <dir>] [--draft <file>]`:
+//! accuracy report against labeled screenshots.
+//! Defaults to the repo fixtures, checked against the game data they were taken with
+//! (`tests/fixtures/mods_3.29.json`); `--mods` names another `mods.json` (e.g. `data/mods.json` for
+//! screens of the current league); `--height` downscales every screen first (synthetic resolution);
 //! `--write` saves those resized screens as PNG into <dir> (for `pov-app --replay`) and stops;
 //! `--draft` writes what was read from <screens> as a labels file to check by eye (with the OCR
-//! lines and an `unsure` flag per box, to be removed from the final labels) and stops.
+//! lines and an `unsure` flag per box, to be removed from the final labels) and stops; it reads
+//! with the current `data/mods.json` unless `--mods` is given.
 
 use std::path::{Path, PathBuf};
 
-use altar::evaluate::{evaluate_scaled, fixtures_dir};
+use altar::detect::assets_dir;
+use altar::evaluate::{evaluate_scaled, fixture_mods, fixtures_dir};
+use altar::data::repo_data_dir;
 use altar::read::Reader;
 use anyhow::{Context, bail};
 use serde_json::{Value, json};
 use vision::{MIN_CLIENT_HEIGHT, Rgb};
 
-const USAGE: &str = "usage: evaluate [<screens> <labels>] [--height <px>] [--write <dir>] [--draft <file>]";
+const USAGE: &str = "usage: evaluate [<screens> <labels>] [--mods <file>] [--height <px>] [--write <dir>] [--draft <file>]";
 
 fn main() -> anyhow::Result<()> {
     let mut paths: Vec<PathBuf> = Vec::new();
     let mut height: Option<u32> = None;
     let mut write: Option<PathBuf> = None;
     let mut draft: Option<PathBuf> = None;
+    let mut mods: Option<PathBuf> = None;
     let mut args = std::env::args().skip(1);
     while let Some(arg) = args.next() {
         match arg.as_str() {
@@ -33,6 +39,7 @@ fn main() -> anyhow::Result<()> {
             }
             "--write" => write = Some(PathBuf::from(args.next().context(USAGE)?)),
             "--draft" => draft = Some(PathBuf::from(args.next().context(USAGE)?)),
+            "--mods" => mods = Some(PathBuf::from(args.next().context(USAGE)?)),
             "-h" | "--help" => {
                 println!("{USAGE}");
                 return Ok(());
@@ -42,7 +49,8 @@ fn main() -> anyhow::Result<()> {
     }
     if let Some(out) = draft {
         let [screens] = paths.as_slice() else { bail!("--draft takes exactly one <screens> folder") };
-        let n = write_draft(screens, &out)?;
+        let mods = mods.unwrap_or_else(|| repo_data_dir().join("mods.json"));
+        let n = write_draft(screens, &out, &mods)?;
         println!("wrote a draft for {n} screens to {}", out.display());
         return Ok(());
     }
@@ -61,7 +69,7 @@ fn main() -> anyhow::Result<()> {
         Some(h) => println!("scale: each screen resized to height {h} px (factor {h} / screen height)"),
         None => println!("scale: native screens"),
     }
-    let report = evaluate_scaled(&screens, &labels, height)?;
+    let report = evaluate_scaled(&screens, &labels, &mods.unwrap_or_else(fixture_mods), height)?;
     println!("{report}");
     Ok(())
 }
@@ -81,8 +89,8 @@ fn screen_paths(screens: &Path) -> anyhow::Result<Vec<PathBuf>> {
 }
 
 /// Reads every native `screen_*.png` of `screens` and writes the result in the labels format.
-fn write_draft(screens: &Path, out: &Path) -> anyhow::Result<usize> {
-    let reader = Reader::new()?;
+fn write_draft(screens: &Path, out: &Path, mods: &Path) -> anyhow::Result<usize> {
+    let reader = Reader::with_paths(&assets_dir(), mods, "en-US")?;
     let paths = screen_paths(screens)?;
     let mut doc = serde_json::Map::new();
     for path in &paths {

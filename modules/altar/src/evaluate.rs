@@ -15,6 +15,7 @@ use serde_json::Value;
 use vision::Rgb;
 
 use crate::data::Target;
+use crate::detect::assets_dir;
 use crate::read::{AltarRead, Reader};
 use crate::verdict::Pos;
 
@@ -83,19 +84,25 @@ fn py_list(items: &[String]) -> String {
     format!("[{}]", inner.join(", "))
 }
 
-pub fn evaluate(screens: &Path, labels: &Path) -> anyhow::Result<Report> {
-    evaluate_scaled(screens, labels, None)
+/// Game data the labeled screenshots were taken with. The labels name the cards that were on
+/// screen then, so they are checked against this frozen `mods.json` and not the current one.
+pub fn fixture_mods() -> PathBuf {
+    fixtures_dir().join("mods_3.29.json")
+}
+
+pub fn evaluate(screens: &Path, labels: &Path, mods: &Path) -> anyhow::Result<Report> {
+    evaluate_scaled(screens, labels, mods, None)
 }
 
 /// Like [`evaluate`], but with `Some(h)` every screen is first resized to height `h`, and the
 /// labeled icon positions and the icon tolerance are scaled by the same factor.
-pub fn evaluate_scaled(screens: &Path, labels: &Path, height: Option<u32>) -> anyhow::Result<Report> {
+pub fn evaluate_scaled(screens: &Path, labels: &Path, mods: &Path, height: Option<u32>) -> anyhow::Result<Report> {
     if let Some(h) = height {
         anyhow::ensure!(h as usize >= vision::MIN_CLIENT_HEIGHT, "height {h} is below the minimum client height of {} px", vision::MIN_CLIENT_HEIGHT);
     }
     let text = std::fs::read_to_string(labels).with_context(|| format!("reading {}", labels.display()))?;
     let labels: Value = serde_json::from_str(&text).context("parsing labels")?;
-    let reader = Reader::new()?;
+    let reader = Reader::with_paths(&assets_dir(), mods, "en-US")?;
 
     let mut paths: Vec<PathBuf> = std::fs::read_dir(screens)
         .with_context(|| format!("listing {}", screens.display()))?

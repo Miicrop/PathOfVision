@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
 
+use altar::detect::assets_dir;
+use altar::evaluate::fixture_mods;
 use altar::hud::{HudView, hud_view, HudStyle};
 use altar::labels::{KeywordMatcher, load_keywords, load_labels};
 use altar::live::Tracker;
@@ -23,7 +25,8 @@ fn screen() -> Option<PathBuf> {
 
 fn view(with_labels: bool) -> Option<(HudView, Vec<altar::Card>)> {
     let path = screen()?;
-    let reader = Reader::new().unwrap();
+    // The screenshot is from 3.29, so it is read with the game data of that time.
+    let reader = Reader::with_paths(&assets_dir(), &fixture_mods(), "en-US").unwrap();
     let img = Rgb::load(&path).unwrap();
     let altars = reader.read_altars(&img).unwrap();
     let mut tracker = Tracker::new();
@@ -33,7 +36,7 @@ fn view(with_labels: bool) -> Option<(HudView, Vec<altar::Card>)> {
         let i = queue.iter().position(|a| a.icon.x == icon.x && a.icon.y == icon.y).unwrap();
         Ok(Some(queue.remove(i)))
     });
-    let profile = Profile::load(&repo_data_dir().join("profiles/default.json")).unwrap();
+    let profile = Profile::load(&repo_data_dir().join("profiles/empty.json")).unwrap();
     let views = tracker.views(&reader.cards, &profile);
     let labels = if with_labels { load_labels(&repo_data_dir().join("labels.json")) } else { HashMap::new() };
     let keywords = KeywordMatcher::new(&load_keywords(&repo_data_dir().join("keywords.json")));

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Game data for 3.30: Threads replace Scarabs on the altars (10 Threads as monster and boss drops, "Threads Duplicated"), all Scarab, Orb of Binding and Item Quantity options are gone, Item Rarity rolls (10-20)%. New Thread icons from the game files; the board's reward filter shows Threads instead of Scarabs.
+- The read-only Default profile is gone; the app ships only the Empty profile (Divine Orbs on top) and falls back to it.
 - Home shows the app version next to the status. When an update is waiting, the card offers it with an "Update now" button, shows progress while installing and the error if it fails.
 - Altar profiles can be shared as text codes: Export on the tier board copies the profile as a code, Import adds a profile from a pasted code (with a preview; never overwrites an existing profile, options this version does not know are skipped).
 

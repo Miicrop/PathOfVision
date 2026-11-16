@@ -13,7 +13,7 @@ pub mod status;
 
 pub use context::SettingsContext;
 pub use paths::{APP_ID, AppPaths, USER_DIR_NAME};
-pub use profiles::{ImportReport, active_profile_path, import_prototype};
+pub use profiles::{DEFAULT_PROFILE, ImportReport, active_profile_path, import_prototype};
 pub use settings::{AltarSettings, General, Settings, SettingsStore, clean_altar};
 pub use module::{Module, ModuleOutput};
 pub use resolution::{Support, support};

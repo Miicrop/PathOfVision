@@ -19,7 +19,6 @@ use serde_json::{Map, Value, json};
 use crate::labels::{load_keywords, load_labels};
 
 const MODULE: &str = "altar";
-const DEFAULT_PROFILE: &str = "default.json";
 
 pub struct BoardApi {
     paths: AppPaths,
@@ -77,7 +76,7 @@ pub fn upgrade_upsides(upsides: &Value) -> Value {
     })
 }
 
-/// A free file name derived from a profile name: "My Scarab Farm" -> `my-scarab-farm.json`.
+/// A free file name derived from a profile name: "My Thread Farm" -> `my-thread-farm.json`.
 pub fn profile_file_name(name: &str, taken: impl Fn(&str) -> bool) -> String {
     let mut stem = String::new();
     let mut gap = false;
@@ -285,7 +284,7 @@ impl BoardApi {
         pov_core::active_profile_path(&self.paths, settings.get())
             .file_name()
             .and_then(|f| f.to_str())
-            .unwrap_or(DEFAULT_PROFILE)
+            .unwrap_or(pov_core::DEFAULT_PROFILE)
             .to_string()
     }
 
@@ -364,7 +363,7 @@ impl BoardApi {
         let was_active = self.active() == file;
         std::fs::remove_file(self.user_path(file)).with_context(|| format!("deleting {file}"))?;
         if was_active {
-            self.write_active(DEFAULT_PROFILE)?;
+            self.write_active(pov_core::DEFAULT_PROFILE)?;
         }
         Ok(json!({"ok": true, "profiles": self.profiles(), "active": self.active()}))
     }

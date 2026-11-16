@@ -9,7 +9,7 @@ fn setup() -> (tempfile::TempDir, BoardApi, AppPaths) {
     let tmp = tempfile::tempdir().unwrap();
     let data = tmp.path().join("data");
     std::fs::create_dir_all(data.join("profiles")).unwrap();
-    for f in ["mods.json", "labels.json", "keywords.json", "profiles/default.json", "profiles/empty.json"] {
+    for f in ["mods.json", "labels.json", "keywords.json", "profiles/empty.json"] {
         std::fs::copy(altar::repo_data_dir().join(f), data.join(f)).unwrap();
     }
     let paths = AppPaths::with(data, tmp.path().join("user"));
@@ -35,17 +35,17 @@ fn state_lists_mods_profiles_and_active() {
     }
     assert!(state["keywords"].is_object());
     assert_eq!(state["gameVersion"], mods["gameVersion"]);
-    assert_eq!(state["profiles"][0], json!({"file": "default.json", "name": "Default", "readOnly": true}));
-    assert_eq!(files(&state["profiles"]), ["default.json", "empty.json"]);
-    assert_eq!(state["active"], "default.json");
+    assert_eq!(state["profiles"][0], json!({"file": "empty.json", "name": "Empty", "readOnly": true}));
+    assert_eq!(files(&state["profiles"]), ["empty.json"]);
+    assert_eq!(state["active"], "empty.json");
 }
 
 #[test]
 fn duplicate_picks_a_free_file_name() {
     let (_t, api, paths) = setup();
-    let first = api.duplicate_profile("default.json", "My Farm").unwrap();
+    let first = api.duplicate_profile("empty.json", "My Farm").unwrap();
     assert_eq!(first["file"], "my-farm.json");
-    let second = api.duplicate_profile("default.json", "My Farm").unwrap();
+    let second = api.duplicate_profile("empty.json", "My Farm").unwrap();
     assert_eq!(second["file"], "my-farm-2.json");
     for f in ["my-farm.json", "my-farm-2.json"] {
         let v: Value = serde_json::from_str(&std::fs::read_to_string(paths.profiles_dir("altar").join(f)).unwrap()).unwrap();
@@ -53,9 +53,9 @@ fn duplicate_picks_a_free_file_name() {
         assert_eq!(v["readOnly"], false);
     }
     assert_eq!(api.get_state().unwrap()["active"], "my-farm-2.json");
-    assert_eq!(files(&second["profiles"]), ["default.json", "empty.json", "my-farm-2.json", "my-farm.json"]);
+    assert_eq!(files(&second["profiles"]), ["empty.json", "my-farm-2.json", "my-farm.json"]);
     assert_eq!(profile_file_name("!!!", |_| false), "profile.json");
-    assert_eq!(profile_file_name("My Scarab  Farm!", |_| false), "my-scarab-farm.json");
+    assert_eq!(profile_file_name("My Thread  Farm!", |_| false), "my-thread-farm.json");
     assert_eq!(profile_file_name("a", |f| f == "a.json"), "a-2.json");
 }
 
@@ -73,7 +73,7 @@ fn reserved_names_get_a_suffix() {
 #[test]
 fn save_keeps_unknown_keys() {
     let (_t, api, paths) = setup();
-    let file = api.duplicate_profile("default.json", "Mine").unwrap()["file"].as_str().unwrap().to_string();
+    let file = api.duplicate_profile("empty.json", "Mine").unwrap()["file"].as_str().unwrap().to_string();
     let mut profile = api.load_profile(&file).unwrap();
     profile["extra"] = json!({"a": 1});
     profile["readOnly"] = json!(true);
@@ -90,13 +90,13 @@ fn save_keeps_unknown_keys() {
 #[test]
 fn read_only_profiles_cannot_be_saved_or_deleted() {
     let (_t, api, paths) = setup();
-    let path = paths.data.join("profiles/default.json");
+    let path = paths.data.join("profiles/empty.json");
     let before = std::fs::read(&path).unwrap();
     let err = json!({"ok": false, "error": "read-only profile"});
-    assert_eq!(api.save_profile("default.json", json!({"name": "x"})).unwrap(), err);
-    assert_eq!(api.delete_profile("default.json").unwrap(), err);
+    assert_eq!(api.save_profile("empty.json", json!({"name": "x"})).unwrap(), err);
+    assert_eq!(api.delete_profile("empty.json").unwrap(), err);
     assert_eq!(std::fs::read(&path).unwrap(), before);
-    assert!(!paths.profiles_dir("altar").join("default.json").exists());
+    assert!(!paths.profiles_dir("altar").join("empty.json").exists());
     // a user file marked read-only is protected too
     std::fs::create_dir_all(paths.profiles_dir("altar")).unwrap();
     std::fs::write(paths.profiles_dir("altar").join("ro.json"), r#"{"name":"Ro","readOnly":true}"#).unwrap();
@@ -105,23 +105,23 @@ fn read_only_profiles_cannot_be_saved_or_deleted() {
 }
 
 #[test]
-fn delete_active_profile_falls_back_to_default() {
+fn delete_active_profile_falls_back_to_the_empty_profile() {
     let (_t, api, paths) = setup();
-    let file = api.duplicate_profile("default.json", "Gone").unwrap()["file"].as_str().unwrap().to_string();
+    let file = api.duplicate_profile("empty.json", "Gone").unwrap()["file"].as_str().unwrap().to_string();
     assert_eq!(api.get_state().unwrap()["active"], file.as_str());
     let out = api.delete_profile(&file).unwrap();
     assert_eq!(out["ok"], true);
-    assert_eq!(out["active"], "default.json");
-    assert_eq!(files(&out["profiles"]), ["default.json", "empty.json"]);
+    assert_eq!(out["active"], "empty.json");
+    assert_eq!(files(&out["profiles"]), ["empty.json"]);
     assert!(!paths.profiles_dir("altar").join(&file).exists());
     let settings: Value = serde_json::from_str(&std::fs::read_to_string(paths.settings_file()).unwrap()).unwrap();
-    assert_eq!(settings["modules"]["altar"]["profile"], "default.json");
+    assert_eq!(settings["modules"]["altar"]["profile"], "empty.json");
 }
 
 #[test]
 fn parallel_saves_of_one_profile_do_not_collide() {
     let (_t, api, paths) = setup();
-    let file = api.duplicate_profile("default.json", "Busy").unwrap()["file"].as_str().unwrap().to_string();
+    let file = api.duplicate_profile("empty.json", "Busy").unwrap()["file"].as_str().unwrap().to_string();
     let base = api.load_profile(&file).unwrap();
     let mut a = base.clone();
     a["name"] = json!("A");
@@ -201,7 +201,7 @@ fn export_import_round_trip() {
     let (_t, api, paths) = setup();
     let up = mod_ids(&paths, "upside");
     let down = mod_ids(&paths, "downside");
-    let file = api.duplicate_profile("default.json", "Ritual Farm").unwrap()["file"].as_str().unwrap().to_string();
+    let file = api.duplicate_profile("empty.json", "Ritual Farm").unwrap()["file"].as_str().unwrap().to_string();
     let mut profile = api.load_profile(&file).unwrap();
     profile["upsides"] = json!({
         "columns": [
@@ -235,20 +235,20 @@ fn export_import_round_trip() {
 #[test]
 fn import_never_overwrites_and_dedupes_the_name() {
     let (_t, api, paths) = setup();
-    let code = api.export_code("default.json").unwrap();
-    let default_before = std::fs::read_to_string(paths.data.join("profiles/default.json")).unwrap();
+    let code = api.export_code("empty.json").unwrap();
+    let shipped_before = std::fs::read_to_string(paths.data.join("profiles/empty.json")).unwrap();
     let names: Vec<String> = (0..3)
         .map(|_| {
             let f = api.import_code(&code).unwrap()["file"].as_str().unwrap().to_string();
             api.load_profile(&f).unwrap()["name"].as_str().unwrap().to_string()
         })
         .collect();
-    assert_eq!(names, ["Default (2)", "Default (3)", "Default (4)"]);
-    assert_eq!(user_files(&paths), ["default-2.json", "default-3.json", "default-4.json"]);
-    assert_eq!(std::fs::read_to_string(paths.data.join("profiles/default.json")).unwrap(), default_before);
-    // The shipped default is read-only, its copy is not and keeps the tiers.
-    let original = api.load_profile("default.json").unwrap();
-    let copy = api.load_profile("default-2.json").unwrap();
+    assert_eq!(names, ["Empty (2)", "Empty (3)", "Empty (4)"]);
+    assert_eq!(user_files(&paths), ["empty-2.json", "empty-3.json", "empty-4.json"]);
+    assert_eq!(std::fs::read_to_string(paths.data.join("profiles/empty.json")).unwrap(), shipped_before);
+    // The shipped profile is read-only, its copy is not and keeps the tiers.
+    let original = api.load_profile("empty.json").unwrap();
+    let copy = api.load_profile("empty-2.json").unwrap();
     assert_eq!(copy["readOnly"], false);
     assert_eq!(copy["upsides"], original["upsides"]);
     assert_eq!(copy["downsides"]["dangerous"], original["downsides"]["dangerous"]);
@@ -281,7 +281,7 @@ fn unknown_ids_are_dropped_and_counted() {
 #[test]
 fn invalid_codes_write_nothing() {
     let (_t, api, paths) = setup();
-    let good = api.export_code("default.json").unwrap();
+    let good = api.export_code("empty.json").unwrap();
     let invalid = "This is not a valid profile code.";
     let mut cases: Vec<(String, &str)> = vec![
         ("".into(), invalid),
@@ -308,14 +308,25 @@ fn invalid_codes_write_nothing() {
         assert_eq!(err.to_string(), *message, "import of {code:.40}");
     }
     assert!(user_files(&paths).is_empty());
-    assert_eq!(api.get_state().unwrap()["active"], "default.json");
+    assert_eq!(api.get_state().unwrap()["active"], "empty.json");
 }
 
 #[test]
-fn default_profile_code_is_one_short_line() {
-    let (_t, api, _p) = setup();
-    let code = api.export_code("default.json").unwrap();
-    println!("default profile code: {} characters", code.len());
+fn full_profile_code_is_one_short_line() {
+    let (_t, api, paths) = setup();
+    // About the size of a well-filled profile: 60 rated upsides in four columns, 20 downsides.
+    let up = mod_ids(&paths, "upside");
+    let down = mod_ids(&paths, "downside");
+    let file = api.duplicate_profile("empty.json", "Full").unwrap()["file"].as_str().unwrap().to_string();
+    let mut profile = api.load_profile(&file).unwrap();
+    profile["upsides"] = json!({
+        "columns": [{"name": "C", "ids": up[0..15]}, {"name": "B", "ids": up[15..30]}, {"name": "A", "ids": up[30..45]}],
+        "top": {"name": "S", "ids": up[45..60]},
+    });
+    profile["downsides"] = json!({"dangerous": down[0..10], "brick": down[10..20]});
+    api.save_profile(&file, profile).unwrap();
+    let code = api.export_code(&file).unwrap();
+    println!("full profile code: {} characters", code.len());
     assert!(!code.contains(char::is_whitespace));
     assert!(code.len() < 3000, "code is {} characters", code.len());
 }

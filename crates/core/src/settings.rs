@@ -32,7 +32,7 @@ impl Default for AltarSettings {
     fn default() -> Self {
         AltarSettings {
             enabled: true,
-            profile: "default.json".into(),
+            profile: crate::profiles::DEFAULT_PROFILE.into(),
             hud_bottom: 60,
             hud_offset_x: 0,
             hud_font_size: 15,

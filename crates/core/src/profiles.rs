@@ -7,7 +7,9 @@ use crate::paths::AppPaths;
 use crate::settings::{AltarSettings, Settings, clean_altar, write_atomic};
 
 const MODULE: &str = "altar";
-const SHIPPED: [&str; 2] = ["default.json", "empty.json"];
+/// Shipped profile used when none is chosen or the chosen one is gone.
+pub const DEFAULT_PROFILE: &str = "empty.json";
+const SHIPPED: [&str; 1] = [DEFAULT_PROFILE];
 
 pub fn active_profile_path(paths: &AppPaths, s: &Settings) -> PathBuf {
     let name = &s.altar.profile;
@@ -23,7 +25,7 @@ pub fn active_profile_path(paths: &AppPaths, s: &Settings) -> PathBuf {
             return ship;
         }
     }
-    shipped.join("default.json")
+    shipped.join(DEFAULT_PROFILE)
 }
 
 #[derive(Debug, Default, Clone, PartialEq)]
@@ -74,7 +76,6 @@ mod tests {
         let d = tempfile::tempdir().unwrap();
         let p = AppPaths::with(d.path().join("data"), d.path().join("user"));
         std::fs::create_dir_all(p.shipped_profiles_dir("altar")).unwrap();
-        std::fs::write(p.shipped_profiles_dir("altar").join("default.json"), "{}").unwrap();
         std::fs::write(p.shipped_profiles_dir("altar").join("empty.json"), "{}").unwrap();
         (d, p)
     }
@@ -100,9 +101,10 @@ mod tests {
     }
 
     #[test]
-    fn missing_profile_name_falls_back_to_default() {
+    fn missing_profile_name_falls_back_to_the_empty_profile() {
         let (_d, p) = setup();
-        let want = p.shipped_profiles_dir("altar").join("default.json");
+        let want = p.shipped_profiles_dir("altar").join("empty.json");
+        assert_eq!(active_profile_path(&p, &Settings::default()), want);
         assert_eq!(active_profile_path(&p, &with_profile("nope.json")), want);
         assert_eq!(active_profile_path(&p, &with_profile("../x.json")), want);
     }
@@ -113,7 +115,7 @@ mod tests {
         let repo = d.path().join("repo");
         let prof = repo.join("data").join("profiles");
         std::fs::create_dir_all(&prof).unwrap();
-        for n in ["default", "empty", "maps-eater"] {
+        for n in ["empty", "maps-eater"] {
             std::fs::write(prof.join(format!("{n}.json")), "{}").unwrap();
         }
         std::fs::write(repo.join("settings.json"), r#"{"profile": "maps-eater.json", "hud_font_size": 15}"#).unwrap();
@@ -121,7 +123,7 @@ mod tests {
         let r = import_prototype(&p, &repo).unwrap();
         assert_eq!(r, ImportReport { profiles: vec!["maps-eater.json".into()], settings: true });
         assert!(p.profiles_dir("altar").join("maps-eater.json").exists());
-        assert!(!p.profiles_dir("altar").join("default.json").exists());
+        assert!(!p.profiles_dir("altar").join("empty.json").exists());
         let text = std::fs::read_to_string(p.settings_file()).unwrap();
         let v: Value = serde_json::from_str(&text).unwrap();
         assert_eq!(v["modules"]["altar"]["profile"], "maps-eater.json");

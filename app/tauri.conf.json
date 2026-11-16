@@ -23,7 +23,6 @@
       "../data/mods.json": "data/mods.json",
       "../data/labels.json": "data/labels.json",
       "../data/keywords.json": "data/keywords.json",
-      "../data/profiles/default.json": "data/profiles/default.json",
       "../data/profiles/empty.json": "data/profiles/empty.json",
       "../modules/altar/assets/": "modules/altar/assets/"
     },

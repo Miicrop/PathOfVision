@@ -96,8 +96,8 @@ fn neutral_takes_minions() {
 }
 
 #[test]
-fn default_profile_loads() {
-    let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/profiles/default.json");
+fn shipped_profile_loads() {
+    let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/profiles/empty.json");
     let p = Profile::load(&path).unwrap();
     assert!(p.read_only && !p.upsides.top.ids.is_empty());
 }

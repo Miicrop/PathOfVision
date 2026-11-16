@@ -9,7 +9,7 @@ use std::path::PathBuf;
 
 use vision::Scale;
 
-const TOP_ID: &str = "TangleAltarUpsideBossDivineOrb"; // top column of the default profile
+const TOP_ID: &str = "TangleAltarUpsideBossDivineOrb"; // top column of the shipped empty profile
 const UP_A: &str = "CleansingAltarUpsideBossChaosOrb";
 const UP_B: &str = "CleansingAltarUpsideBossDivinationCardsCorrupted";
 const DOWN: &str = "CleansingAltarDownsideBossArmour";
@@ -195,9 +195,9 @@ fn views_apply_the_profile() {
     let mut read = |i: &Icon| Ok(Some(altar(&cards, *i, &[TOP_ID], &[DOWN], false)));
     let mut t = Tracker::new();
     t.scan(0.0, &[icon(500, 500)], &cards, Scale::REFERENCE, &mut read);
-    let default = repo_data_dir().join("profiles/default.json");
-    let mut profiles = ProfileCache::new(default.clone());
-    let profile = profiles.get(&default).clone();
+    let shipped = repo_data_dir().join("profiles/empty.json");
+    let mut profiles = ProfileCache::new(shipped.clone());
+    let profile = profiles.get(&shipped).clone();
     let views = t.views(&cards, &profile);
     assert_eq!(views.len(), 1);
     assert_eq!(views[0].verdicts[0].verdict, Verdict::Take);
@@ -214,7 +214,7 @@ fn touch(path: &std::path::Path, secs: u64) {
 fn profile_cache_reloads_on_change_and_survives_broken_files() {
     let dir = temp_dir("profiles");
     let path = dir.join("p.json");
-    let fallback = repo_data_dir().join("profiles/default.json");
+    let fallback = repo_data_dir().join("profiles/empty.json");
     std::fs::write(&path, r#"{"name":"one"}"#).unwrap();
     let mut cache = ProfileCache::new(fallback.clone());
     assert_eq!(cache.get(&path).name, "one");
@@ -228,6 +228,6 @@ fn profile_cache_reloads_on_change_and_survives_broken_files() {
     let broken = dir.join("broken.json");
     std::fs::write(&broken, "{broken").unwrap();
     let mut fresh = ProfileCache::new(fallback);
-    assert_eq!(fresh.get(&broken).name, "Default");
+    assert_eq!(fresh.get(&broken).name, "Empty");
     let _ = std::fs::remove_dir_all(&dir);
 }

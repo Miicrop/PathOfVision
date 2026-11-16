@@ -6,7 +6,8 @@ from pathlib import Path
 DATA = Path(__file__).resolve().parents[1] / "data"
 MODS = json.loads((DATA / "mods.json").read_text(encoding="utf-8"))
 CARDS = {c["id"]: c for c in MODS["mods"]}
-PROFILES = sorted((DATA / "profiles").glob("*.json"))
+# Only the shipped profiles; other files in data/profiles are local and git-ignored.
+PROFILES = [DATA / "profiles" / "empty.json"]
 LABELS = json.loads((DATA / "labels.json").read_text(encoding="utf-8"))["labels"]
 MOD_ICONS = DATA.parent / "ui" / "modules" / "altar" / "img" / "mods"
 
@@ -45,13 +46,6 @@ def test_profiles_reference_existing_mods_on_the_right_side():
         assert len(seen) == len(set(seen)), f"{path.name}: a mod is listed twice"
 
 
-def test_default_profile_is_read_only():
-    default = json.loads((DATA / "profiles" / "default.json").read_text(encoding="utf-8"))
-    assert default["readOnly"] is True
-    assert set(default["upsides"]) == {"columns", "top"}
-    assert set(default["downsides"]) == {"dangerous", "brick"}
-
-
 def test_labels_cover_every_card_and_icons_exist():
     assert set(LABELS) == set(CARDS), "run python -m tools.gen_mods --offline to sync data/labels.json"
     for cid, entry in LABELS.items():
@@ -62,5 +56,6 @@ def test_labels_cover_every_card_and_icons_exist():
 def test_empty_template_only_rates_divine_orbs():
     empty = json.loads((DATA / "profiles" / "empty.json").read_text(encoding="utf-8"))
     assert empty["readOnly"] is True
+    assert empty["modsVersion"] == MODS["gameVersion"]
     assert sorted(empty["upsides"]["top"]["ids"]) == ["TangleAltarUpsideBossDivineOrb", "TangleAltarUpsideMonsterDivineOrb"]
     assert not any(c["ids"] for c in empty["upsides"]["columns"]) and not any(empty["downsides"].values())

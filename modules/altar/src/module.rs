@@ -33,7 +33,7 @@ pub struct AltarModule {
 impl AltarModule {
     pub fn new(paths: &AppPaths, settings: Arc<Mutex<SettingsStore>>) -> anyhow::Result<AltarModule> {
         let reader = Reader::with_paths(&paths.module_assets(ID), &paths.data.join("mods.json"), "en-US")?;
-        let fallback: PathBuf = paths.shipped_profiles_dir(ID).join("default.json");
+        let fallback: PathBuf = paths.shipped_profiles_dir(ID).join(pov_core::DEFAULT_PROFILE);
         Ok(AltarModule {
             paths: paths.clone(),
             settings,

@@ -8,7 +8,8 @@ Usage:
 Every run prints a diff (added / removed / changed cards) against the
 existing data/mods.json before overwriting it. It also keeps data/labels.json
 (hand-made short labels per card) in sync: new cards get an empty entry, the
-reference text is refreshed, aliases and icons are never touched.
+reference text is refreshed, aliases and icons of existing cards are never
+touched, labels of removed cards are dropped.
 """
 
 from __future__ import annotations
@@ -37,7 +38,14 @@ TARGETS = {"Player": "player", "Monster": "minions", "Boss": "boss"}
 SIDE_TARGET_RE = re.compile(r"(Upside|Downside)(Boss|Monster|Player)(\w*)$")
 RANGE_RE = re.compile(r"\((-?\d+(?:\.\d+)?)-(-?\d+(?:\.\d+)?)\)")
 NUMBER_RE = re.compile(r"(?<![\w.#])\d+(?:\.\d+)?")
+# Game text links terms to their help entry: "[AbyssThread|Abyss Threads]", "[Blind]".
+MARKUP_RE = re.compile(r"\[(?:[^\[\]|]*\|)?([^\[\]|]*)\]")
 VALUE_RE = re.compile(r"(-?)(?:\((-?\d+(?:\.\d+)?)-(-?\d+(?:\.\d+)?)\)|(?<![\w.])(\d+(?:\.\d+)?))")
+
+
+def strip_markup(line: str) -> str:
+    """Keep only the text the game shows for linked terms."""
+    return MARKUP_RE.sub(lambda m: m.group(1), line)
 
 
 def to_template(line: str) -> str:
@@ -73,7 +81,7 @@ def parse_variant(mod_id: str, mod: dict) -> dict | None:
     if len(spawning) > 1:
         raise ValueError(f"mod spawns on several altars: {mod_id}")
 
-    lines = mod["text"].split("\n")
+    lines = [strip_markup(line) for line in mod["text"].split("\n")]
     return {
         "id": mod_id,
         "altar": ALTAR_TAGS[spawning[0]["tag"]],
@@ -185,7 +193,7 @@ SIDE_SIGNS = {"upside": "+", "downside": "-"}
 def sync_labels(mods: dict, old: dict | None) -> tuple[dict, list[str]]:
     """labels.json for the given cards, keeping every alias and icon from the old file.
 
-    Labels of cards that no longer exist are kept (and reported) so no hand work is lost.
+    Labels of cards that no longer exist are dropped and reported with their alias.
     """
     old_labels = (old or {}).get("labels", {})
     cards = sorted(mods["mods"], key=lambda c: (TARGET_ORDER[c["target"]], c["side"] != "upside", c["lines"]))
@@ -197,10 +205,8 @@ def sync_labels(mods: dict, old: dict | None) -> tuple[dict, list[str]]:
             "alias": entry.get("alias", ""),
             "icon": entry.get("icon", ""),
         }
-    notes = [f"? unused label {cid} (card no longer exists)" for cid in old_labels if cid not in labels]
-    for cid in old_labels:
-        if cid not in labels:
-            labels[cid] = old_labels[cid]
+    notes = [f"- removed label {cid} (alias '{entry.get('alias', '')}')"
+             for cid, entry in old_labels.items() if cid not in labels]
     return {"about": LABELS_ABOUT, "labels": labels}, notes
 
 

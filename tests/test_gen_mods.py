@@ -1,4 +1,4 @@
-from tools.gen_mods.gen_mods import build_mods, diff_mods, parse_ranges, sync_labels, to_template
+from tools.gen_mods.gen_mods import build_mods, diff_mods, parse_ranges, strip_markup, sync_labels, to_template
 
 
 def raw_mod(text, tag, weight=1000, blocked="primordial_altar_downside"):
@@ -19,6 +19,8 @@ RAW = {
     "TangledAltarDownsidePlayerSapped": raw_mod(
         "(25-35)% chance to be Sapped when Hit\nAll Damage taken from Hits can Sap you", "tangle_altar", blocked="primordial_altar_upside"),
     "TangledAltarDownsideBossAllDamageCanChill": raw_mod("All Damage with Hits can Chill", "tangle_altar", 0, "primordial_altar_upside"),
+    "CleansingAltarUpsideBossThreadAbyss": raw_mod(
+        "Final Boss drops (2-4) additional [AbyssThread|Abyss Threads]", "cleansing_fire_altar", 20000),
     "Strength1": {"domain": "item", "spawn_weights": [], "text": "+(8-12) to Strength"},
 }
 
@@ -34,6 +36,18 @@ def test_to_template_matches_ocr_text():
     assert to_template("Take 600.0 Chaos Damage per second") == "Take # Chaos Damage per second"
 
 
+def test_strip_markup_keeps_the_shown_text():
+    assert strip_markup("Final Boss drops (2-4) additional [AbyssThread|Abyss Threads]") == "Final Boss drops (2-4) additional Abyss Threads"
+    assert strip_markup("100% Global chance to [Blind] Enemies on hit") == "100% Global chance to Blind Enemies on hit"
+    assert strip_markup("(10-20)% increased Rarity of Items") == "(10-20)% increased Rarity of Items"
+
+
+def test_card_lines_have_no_markup():
+    card = cards_by_id()["CleansingAltarUpsideBossThreadAbyss"]
+    assert card["lines"] == ["Final Boss drops (2-4) additional Abyss Threads"]
+    assert card["variants"][0]["templates"] == ["Final Boss drops # additional Abyss Threads"]
+
+
 def test_parse_ranges_sorts_and_applies_sign():
     assert parse_ranges("(20-10)% reduced Recovery Rate") == [[10, 20]]
     assert parse_ranges("-(60-40)% to Cold Resistance") == [[-60, -40]]
@@ -46,7 +60,7 @@ def test_only_spawnable_altar_mods_are_kept():
     variant_ids = {v["id"] for c in cards.values() for v in c["variants"]}
     assert "TangledAltarDownsideBossAllDamageCanChill" not in variant_ids
     assert "Strength1" not in variant_ids
-    assert len(variant_ids) == 7
+    assert len(variant_ids) == 8
 
 
 def test_side_target_and_altar():
@@ -86,7 +100,7 @@ def test_diff_reports_added_removed_changed():
     assert diff_mods(old, old) == []
 
 
-def test_sync_labels_keeps_hand_work_and_adds_new_cards():
+def test_sync_labels_keeps_hand_work_adds_new_cards_and_drops_gone_ones():
     mods = build_mods(RAW, "test")
     old = {"labels": {
         "TangledAltarDownsidePlayerSapped": {"text": "stale", "alias": "Sap #%", "icon": "sap"},
@@ -99,6 +113,5 @@ def test_sync_labels_keeps_hand_work_and_adds_new_cards():
     assert sap["text"].startswith("player - (25-35)% chance to be Sapped")
     assert entries["TangleAltarUpsideMonsterDivineOrb"] == {
         "text": "minions + (1.6-3.2)% chance to drop an additional Divine Orb", "alias": "", "icon": ""}
-    assert entries["GoneAltarUpsidePlayerSomething"]["alias"] == "Gone"
-    assert notes == ["? unused label GoneAltarUpsidePlayerSomething (card no longer exists)"]
-    assert set(entries) - {"GoneAltarUpsidePlayerSomething"} == {c["id"] for c in mods["mods"]}
+    assert notes == ["- removed label GoneAltarUpsidePlayerSomething (alias 'Gone')"]
+    assert set(entries) == {c["id"] for c in mods["mods"]}
